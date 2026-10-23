@@ -1,0 +1,17 @@
+[
+  {
+    "file": "assets/dashboard-1.webp",
+    "sha256": "cd308b4037844edbbf81af1b2a2e0a4505cb67c5127b809ace9b624dfd21360d",
+    "bytes": 172628
+  },
+  {
+    "file": "assets/dashboard-2.webp",
+    "sha256": "8e9155d9b95c8d1220442fff0d9c64ee16ec299059e753c3982b8bb0e64390fd",
+    "bytes": 141042
+  },
+  {
+    "file": "assets/dashboard-3.webp",
+    "sha256": "a24fc23fa95fb0b04486798e061cc7b77cf1a73811b91a742e5860edc646a1ce",
+    "bytes": 161650
+  }
+]

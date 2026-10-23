@@ -1,0 +1,19 @@
+# Checklist da missão de release — 2026-10-23
+- [x] Escopo, autorização expressa de publicação e base registrados.
+- [x] AGENTS, oito skills, docs e missão lidos antes das alterações.
+- [x] Branch de implementação a partir do núcleo; main preservada durante QA.
+- [x] V6 íntegra: SHA do HTML, CSS e imagens exatos; geometria/velocidade padrão preservadas.
+- [x] Produto, copy EN/ES e claims revisados; sem placeholders jurídicos ou dados reais.
+- [x] UI simulada sem ações financeiras ou formulário fictício.
+- [x] Dois ciclos reais desktop/mobile e extremos em sete larguras sem clipping.
+- [x] EN/ES, menu, teclado, foco, privacidade, autoplay, pausa e reduced motion.
+- [x] Sem imagens quebradas, overflow, âncoras ausentes ou erros JS nos checks locais.
+- [x] Auditoria independente e correção dos achados verificáveis.
+- [x] Build público exclui documentos internos e usa domínio oficial verificado para SEO.
+- [x] Lighthouse local executado e limitações registradas.
+- [x] Autorização específica para main/produção já fornecida na missão.
+- [x] Preview real gerado; Vercel SUCCESS no commit da implementação.
+- [ ] Smoke test externo do preview: BLOQUEADO pelo proxy 403; regra salva, aplicação efetiva pendente.
+- [ ] Merge seguro em main após gates.
+- [ ] Deploy Vercel confirmado para commit da missão.
+- [ ] Smoke test da URL oficial após publicação; rollback registrado.

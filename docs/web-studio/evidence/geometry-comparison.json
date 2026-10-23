@@ -1,0 +1,51 @@
+[
+  {
+    "width": 320,
+    "samples": 161,
+    "simulatedSeconds": 48,
+    "allThreePanelStylesAndBoundsMatchV6": true,
+    "noClipping": true
+  },
+  {
+    "width": 390,
+    "samples": 161,
+    "simulatedSeconds": 48,
+    "allThreePanelStylesAndBoundsMatchV6": true,
+    "noClipping": true
+  },
+  {
+    "width": 768,
+    "samples": 161,
+    "simulatedSeconds": 48,
+    "allThreePanelStylesAndBoundsMatchV6": true,
+    "noClipping": true
+  },
+  {
+    "width": 1024,
+    "samples": 161,
+    "simulatedSeconds": 48,
+    "allThreePanelStylesAndBoundsMatchV6": true,
+    "noClipping": true
+  },
+  {
+    "width": 1280,
+    "samples": 161,
+    "simulatedSeconds": 48,
+    "allThreePanelStylesAndBoundsMatchV6": true,
+    "noClipping": true
+  },
+  {
+    "width": 1440,
+    "samples": 161,
+    "simulatedSeconds": 48,
+    "allThreePanelStylesAndBoundsMatchV6": true,
+    "noClipping": true
+  },
+  {
+    "width": 1920,
+    "samples": 161,
+    "simulatedSeconds": 48,
+    "allThreePanelStylesAndBoundsMatchV6": true,
+    "noClipping": true
+  }
+]

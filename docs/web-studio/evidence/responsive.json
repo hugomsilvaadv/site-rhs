@@ -1,0 +1,100 @@
+[
+  {
+    "width": 320,
+    "viewport": 320,
+    "scroll": 320,
+    "images": true,
+    "links": [],
+    "es": {
+      "lang": "es",
+      "viewport": 320,
+      "scroll": 320
+    },
+    "errors": [],
+    "failed": []
+  },
+  {
+    "width": 390,
+    "viewport": 390,
+    "scroll": 390,
+    "images": true,
+    "links": [],
+    "es": {
+      "lang": "es",
+      "viewport": 390,
+      "scroll": 390
+    },
+    "errors": [],
+    "failed": []
+  },
+  {
+    "width": 768,
+    "viewport": 768,
+    "scroll": 768,
+    "images": true,
+    "links": [],
+    "es": {
+      "lang": "es",
+      "viewport": 768,
+      "scroll": 768
+    },
+    "errors": [],
+    "failed": []
+  },
+  {
+    "width": 1024,
+    "viewport": 1024,
+    "scroll": 1024,
+    "images": true,
+    "links": [],
+    "es": {
+      "lang": "es",
+      "viewport": 1024,
+      "scroll": 1024
+    },
+    "errors": [],
+    "failed": []
+  },
+  {
+    "width": 1280,
+    "viewport": 1280,
+    "scroll": 1280,
+    "images": true,
+    "links": [],
+    "es": {
+      "lang": "es",
+      "viewport": 1280,
+      "scroll": 1280
+    },
+    "errors": [],
+    "failed": []
+  },
+  {
+    "width": 1440,
+    "viewport": 1440,
+    "scroll": 1440,
+    "images": true,
+    "links": [],
+    "es": {
+      "lang": "es",
+      "viewport": 1440,
+      "scroll": 1440
+    },
+    "errors": [],
+    "failed": []
+  },
+  {
+    "width": 1920,
+    "viewport": 1920,
+    "scroll": 1920,
+    "images": true,
+    "links": [],
+    "es": {
+      "lang": "es",
+      "viewport": 1920,
+      "scroll": 1920
+    },
+    "errors": [],
+    "failed": []
+  }
+]
