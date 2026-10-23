@@ -1,18 +1,18 @@
-# Checklist de liberação — preencher por tarefa
-- [ ] Escopo e versão de base registrados.
-- [ ] Claims comerciais conferidos com briefing e estágio real.
-- [ ] Aprovação de conceito visual registrada.
-- [ ] Branch isolada; `main` preservada.
-- [ ] Assets existentes e imagens integradas corretamente.
-- [ ] Sem dados/segredos reais.
-- [ ] Órbita e outras animações: sem cortes, pausas indesejadas ou movimentos problemáticos.
-- [ ] Reduced-motion, navegação teclado e foco visível.
-- [ ] Layout 320/390/768/1024/1280/1440 e uma volta completa da órbita.
-- [ ] Sem rolagem horizontal nem erros no console.
-- [ ] Links, CTA e formulário com comportamento verdadeiro.
-- [ ] SEO e metadados, títulos e imagens com `alt`.
-- [ ] Testes de performance e tamanho total de assets documentados.
-- [ ] Privacidade, segurança e restrições regulatórias revisadas.
-- [ ] URL de preview entregue e aprovação de aceite.
-- [ ] Aprovação específica para publicar em `main`.
-- [ ] Deploy e smoke test com registro de versão.
+# Checklist da missão de release — 2026-10-23
+- [x] Escopo, autorização expressa de publicação e base registrados.
+- [x] AGENTS, oito skills, docs e missão lidos antes das alterações.
+- [x] Branch de implementação a partir do núcleo; main preservada durante QA.
+- [x] V6 íntegra: SHA do HTML, CSS e imagens exatos; geometria/velocidade padrão preservadas.
+- [x] Produto, copy EN/ES e claims revisados; sem placeholders jurídicos ou dados reais.
+- [x] UI simulada sem ações financeiras ou formulário fictício.
+- [x] Dois ciclos reais desktop/mobile e extremos em sete larguras sem clipping.
+- [x] EN/ES, menu, teclado, foco, privacidade, autoplay, pausa e reduced motion.
+- [x] Sem imagens quebradas, overflow, âncoras ausentes ou erros JS nos checks locais.
+- [x] Auditoria independente e correção dos achados verificáveis.
+- [x] Build público exclui documentos internos e usa domínio oficial verificado para SEO.
+- [x] Lighthouse local executado e limitações registradas.
+- [x] Autorização específica para main/produção já fornecida na missão.
+- [ ] Preview real gerado e smoke test externo.
+- [ ] Merge seguro em main após gates.
+- [ ] Deploy Vercel confirmado para commit da missão.
+- [ ] Smoke test da URL oficial após publicação; rollback registrado.

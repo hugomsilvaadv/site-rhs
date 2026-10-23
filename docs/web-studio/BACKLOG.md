@@ -1,13 +1,15 @@
-# Backlog coordenado — RHS Web Studio
-Responsável pelo estado: coordenador do núcleo.
+# Backlog coordenado — missão website release
 
-| Prioridade | Item | Estado | Aceite |
-|---|---|---|---|
-| P0 | Integrar hero orbital V6 aprovado ao site existente sem perder seções originais | APROVADO; NÃO INTEGRADO | HTML correto, órbita contínua, imagens sem cortes, CTA, responsivo |
-| P0 | QA da órbita (360°, ciclos repetidos) em desktop/mobile e acessibilidade reduzida | PENDENTE NA INTEGRAÇÃO | Sem imagem quebrada, cortes ou JS errors |
-| P1 | Revisão da seção 2 "A complete picture" e painel automático | DISCUSSÃO | 3 propostas → escolha → preview |
-| P1 | Explorar apresentação Core/Payments/Intelligence/Fraud/Complete | DISCUSSÃO | Produto fiel ao áudio/briefing, sem claim não demonstrado |
-| P1 | Contato B2B / CTA e aviso sobre estágio do produto | DISCUSSÃO | Lead real somente com backend e privacidade definidos |
-| P1 | Revisão dos avisos legais, segurança e idioma EN/ES | PENDENTE | Validação técnica e jurídica |
-| P2 | SEO, acessibilidade, performance e instrumentação | PENDENTE | Relatório com evidências |
-| P2 | Teste completo e publicação oficial da nova versão | BLOQUEADO ATÉ APROVAÇÃO | Preview aceito e autorização explícita |
+| Prioridade | Item | Estado / evidência |
+|---|---|---|
+| P0 | Integrar V6 exatamente | IMPLEMENTADO; SHA, CSS, imagens, screenshots e geometria verificados |
+| P0 | Órbita desktop/mobile por 2 voltas e extremos | PASS; JSON real e determinístico em evidence/ |
+| P1 | Workspace / Player 360 e alternância | IMPLEMENTADO; sete vistas, autoplay pausável, teclado, mobile e dados simulados |
+| P1 | Core / Payments / Intelligence / Fraud / Complete | IMPLEMENTADO EN/ES; revisão de Produto/Copy/Compliance |
+| P1 | Quatro casos e fluxo de decisão | IMPLEMENTADO; sinais/contexto/revisão/registro sem verdictos automáticos |
+| P1 | Empresa, segurança, privacidade e contato | IMPLEMENTADO com limites explícitos; mailbox/dados societários a confirmar |
+| P1 | Navegação e idioma | PASS local; duas rotas, preferência, menu mobile, foco |
+| P1 | Artefato público e SEO | PASS build; allowlist, sitemap e metadata da origem verificada |
+| P1 | Preview e release autorizado | EM PREPARAÇÃO; validar integração por branch antes de main |
+| P2 | Desempenho | Lighthouse local documentado; manter hero aprovado; confirmar métricas em hosting final |
+| P2 | Compatibilidade adicional | Safari/Firefox/Edge não executados; Chromium verificado |
