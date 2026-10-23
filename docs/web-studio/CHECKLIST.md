@@ -1,0 +1,18 @@
+# Checklist de liberação — preencher por tarefa
+- [ ] Escopo e versão de base registrados.
+- [ ] Claims comerciais conferidos com briefing e estágio real.
+- [ ] Aprovação de conceito visual registrada.
+- [ ] Branch isolada; `main` preservada.
+- [ ] Assets existentes e imagens integradas corretamente.
+- [ ] Sem dados/segredos reais.
+- [ ] Órbita e outras animações: sem cortes, pausas indesejadas ou movimentos problemáticos.
+- [ ] Reduced-motion, navegação teclado e foco visível.
+- [ ] Layout 320/390/768/1024/1280/1440 e uma volta completa da órbita.
+- [ ] Sem rolagem horizontal nem erros no console.
+- [ ] Links, CTA e formulário com comportamento verdadeiro.
+- [ ] SEO e metadados, títulos e imagens com `alt`.
+- [ ] Testes de performance e tamanho total de assets documentados.
+- [ ] Privacidade, segurança e restrições regulatórias revisadas.
+- [ ] URL de preview entregue e aprovação de aceite.
+- [ ] Aprovação específica para publicar em `main`.
+- [ ] Deploy e smoke test com registro de versão.
