@@ -12,7 +12,8 @@
 - [x] Build público exclui documentos internos e usa domínio oficial verificado para SEO.
 - [x] Lighthouse local executado e limitações registradas.
 - [x] Autorização específica para main/produção já fornecida na missão.
-- [ ] Preview real gerado e smoke test externo.
+- [x] Preview real gerado; Vercel SUCCESS no commit da implementação.
+- [ ] Smoke test externo do preview: BLOQUEADO pelo proxy 403; regra salva, aplicação efetiva pendente.
 - [ ] Merge seguro em main após gates.
 - [ ] Deploy Vercel confirmado para commit da missão.
 - [ ] Smoke test da URL oficial após publicação; rollback registrado.

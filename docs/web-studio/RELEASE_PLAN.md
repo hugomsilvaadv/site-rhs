@@ -21,26 +21,26 @@ Base: studio/rhs-web-studio-v1 at 39ef91a739f8ac98f27a53ccf79b4aaadc484b14; prod
 - Network and Vercel authorization may block preview/production; never infer deployment from local success.
 
 ## Task 1 — baseline and behavior contracts
-- [ ] Record section/claims/contact inventory and verify V6 image bytes.
-- [ ] Add browser checks for language persistence, keyboard mobile navigation, all mock views, reduced motion, local assets and responsive overflow; run against original and record expected failure.
+- [x] Record section/claims/contact inventory and verify V6 image bytes.
+- [x] Add browser checks for language persistence, keyboard mobile navigation, all mock views, reduced motion, local assets and responsive overflow; run against original and record expected failure.
 
 ## Task 2 — implement static release
 Files: index.html, assets/*, site.css, site.js, robots.txt; localized entry es/index.html generated from the same source; no framework.
-- [ ] Extract hero, CSS dependencies and orbit script; isolate all new CSS under .rhs-content.
-- [ ] Implement lower-page copy, accessible simulated workspace, scenarios, workflow, company/controls, transparent contact notice EN/ES.
-- [ ] Preserve hero image bytes; local fonts if external font access cannot be restored; document visual dependency handling.
-- [ ] Run browser contracts until passing and commit implementation.
+- [x] Extract hero, CSS dependencies and orbit script; isolate all new CSS under .rhs-content.
+- [x] Implement lower-page copy, accessible simulated workspace, scenarios, workflow, company/controls, transparent contact notice EN/ES.
+- [x] Preserve hero image bytes; local fonts if external font access cannot be restored; document visual dependency handling.
+- [x] Run browser contracts until passing and commit implementation.
 
 ## Task 3 — independent audit
 Files: tests/* and docs/web-studio/evidence/*.
-- [ ] Run responsive browser checks at 320/390/768/1024/1280/1440/1920.
-- [ ] Observe at least two complete continuous 23.5-second hero laps on desktop/mobile; sample all panels against clipping boundaries.
-- [ ] Compare V6 and integrated hero screenshots; inspect actual screenshots and image hashes.
-- [ ] Audit real console/network/links, keyboard, EN/ES, reduced motion, visibility, mock rotation, claims and SEO; record unrun browsers/performance explicitly.
-- [ ] Independent RHS Auditor review; fix verified release blockers, rerun affected checks.
+- [x] Run responsive browser checks at 320/390/768/1024/1280/1440/1920.
+- [x] Observe at least two complete continuous 23.5-second hero laps on desktop/mobile; sample all panels against clipping boundaries.
+- [x] Compare V6 and integrated hero screenshots; inspect actual screenshots and image hashes.
+- [x] Audit real console/network/links, keyboard, EN/ES, reduced motion, visibility, mock rotation, claims and SEO; record unrun browsers/performance explicitly.
+- [x] Independent RHS Auditor review; fix verified release blockers, rerun affected checks.
 
 ## Task 4 — release or exact external blocker
-- [ ] Inspect actual Vercel project, domains and Git integration via authorized interface before production.
-- [ ] If gates pass: preview, safe merge, production deploy, official-URL smoke test, rollback record.
-- [ ] Otherwise retain tested implementation branch and document concrete blockers without touching main.
-- [ ] Update STATUS, DECISIONS, BACKLOG, CHECKLIST with evidence, commits and actual release status.
+- [x] Inspect actual Vercel project, domains and Git integration via authorized interface before production.
+- [ ] If gates pass: preview smoke, safe merge, production deploy, official-URL smoke test. BLOCKED: preview egress denied 403; rollback baseline documented.
+- [x] Otherwise retain tested implementation branch and document concrete blockers without touching main.
+- [x] Update STATUS, DECISIONS, BACKLOG, CHECKLIST with evidence, commits and actual release status.

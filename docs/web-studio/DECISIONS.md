@@ -30,3 +30,5 @@ A prévia **V6 — Órbita Sem Cortes** foi aceita como base para integração. 
 | RHS-014 | Publicar apenas saída `public/`, criada por allowlist em `tools/stage.mjs`; nunca a raiz do checkout. | Achado do auditor corrigido e testado |
 | RHS-015 | Origem oficial existente confirmada: `https://site-rhs.vercel.app`, coincidente com homepage GitHub e bytes do main em produção. Não inventar domínio próprio. | Verificado por HTTP e GitHub; sitemap/canonical/OG gerados da configuração |
 | RHS-016 | Melhorias invisíveis do hero: ARIA traduzida, teclado/reduced-motion, pausa de acessibilidade e uma leitura de largura por frame; nenhuma mudança na geometria, imagens ou velocidade matemática padrão. | Comparação determinística com a V6 passou em 7 larguras |
+
+| RHS-017 | Não integrar em main com smoke externo do preview bloqueado por rede, mesmo com build Vercel SUCCESS. Preservar produção anterior até aplicar a regra de rede já salva e executar o gate. | Bloqueio verificável, não falta de autorização do proprietário |
