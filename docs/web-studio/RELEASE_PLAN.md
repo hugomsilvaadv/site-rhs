@@ -41,6 +41,14 @@ Files: tests/* and docs/web-studio/evidence/*.
 
 ## Task 4 — release or exact external blocker
 - [x] Inspect actual Vercel project, domains and Git integration via authorized interface before production.
-- [ ] If gates pass: preview smoke, safe merge, production deploy, official-URL smoke test. BLOCKED: preview egress denied 403; rollback baseline documented.
+- [x] Preview smoke externo realizado por link temporário Vercel; PR #1 merged (squash) como d1fc5a936a7433b5410974e726821345700f5274; Vercel produção READY; GET externo em / e /es/ confirma conteúdo novo.
 - [x] Otherwise retain tested implementation branch and document concrete blockers without touching main.
 - [x] Update STATUS, DECISIONS, BACKLOG, CHECKLIST with evidence, commits and actual release status.
+
+## Resultado de publicação — 2026-10-23
+- O 403 do proxy Codex foi contornado com link temporário autenticado do preview protegido. Não foi necessário desabilitar SSO.
+- Browser remoto desktop aprovou dashboards, animação orbital, navegação e idioma. QA mobile local consta da auditoria do Codex.
+- PR #1 merged e Vercel deployment de produção `dpl_2byDy9Uvx5UEyEi9UEkehgfvfHDz` READY.
+- Endereço público: https://site-rhs.vercel.app/ ; rota ES: https://site-rhs.vercel.app/es/ . Ambos testados via rede externa.
+- Rollback para baseline `e14e2c3f5befade075dfc3009ea63b6fc1ee170c` permanece disponível, se necessário.
+- Próximo cuidado operacional: confirmar recebimento do e-mail e monitorar performance real.

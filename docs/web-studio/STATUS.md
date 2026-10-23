@@ -1,42 +1,37 @@
 # Estado real — RHS Labs / Sentinel
 
-Atualizado em 2026-10-23. Estado desta revisão: **BLOQUEADO ANTES DO MERGE DE PRODUÇÃO — PREVIEW PRONTO, SMOKE EXTERNO NEGADO PELO PROXY**.
+Atualizado em 2026-10-23. **SITE 2.0 PUBLICADO EM PRODUÇÃO E CONFERIDO NOS ENDEREÇOS PÚBLICOS EN/ES.**
 
 | Superfície | Evidência atual |
 |---|---|
-| Base do estúdio | `39ef91a739f8ac98f27a53ccf79b4aaadc484b14`, branch `studio/rhs-web-studio-v1` |
-| Produção anterior / rollback | `e14e2c3f5befade075dfc3009ea63b6fc1ee170c` — preservar histórico; reverter o futuro merge para rollback |
-| Branch de implementação | `feature/rhs-site-complete-v2` |
-| URL de produção existente | https://site-rhs.vercel.app — homepage configurada no GitHub; GET 200 e conteúdo idêntico ao main original |
-| Integração Git/Vercel existente | Status Vercel success no commit original; projeto `drhugomsilva-4234/site-rhs` |
-| Nova versão | HTML estático EN/ES, hero V6 integrado, narrativa e Workspace revisados; commit `6ccb5b3`, PR #1; não integrada em main nem afirmada em produção |
-| Domínio próprio | Não verificado; não presumir rhs-labs.com como URL publicada |
-| API Vercel | 403: missing authentication token; testar caminho Git existente sem inventar credencial |
+| Produção atual | https://site-rhs.vercel.app/ — publicação Vercel `READY`, deployment `dpl_2byDy9Uvx5UEyEi9UEkehgfvfHDz` |
+| Rota espanhola | https://site-rhs.vercel.app/es/ — conteúdo novo em espanhol verificado por consulta externa |
+| Código publicado | `main`, PR #1 merged (squash), release commit `d1fc5a936a7433b5410974e726821345700f5274` |
+| Baseline e opção de rollback | Commit original `e14e2c3f5befade075dfc3009ea63b6fc1ee170c`; deployment original `dpl_t9CXop83FznzcUCQbek8R6aEnKps` |
+| Hero V6 | Três dashboards em órbita 3D contínua; preservação comprovada em auditoria local, visual e geométrica |
+| Preview | Deployment `dpl_6dUSU3RUybmHZR9qCzqQ8N8PC4HS` `READY`; acesso externo realizado por link temporário autenticado Vercel (sem desligar SSO) |
+| Preview smoke | Browser remoto desktop: PASS (três imagens, órbita contínua, navegação, módulos, contato, EN/ES). |
+| Mobile QA | Codex registrou teste Chromium local em 320/390/768/1024/1280/1440/1920 e >2 órbitas em mobile; não houve smoke mobile remoto independente após o merge |
+| Produção EN/ES | GET externo confirmou conteúdo novo, metadados corretos e caminhos dos três dashboards em ambas as rotas |
+| Domínio próprio | Não verificado; não presumir rhs-labs.com como publicado |
 
-## Preview real e bloqueio atual
-- PR: https://github.com/hugomsilvaadv/site-rhs/pull/1
-- Preview informado pelo bot Vercel: https://site-rhs-git-feature-rhs-site-complete-v2-drhugomsilva-4234.vercel.app
-- Deployment status SUCCESS para `6ccb5b35c4315c4b8f4104ad286e2fa95baf3900`; dashboard: https://vercel.com/drhugomsilva-4234/site-rhs/JAHR6iDa4sLPShqusCQ2BeniKfaD
-- Requisição externa ao preview bloqueada no CONNECT do proxy: `403 Forbidden`. Não é evidência de erro do site nem de login Vercel.
-- Regra exata do hostname adicionada ao rascunho de rede preservando regras anteriores; o acesso efetivo ainda foi negado no retry.
-- Ação externa mínima: aplicar/salvar essa regra nas configurações de rede do ambiente. A autorização de publicação já existe; não é necessário pedir nova autorização estética ou de merge.
-- Sem smoke de preview, não fazer merge em main. API Vercel sem token não impede necessariamente a via Git, que já gerou o preview.
-- Lighthouse da saída pública com origem absoluta: performance 68, acessibilidade 100, boas práticas 100, SEO 100, CLS 0; LCP 4.7s/TBT 540ms na simulação local. Não representa Core Web Vitals em produção. Medição anterior de performance 76 demonstra variação; não afirmar pontuação oficial.
+## Histórico do bloqueio de preview — RESOLVIDO
+O Codex relatou `403 Forbidden` no CONNECT do proxy cloud do seu ambiente. A Vercel também utiliza proteção SSO para previews. O bloqueio foi superado por um **link temporário autenticado de preview**, gerado pelo acesso autorizado ao projeto Vercel, seguido por smoke test no navegador. Nenhuma configuração de SSO foi desativada. Não persistir token ou URL de compartilhamento em código/documentação.
 
-## QA executado
-- Funcional Chromium: idiomas persistentes, menu/teclado, 7 vistas, contato, console e reduced-motion.
-- EN/ES × 7 larguras (320, 390, 768, 1024, 1280, 1440, 1920): sem overflow, imagens quebradas, âncoras ausentes ou requests de recursos falhos.
-- Órbita real: >2 voltas em 1440/390; três telas visíveis, alternância frontal 0→1→2→0→1→2→0; limites positivos em todas as amostras. Sob carga concorrente, 64.3s/67.4s de observação; velocidade matemática original e limite de delta por frame preservados.
-- Geometria determinística: 161 amostras de dois ciclos em cada uma das 7 larguras; estilos e limites dos 3 painéis idênticos à V6 original.
-- Comparação visual em fase estática/reduced-motion com as mesmas fontes: 1440 pixel-idêntico; 390 idêntico exceto última linha raster junto à seção seguinte.
-- Auditoria independente: Produto/Copy/Compliance e Auditor em contextos separados; achados de empacotamento, idioma e pausa corrigidos pelo coordenador.
-- Saída pública exclui docs, testes, ferramentas e fragments. Sitemap/metadata absolutos gerados do domínio verificado; guardas de origem testadas.
-- Lighthouse local mobile, servidor Python sem gzip/cache: performance 76, acessibilidade 100, boas práticas 100, SEO 85 antes de finalizar origem absoluta. Ver evidência; não são métricas de produção.
+## QA pré-release
+- Chromium local: EN/ES, 7 larguras, menu/teclado, Workspace 7 vistas, reduced-motion, links e imagens.
+- Órbita 3D: >2 voltas desktop/mobile e 161 amostras de geometria em 7 larguras; comparação com V6 original registrada em `docs/web-studio/evidence/`.
+- Auditoria independente Produto/Copy/Compliance e Auditor: achados bloqueadores corrigidos.
+- Browser remoto preview desktop: homepage, hero, dashboard assets, rotação, seções, navegação e alternância EN/ES aprovados.
+- GET externo de produção nas rotas `/` e `/es/`: ambas carregaram o conteúdo novo; produção Vercel `READY`.
+- Lighthouse local simulando mobile: Performance **68**, Accessibility **100**, Best Practices **100**, SEO **100**; LCP 4.7s, CLS 0. Não interpretar como métricas de usuários reais.
 
-## Limitações honestas
-- Não testados Safari, Firefox, Edge nem dados reais de Core Web Vitals/INP em campo.
-- Mailto funcional abre o aplicativo do visitante; entrega de `contact@rhs-labs.com` não confirmada.
-- Dados societários e tratamento de dados para piloto ainda dependem de confirmação. Aviso público sucinto não se apresenta como política jurídica completa.
-- Sem certificações/clientes/resultados/integradores inventados; sem formulário, analytics ou ação financeira real.
+## Limitações remanescentes
+- Não validados Firefox, Safari e Edge; sem dados reais de Core Web Vitals.
+- Entrega da caixa `contact@rhs-labs.com` não confirmada; `mailto:` abre aplicativo do visitante, mas não comprova recebimento.
+- Dados societários e políticas completas de processamento de dados dependem de validação antes de uso operacional/pilotos; aviso público não substitui política completa.
+- Não existem ações financeiras reais no site, nem formulário ou analytics.
+- Funcionalidades planejadas e mockups ilustrativos permanecem rotulados honestamente como produto em desenvolvimento.
 
-Evidências e capturas: `docs/web-studio/evidence/`. Consulte `EXECUTION_LOG.md` para mudanças de diagnóstico e passos reais do release.
+## Alterações posteriores de documentação
+Registros de status e planejamento foram atualizados após a publicação, sem alterações de interface. Qualquer commit subsequente no `main` pode disparar novo deploy automático da Vercel; verificar o commit/deployment efetivo antes de registrar uma versão posterior como produção.

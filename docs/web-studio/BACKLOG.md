@@ -10,6 +10,6 @@
 | P1 | Empresa, segurança, privacidade e contato | IMPLEMENTADO com limites explícitos; mailbox/dados societários a confirmar |
 | P1 | Navegação e idioma | PASS local; duas rotas, preferência, menu mobile, foco |
 | P1 | Artefato público e SEO | PASS build; allowlist, sitemap e metadata da origem verificada |
-| P1 | Preview e release autorizado | PREVIEW READY na Vercel / PR #1; smoke bloqueado pelo proxy 403; main preservada |
+| P1 | Preview e release autorizado | PUBLICADO: PR #1 merged, preview externo PASS com acesso temporário Vercel, produção EN/ES validada |
 | P2 | Desempenho | Lighthouse local documentado; manter hero aprovado; confirmar métricas em hosting final |
 | P2 | Compatibilidade adicional | Safari/Firefox/Edge não executados; Chromium verificado |

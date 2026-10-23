@@ -23,3 +23,6 @@
 - Final local staging measurement: Lighthouse accessibility/best practices/SEO 100; performance 68, CLS 0, LCP 4.7s, TBT 540ms under simulated mobile throttling. Previous local performance 76, production field metrics not run. Preserved approved hero rather than changing visual/motion design for a score.
 - Removed a stale comparison image created before reference fonts were correctly routed. Final hero-comparison.json and remaining difference image reflect correct shared-font comparison only.
 - Review findings fixed: public-only staging + origin metadata tests; Spanish ARIA labels and reduced-motion manual selection; subtle workspace transition and CSS backlight pause. Independent read-only reviewer artifacts retained separately from coordinator resolutions.
+
+- Release final 2026-10-23: acesso temporário de preview autorizado via Vercel e smoke browser independente desktop concluído (EN/ES, 3 dashboards, órbita, links e seções). Sem desativar SSO ou publicar token de compartilhamento.
+- PR #1 merged (squash) em main: d1fc5a936a7433b5410974e726821345700f5274. Deployment produção Vercel dpl_2byDy9Uvx5UEyEi9UEkehgfvfHDz READY. GET externo de https://site-rhs.vercel.app/ e /es/ confirmou a nova versão em ambas as rotas. Limitações de mobile remoto e mailbox permanecem registradas.
