@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parent.parent
 EN = {
  'lang':'en','title':'RHS Labs — Sentinel | Operational clarity. Connected risk intelligence.',
  'description':'Explore Sentinel, the B2B platform in development for operational backoffice, payment workflows, risk intelligence and fraud investigations.',
- 'nav':['Platform','Solutions','Use Cases','Security','Company'],
+ 'nav':['Platform','Solutions','Intelligence','Security','Company'],
  'disclosure':'Platform in development. Illustrative interfaces use simulated data. Capabilities and availability are confirmed during commercial discussions.',
  'workspace_k':'THE SENTINEL WORKSPACE','workspace_h':'A complete picture.<br>Not another tab.',
  'workspace_p':'Sentinel is a B2B platform being developed to bring operational backoffice, payment workflows, risk intelligence and fraud investigations into one workspace.',
@@ -16,13 +16,35 @@ EN = {
  'modules_k':'FOUR PILLARS. ONE CONNECTED PRODUCT VISION.','modules_h':'Context travels<br>with the decision.',
  'modules_p':'Designed for operations, payments, risk and compliance teams to work from a shared picture.',
  'modules':[
-  ['Core','The operational foundation.','Bring player profiles, account and gameplay history, events, tags, segmentation and cases into context, with roles, permissions and an audit trail.','PROFILE → CONTEXT → CASE'],
-  ['Payments','Review with the full picture.','Review withdrawals, follow deposits and reconcile transactions through configured rules, approval limits, balance controls and supervised exception workflows.','TRANSACTION → POLICY → REVIEW'],
-  ['Intelligence','Connections worth examining.','Explore account clusters across device, IP, identity and payment signals. A shared signal adds context; it does not prove fraud. Device fingerprinting is a technical direction, not a verified proprietary capability.','SIGNALS → LINKS → CONTEXT'],
-  ['Fraud','From a signal to an investigation.','Bring configurable rules, alerts and evidence together to investigate multiaccount, identity misuse, automated behavior, bonus and rollover abuse, unusual payments and betting patterns.','ALERT → EVIDENCE → INVESTIGATION']],
+  ['Core','The operational foundation.','An operational backoffice that brings player context and team workflows together.','PROFILE → CONTEXT → CASE'],
+  ['Payments','Review with the full picture.','Payment visibility and supervised transaction review workflows.','TRANSACTION → POLICY → REVIEW'],
+  ['Intelligence','Connections worth examining.','Connect account, device, identity and payment signals for investigation.','SIGNALS → LINKS → CONTEXT'],
+  ['Fraud','From a signal to an investigation.','Turn suspicious activity and risk signals into evidence-led reviews.','ALERT → EVIDENCE → INVESTIGATION']],
  'complete':'Complete combines the four pillars in one commercial package. Scope, integrations and availability are agreed during commercial discussions. Payment execution and custody are not represented as services provided by RHS Labs.',
- 'cases_k':'ILLUSTRATIVE SCENARIOS','cases_h':'Signals ask questions.<br>Context guides the next step.',
- 'cases_p':'Four fictional examples of a policy-led review. A signal starts an inquiry; it is never a verdict.',
+ 'cases_k':'CONNECTED INTELLIGENCE','cases_h':'Understand the connections.<br>Review the evidence.',
+ 'cases_p':'A shared device, payment method or IP can explain why accounts merit review. A connection is a signal — not proof of wrongdoing.',
+ 'graph_title':"Related accounts and supporting signals",
+ 'graph_aria':"One principal account has three contextual connections: shared device, shared payment method, and shared IP. Different evidence types require different strength of review.",
+ 'graph_main':"PRIMARY ACCOUNT",
+ 'graph_related':"RELATED",
+ 'graph_device':"SHARED DEVICE",
+ 'graph_device2':"Device ID match",
+ 'graph_payment':"PAYMENT LINK",
+ 'graph_payment2':"Same instrument",
+ 'graph_ip':"SHARED IP",
+ 'graph_ip2':"Context only",
+ 'graph_device_label':"Device",
+ 'graph_payment_label':"Payment",
+ 'graph_ip_label':"IP / weak context",
+ 'graph_card1':"Shared device",
+ 'graph_body1':"A matching device identifier creates a lead for investigation; it does not establish who controlled the account.",
+ 'graph_card2':"Payment relationship",
+ 'graph_body2':"A repeated payment instrument offers another contextual link for an authorized review.",
+ 'graph_card3':"Shared IP is weak evidence",
+ 'graph_body3':"Networks can be shared legitimately. The operator weighs each signal alongside identity, timing and policy.",
+ 'graph_footer':"Signals support investigation. Only an authorized operator determines the next action.",
+ 'graph_example':"ILLUSTRATIVE RELATIONSHIP MAP",
+ 'graph_case':"CASE P-48213 · SIMULATED",
  'cases':[
  ['Multi-account & linked identities','A shared device connects three illustrative accounts. Compare identity, payment and activity context before deciding whether to investigate.',['Shared device','Related activity','Policy review','Recorded decision']],
  ['Withdrawal & payment exceptions','An illustrative withdrawal has an identity mismatch. Review supporting records and approval limits before recording the next step.',['Payment exception','Account context','Authorized review','Audit trail']],
@@ -44,7 +66,7 @@ EN = {
 ES = {
  'lang':'es','title':'RHS Labs — Sentinel | Claridad operativa e inteligencia de riesgo.',
  'description':'Conozca Sentinel, la plataforma B2B en desarrollo para backoffice operativo, flujos de pagos, inteligencia de riesgo e investigaciones de fraude.',
- 'nav':['Plataforma','Soluciones','Casos de uso','Seguridad','Empresa'],
+ 'nav':['Plataforma','Soluciones','Inteligencia','Seguridad','Empresa'],
  'disclosure':'Plataforma en desarrollo. Las interfaces ilustrativas utilizan datos simulados. Las capacidades y la disponibilidad se confirman durante las conversaciones comerciales.',
  'workspace_k':'EL ESPACIO DE TRABAJO SENTINEL','workspace_h':'La visión completa.<br>Sin otra pestaña.',
  'workspace_p':'Sentinel es una plataforma B2B en desarrollo que busca reunir el backoffice operativo, los flujos de pagos, la inteligencia de riesgo y las investigaciones de fraude en un solo espacio de trabajo.',
@@ -55,13 +77,35 @@ ES = {
  'modules_k':'CUATRO PILARES. UNA VISIÓN DE PRODUCTO CONECTADA.','modules_h':'El contexto acompaña<br>cada decisión.',
  'modules_p':'Diseñada para que los equipos de operaciones, pagos, riesgo y cumplimiento compartan una misma visión.',
  'modules':[
- ['Core','La base operativa.','Reúna perfiles de jugadores, historial de cuentas y actividad de juego, eventos, etiquetas, segmentación y casos, con roles, permisos y trazabilidad.','PERFIL → CONTEXTO → CASO'],
- ['Payments','Revise con la visión completa.','Revise retiros, dé seguimiento a depósitos y concilie transacciones mediante reglas configuradas, límites de aprobación, controles de saldo y flujos supervisados para excepciones.','TRANSACCIÓN → POLÍTICA → REVISIÓN'],
- ['Intelligence','Conexiones que merecen análisis.','Explore grupos de cuentas mediante señales de dispositivo, IP, identidad y pago. Una señal compartida aporta contexto; no demuestra fraude. La huella de dispositivo es una dirección técnica, no una capacidad propietaria verificada.','SEÑALES → VÍNCULOS → CONTEXTO'],
- ['Fraud','De la señal a la investigación.','Reúna reglas configurables, alertas y evidencias para investigar multicuenta, uso indebido de identidad, comportamiento automatizado, abuso de bonos y rollover, pagos y patrones de apuestas inusuales.','ALERTA → EVIDENCIAS → INVESTIGACIÓN']],
+ ['Core','La base operativa.','Un backoffice operativo que conecta la información del jugador y los flujos de trabajo del equipo.','PERFIL → CONTEXTO → CASO'],
+ ['Payments','Revise con la visión completa.','Visibilidad de pagos y flujos supervisados de revisión de transacciones.','TRANSACCIÓN → POLÍTICA → REVISIÓN'],
+ ['Intelligence','Conexiones que merecen análisis.','Conecte señales de cuentas, dispositivos, identidad y pagos para su investigación.','SEÑALES → VÍNCULOS → CONTEXTO'],
+ ['Fraud','De la señal a la investigación.','Convierta actividades sospechosas y señales de riesgo en revisiones basadas en evidencias.','ALERTA → EVIDENCIAS → INVESTIGACIÓN']],
  'complete':'Complete reúne los cuatro pilares en una propuesta comercial. El alcance, las integraciones y la disponibilidad se acuerdan durante las conversaciones comerciales. RHS Labs no se presenta como proveedor de custodia ni de ejecución directa de pagos.',
- 'cases_k':'ESCENARIOS ILUSTRATIVOS','cases_h':'Las señales plantean preguntas.<br>El contexto orienta el siguiente paso.',
- 'cases_p':'Cuatro ejemplos ficticios de revisión guiada por políticas. Una señal inicia una investigación; nunca es un veredicto.',
+ 'cases_k':'INTELIGENCIA CONECTADA','cases_h':'Comprenda las conexiones.<br>Revise las evidencias.',
+ 'cases_p':'Un dispositivo, método de pago o IP compartidos pueden justificar una revisión. Una conexión es una señal, no una prueba de fraude.',
+ 'graph_title':"Cuentas vinculadas y señales de contexto",
+ 'graph_aria':"Una cuenta principal tiene tres vínculos de contexto: dispositivo, método de pago e IP compartidos. Cada indicio requiere una revisión diferente.",
+ 'graph_main':"CUENTA PRINCIPAL",
+ 'graph_related':"VINCULADA",
+ 'graph_device':"DISPOSITIVO",
+ 'graph_device2':"ID compartida",
+ 'graph_payment':"PAGO VINCULADO",
+ 'graph_payment2':"Mismo medio",
+ 'graph_ip':"IP COMPARTIDA",
+ 'graph_ip2':"Solo contexto",
+ 'graph_device_label':"Dispositivo",
+ 'graph_payment_label':"Pago",
+ 'graph_ip_label':"IP / señal débil",
+ 'graph_card1':"Dispositivo compartido",
+ 'graph_body1':"Un identificador de dispositivo coincidente justifica la revisión, pero no identifica por sí solo a quien operó la cuenta.",
+ 'graph_card2':"Relación de pago",
+ 'graph_body2':"Un medio de pago repetido aporta contexto adicional para una revisión autorizada.",
+ 'graph_card3':"Una IP compartida es un indicio débil",
+ 'graph_body3':"Una red puede compartirse legítimamente. El operador valora las señales con la identidad, el momento y sus políticas.",
+ 'graph_footer':"Las señales orientan la investigación. Solo un operador autorizado determina la siguiente acción.",
+ 'graph_example':"MAPA DE RELACIONES ILUSTRATIVO",
+ 'graph_case':"CASO P-48213 · SIMULADO",
  'cases':[
  ['Multicuenta e identidades vinculadas','Un dispositivo compartido conecta tres cuentas ilustrativas. Compare identidad, pagos y actividad antes de decidir si corresponde investigar.',['Dispositivo compartido','Actividad relacionada','Revisión de política','Decisión registrada']],
  ['Retiros y excepciones de pago','Un retiro ilustrativo presenta una discrepancia de identidad. Revise los registros y los límites de aprobación antes de registrar el siguiente paso.',['Excepción de pago','Contexto de la cuenta','Revisión autorizada','Trazabilidad']],
@@ -126,14 +170,42 @@ def render(t):
 <section id="platform" class="rhs-section rhs-workspace"><div class="wrap">
 <div class="rhs-section-head"><div><span class="rhs-kicker">{t['workspace_k']}</span><h2>{t['workspace_h']}</h2></div><p>{t['workspace_p']}</p></div>
 <div class="rhs-workspace-meta"><p>{t['workspace_note']}</p><button class="rhs-motion" id="motion-toggle" type="button" aria-pressed="false">{t['pause']}</button></div>
-<div class="rhs-app" aria-label="Sentinel workspace"><div class="rhs-app-top"><b>SENTINEL <span>/ WORKSPACE</span></b><small>{t['sim']}</small></div>
+<div class="rhs-device"><span class="rhs-device-camera" aria-hidden="true"></span><div class="rhs-app" aria-label="Sentinel workspace"><div class="rhs-app-top"><b>SENTINEL <span>/ WORKSPACE</span></b><small>{t['sim']}</small></div>
 <div class="rhs-app-body"><div class="rhs-tabs"><span class="rhs-kicker">{t['operations']}</span><div role="tablist" aria-label="{'Vistas del espacio de trabajo' if es else 'Workspace views'}" aria-orientation="vertical">{views}</div></div>
-<div class="rhs-app-content" id="mock-panel" role="tabpanel" aria-labelledby="tab-overview" tabindex="0"><div class="rhs-app-heading"><h3 id="mock-heading">{'Resumen operativo' if es else 'Operations overview'}</h3><small id="mock-status">{t['sim']}</small></div><div id="mock-metrics" class="rhs-metrics"></div><h4 id="mock-subhead"></h4><div id="mock-rows"></div><p class="rhs-demo-note">{t['demo_note']}</p></div></div></div>
+<div class="rhs-app-content" id="mock-panel" role="tabpanel" aria-labelledby="tab-overview" tabindex="0"><div class="rhs-app-heading"><h3 id="mock-heading">{'Resumen operativo' if es else 'Operations overview'}</h3><small id="mock-status">{t['sim']}</small></div><div id="mock-metrics" class="rhs-metrics"></div><h4 id="mock-subhead"></h4><div id="mock-rows"></div><p class="rhs-demo-note">{t['demo_note']}</p></div></div></div></div>
 </div></section>
 <section id="modules" class="rhs-section rhs-modules"><div class="wrap"><div class="rhs-section-head"><div><span class="rhs-kicker">{t['modules_k']}</span><h2>{t['modules_h']}</h2></div><p>{t['modules_p']}</p></div><div class="rhs-module-grid">{mods}</div><p class="rhs-complete"><strong>Complete / </strong>{t['complete']}</p></div></section>
-<section id="use-cases" class="rhs-section"><div class="wrap"><div class="rhs-section-head"><div><span class="rhs-kicker">{t['cases_k']}</span><h2>{t['cases_h']}</h2></div><p>{t['cases_p']}</p></div><div class="rhs-cases">{cases}</div><p class="rhs-fineprint">{t['context_note']}</p></div></section>
+<section id="use-cases" class="rhs-section rhs-intelligence"><div class="wrap">
+<div class="rhs-section-head"><div><span class="rhs-kicker">{t['cases_k']}</span><h2>{t['cases_h']}</h2></div><p>{t['cases_p']}</p></div>
+<div class="rhs-intel-grid">
+<div class="rhs-network-scene">
+<div class="rhs-graph-meta"><span>{t['graph_example']}</span><span>{t['graph_case']}</span></div>
+<svg class="rhs-network" viewBox="0 0 720 450" role="img" aria-labelledby="network-title network-desc">
+<title id="network-title">{t['graph_title']}</title>
+<desc id="network-desc">{t['graph_aria']}</desc>
+<defs><pattern id="rhs-grid" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#266276" opacity=".32"/></pattern><radialGradient id="rhs-graph-glow"><stop stop-color="#20a99a" stop-opacity=".16"/><stop offset="1" stop-color="#20a99a" stop-opacity="0"/></radialGradient></defs>
+<rect width="720" height="450" rx="16" fill="#0a1c2b"/><rect width="720" height="450" fill="url(#rhs-grid)"/><circle cx="350" cy="225" r="210" fill="url(#rhs-graph-glow)"/>
+<path d="M348 225 L226 160 L108 100" fill="none" stroke="#35D8C8" stroke-width="2.4"/>
+<path d="M348 225 L485 157 L615 99" fill="none" stroke="#54AFFF" stroke-width="2.2"/>
+<path d="M348 225 L482 321 L615 370" fill="none" stroke="#8197AB" stroke-width="2" stroke-dasharray="7 9"/>
+<circle cx="348" cy="225" r="52" fill="#15394b" stroke="#45ddc7" stroke-width="2.5"/>
+<text x="348" y="219" text-anchor="middle" fill="#e8f5fa" font-size="16" font-weight="700">P-48213</text><text x="348" y="242" text-anchor="middle" fill="#7bced3" font-size="12">{t['graph_main']}</text>
+<circle cx="108" cy="100" r="38" fill="#102e45" stroke="#35D8C8" stroke-width="2"/><text x="108" y="97" text-anchor="middle" fill="#e9f6fa" font-size="14" font-weight="700">P-77104</text><text x="108" y="114" text-anchor="middle" fill="#80b3c7" font-size="10">{t['graph_related']}</text>
+<circle cx="615" cy="99" r="38" fill="#102e45" stroke="#54AFFF" stroke-width="2"/><text x="615" y="96" text-anchor="middle" fill="#e9f6fa" font-size="14" font-weight="700">P-90311</text><text x="615" y="113" text-anchor="middle" fill="#80b3c7" font-size="10">{t['graph_related']}</text>
+<circle cx="615" cy="370" r="38" fill="#102e45" stroke="#8197AB" stroke-width="2"/><text x="615" y="366" text-anchor="middle" fill="#e9f6fa" font-size="14" font-weight="700">P-62690</text><text x="615" y="383" text-anchor="middle" fill="#80b3c7" font-size="10">{t['graph_related']}</text>
+<rect x="174" y="136" width="105" height="48" rx="9" fill="#173a4b" stroke="#35D8C8"/><text x="226" y="156" text-anchor="middle" fill="#e2f6f3" font-size="12">{t['graph_device']}</text><text x="226" y="173" text-anchor="middle" fill="#9bd4d1" font-size="10">{t['graph_device2']}</text>
+<rect x="425" y="133" width="117" height="48" rx="9" fill="#183045" stroke="#54AFFF"/><text x="483" y="153" text-anchor="middle" fill="#e1f0ff" font-size="12">{t['graph_payment']}</text><text x="483" y="170" text-anchor="middle" fill="#9ebddb" font-size="10">{t['graph_payment2']}</text>
+<rect x="425" y="297" width="113" height="48" rx="9" fill="#1c2c3b" stroke="#8197AB"/><text x="482" y="316" text-anchor="middle" fill="#ebf1f5" font-size="12">{t['graph_ip']}</text><text x="482" y="334" text-anchor="middle" fill="#a6b8c9" font-size="10">{t['graph_ip2']}</text>
+</svg>
+<div class="rhs-graph-footer"><span class="rhs-graph-dot dot-device"></span>{t['graph_device_label']} <span class="rhs-graph-dot dot-payment"></span>{t['graph_payment_label']} <span class="rhs-graph-dot dot-ip"></span>{t['graph_ip_label']}</div></div>
+<div class="rhs-graph-copy">
+<div class="rhs-insight"><span class="rhs-insight-number">01</span><div><h3>{t['graph_card1']}</h3><p>{t['graph_body1']}</p></div></div>
+<div class="rhs-insight"><span class="rhs-insight-number">02</span><div><h3>{t['graph_card2']}</h3><p>{t['graph_body2']}</p></div></div>
+<div class="rhs-insight"><span class="rhs-insight-number">03</span><div><h3>{t['graph_card3']}</h3><p>{t['graph_body3']}</p></div></div>
+<p class="rhs-intel-note">{t['graph_footer']}</p>
+</div></div></div></section>
 <section id="how" class="rhs-section rhs-how"><div class="wrap"><span class="rhs-kicker">{t['how_k']}</span><h2>{t['how_h']}</h2><ol class="rhs-steps">{steps}</ol></div></section>
-<section id="company" class="rhs-section"><div class="wrap rhs-company"><div><span class="rhs-kicker">{t['company_k']}</span><h2>{t['company_h']}</h2></div><p>{t['company_p']}</p></div></section>
+<section id="company" class="rhs-section"><div class="wrap rhs-company"><div><span class="rhs-kicker">{t['company_k']}</span><h2>{t['company_h']}</h2></div><p>{t['company_p']}</p><div class="rhs-brand-symbol" aria-hidden="true"><svg viewBox="0 0 160 142" focusable="false"><path d="M80 20 L21 119 H139 Z" fill="none" stroke="#34cdb8" stroke-width="3.5" stroke-linejoin="round"/><circle cx="80" cy="20" r="8" fill="#34cdb8"/><circle cx="21" cy="119" r="8" fill="#34cdb8"/><circle cx="139" cy="119" r="8" fill="#34cdb8"/></svg><span>RHS Labs</span></div></div></section>
 <section id="security" class="rhs-section rhs-security"><div class="wrap rhs-security-layout"><div><span class="rhs-kicker">{t['controls_k']}</span><h2>{t['controls_h']}</h2></div><ul>{controls}</ul></div></section>
 <section id="contact" class="rhs-section rhs-contact"><div class="wrap"><span class="rhs-kicker">{t['contact_k']}</span><h2>{t['contact_h']}</h2><p class="rhs-contact-intro">{t['contact_p']}</p><a class="btn" href="mailto:contact@rhs-labs.com?subject={quote(t['subject'])}">{t['email_cta']}</a><a class="rhs-email" href="mailto:contact@rhs-labs.com">contact@rhs-labs.com</a><p class="rhs-fineprint">{t['email_note']}</p><details id="privacy" class="rhs-privacy"><summary>{t['privacy_title']}</summary><p>{t['privacy']}</p></details></div></section>
 <footer class="rhs-footer"><div class="wrap"><div class="rhs-footer-top"><div><a class="rhs-footer-brand" href="#home">RHS Labs <span>/ Sentinel</span></a><p>{t['footer']}</p></div><nav aria-label="{'Navegación de pie de página' if es else 'Footer navigation'}"><a href="#platform">{t['nav'][0]}</a><a href="#modules">{t['nav'][1]}</a><a href="#contact">{'Contacto' if es else 'Contact'}</a><a href="#privacy">{'Privacidad' if es else 'Privacy'}</a></nav><div class="rhs-languages" aria-label="{t['language']}"><a href="/" data-language="en" lang="en" {'aria-current="page"' if not es else ''}>EN</a><span>/</span><a href="/es/" data-language="es" lang="es" {'aria-current="page"' if es else ''}>ES</a></div></div><p class="rhs-disclosure">{t['disclosure']}</p></div></footer>
