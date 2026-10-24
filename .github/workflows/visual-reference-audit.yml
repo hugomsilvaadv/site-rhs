@@ -20,6 +20,10 @@ on:
       - 'tests/mobile-showcase.cjs'
       - 'tests/mobile-orbit.cjs'
 
+concurrency:
+  group: rhs-visual-reference-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
