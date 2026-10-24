@@ -117,3 +117,42 @@
  html{overflow-x:clip;}
  body{overflow-x:clip;}
 }
+
+
+/* iPhone/Android: one dashboard at a time, never intersecting on the 3D plane.
+   The desktop orbital composition is deliberately unaffected. */
+@media(max-width:560px){
+  .hero-v2 .carousel-area{margin-top:14px;}
+  .hero-v2 .carousel-track{height:clamp(214px,59vw,310px);isolation:isolate;}
+  .hero-v2 .product-screen{width:min(88vw,440px);aspect-ratio:1586 / 992;transition:none!important;}
+  .hero-v2 .carousel-track.is-ready .product-screen{transition:none!important;}
+  .hero-v2 .screen-art{border-radius:9px;box-shadow:0 0 0 1px rgba(32,239,220,.6),0 15px 34px #0008,0 0 30px rgba(24,230,207,.25);}
+  .hero-v2 .carousel-dots{gap:17px;}
+  .hero-v2 .carousel-dot{width:12px;height:12px;}
+  .hero-v2 .screen-name{min-height:22px;font-size:10px;line-height:1.4;padding:0 14px;}
+  .hero-v2 .carousel-disclosure{padding-bottom:12px;}
+}
+/* The approved reference uses a physical notebook silhouette.
+   Mobile keeps this illustrated laptop immediately visible and lets the
+   visitor explicitly expand the complete, keyboard-accessible HTML demo. */
+.rhs-content .rhs-mobile-laptop{display:none;}
+@media(max-width:767px){
+  .rhs-content .rhs-overview-grid{gap:20px;}
+  .rhs-content .rhs-mobile-laptop{display:block;width:100%;position:relative;margin:4px auto 4px;max-width:580px;text-align:center;}
+  .rhs-content .rhs-laptop-display{position:relative;border:5px solid #0b3441;border-bottom-width:8px;border-radius:16px 16px 5px 5px;background:#061724;box-shadow:0 0 0 1px #2b9c9f,0 0 32px #0ce4d334,0 20px 45px #0009;overflow:hidden;padding:5px;}
+  .rhs-content .rhs-laptop-display::before{content:"";position:absolute;left:50%;top:0px;width:3px;height:3px;background:#5ea6a9;border-radius:50%;transform:translateX(-50%);}
+  .rhs-content .rhs-laptop-browser{height:31px;border-bottom:1px solid #174453;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 10px;font-size:9px;color:#d7e5ed;background:#071e2d;}
+  .rhs-content .rhs-laptop-browser em{font-style:normal;color:#30ddcf;}
+  .rhs-content .rhs-laptop-browser>span:last-child{font-size:8px;color:#84a9bb;white-space:nowrap;}
+  .rhs-content .rhs-laptop-display img{display:block;width:100%;height:auto;aspect-ratio:1586/992;object-fit:cover;object-position:center;border-radius:0 0 4px 4px;}
+  .rhs-content .rhs-laptop-base{width:calc(100% + 25px);height:15px;margin:0 -12.5px;background:linear-gradient(180deg,#284e57,#09202b 72%,#2b4349);border:1px solid #355b62;border-radius:3px 3px 65% 65% / 2px 2px 100% 100%;box-shadow:0 9px 22px #000a;position:relative;}
+  .rhs-content .rhs-laptop-base::before{content:"";position:absolute;top:0;left:43%;width:14%;height:4px;border-radius:0 0 4px 4px;background:#061c29;}
+  .rhs-content .rhs-demo-toggle{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:44px;padding:10px 16px;margin-top:20px;border:1px solid #277a84;border-radius:6px;background:#092b36;color:#68e2db;font-size:12px;font-weight:600;}
+  .rhs-content .rhs-demo-toggle:hover,.rhs-content .rhs-demo-toggle:focus-visible{background:#0d3e48;outline-offset:3px;}
+  .rhs-content .rhs-notebook{display:none;}
+  .rhs-content .rhs-overview.demo-open .rhs-notebook{display:block;margin-top:20px;}
+  .rhs-content .rhs-overview.demo-open .rhs-demo-toggle{background:#104651;color:#defcf9;}
+}
+@media(prefers-reduced-motion:reduce){
+ .rhs-content .rhs-demo-toggle{transition:none!important}
+}
