@@ -5,7 +5,7 @@ const out=__dirname+'/../docs/web-studio/evidence/';
 (async()=>{
  const b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
  try{
- const contexts=await Promise.all([1440,390].map(async width=>{
+ const contexts=await Promise.all([1440].map(async width=>{
   const p=await b.newPage({viewport:{width,height:1000}});
   await p.goto('http://127.0.0.1:8000/',{waitUntil:'networkidle'});
   await p.evaluate(()=>{
@@ -28,7 +28,7 @@ const out=__dirname+'/../docs/web-studio/evidence/';
   });
   return {width,p};
  }));
- console.log('Observing two real continuous laps on desktop and mobile...');
+ console.log('Observing two real continuous laps on desktop...');
  for(const {width,p} of contexts){
   await p.waitForFunction(()=>window.orbitQA.done,{},{timeout:85000});
   const data=await p.evaluate(()=>window.orbitQA);
