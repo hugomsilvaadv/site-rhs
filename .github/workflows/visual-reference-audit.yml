@@ -17,6 +17,8 @@ on:
       - 'assets/hero-v6.js'
       - 'tools/sections.py'
       - 'tools/render.py'
+      - 'tests/mobile-showcase.cjs'
+      - 'tests/mobile-orbit.cjs'
 
 permissions:
   contents: write
@@ -91,6 +93,8 @@ jobs:
             console.log('Captured',reports.length,'cases; browser errors:',reports.flatMap(r=>r.errors)); console.log('Horizontal overflow:',reports.filter(r=>r.wrap>r.width).map(r=>({lang:r.lang,width:r.width,scroll:r.wrap,offenders:r.offenders})));
           })().catch(e=>{console.error(e);process.exit(1)});
           JS
+      - name: Verify mobile hero and laptop behavior
+        run: node tests/mobile-showcase.cjs
       - name: Commit visual audit evidence to feature branch
         if: always()
         run: |
