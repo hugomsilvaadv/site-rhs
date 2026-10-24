@@ -112,6 +112,28 @@
   document.dispatchEvent(new CustomEvent('rhs:motion', {detail:paused})); schedule();
  });
  render(index); schedule();
+ // On small screens show the laptop image first, with an optional full
+ // interactive workspace. This avoids presenting an oversized vertical tab
+ // interface in place of the notebook mockup requested by the owner.
+ const overview=document.querySelector('.rhs-overview');
+ const demoToggle=document.querySelector('.rhs-demo-toggle');
+ const demoTarget=document.getElementById('workspace');
+ const mobileNotebook=matchMedia('(max-width: 767px)');
+ function setDemo(open,scroll=false){
+  if(!overview || !demoToggle || !demoTarget) return;
+  overview.classList.toggle('demo-open',open);
+  demoToggle.setAttribute('aria-expanded',String(open));
+  demoToggle.textContent=lang==='es'?(open?'Cerrar demostración interactiva':'Abrir demostración interactiva del Player 360'):(open?'Close interactive demo':'Open interactive Player 360');
+  if(scroll && open)requestAnimationFrame(()=>demoTarget.scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'}));
+ }
+ if(demoToggle)demoToggle.addEventListener('click',()=>{
+  setDemo(!overview.classList.contains('demo-open'),!overview.classList.contains('demo-open'));
+ });
+ document.querySelectorAll('a[href="#workspace"]').forEach(link=>link.addEventListener('click',e=>{
+  if(!mobileNotebook.matches)return;
+  e.preventDefault();setDemo(true,true);
+ }));
+ if(location.hash==='#workspace' && mobileNotebook.matches)setDemo(true);
  // Privacy information is a real disclosure, not a fabricated legal document.
  document.querySelectorAll('a[href="#privacy"]').forEach(a => a.addEventListener('click', () => {document.getElementById('privacy').open = true;}));
  if (location.hash === '#privacy') document.getElementById('privacy').open = true;
