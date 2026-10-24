@@ -67,8 +67,8 @@ jobs:
                 if(width===1440)for(const id of ['platform','modules','intelligence','payments','how','security','company','contact']){
                   await page.locator('#'+id).screenshot({path:out+'/'+lang+'-'+id+'-1440.png'});
                 }
-                if(width===390)for(const id of ['platform','intelligence','payments']){
-                  await page.locator('#'+id).screenshot({path:out+'/'+lang+'-'+id+'-390.png'});
+                if([390,430].includes(width))for(const id of ['platform','intelligence','payments']){
+                  await page.locator('#'+id).screenshot({path:out+'/'+lang+'-'+id+'-'+width+'.png'});
                 }
                 reports.push({lang,width,errors,...data});
                 await page.close();
