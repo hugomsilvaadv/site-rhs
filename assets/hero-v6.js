@@ -19,9 +19,11 @@
   let phase=0, lastFrame=null, requestId=0, activeIndex=-1, bias=0, manual=null;
   let touchX=0;
 
+  let dimensionsCache=null;
   function dimensions(){
+    if(dimensionsCache) return dimensionsCache;
     const width=stage.clientWidth;
-    return {
+    return dimensionsCache={
       width,
       // Responsive orbital radius keeps all three entire dashboards within
       // the available viewport, even at the widest point of their orbit.
@@ -105,6 +107,10 @@
   document.addEventListener('rhs:motion',e=>{paused=e.detail;});
   document.addEventListener('rhs:language',()=>{names=document.documentElement.lang==='es'?namesES:namesEN;activeIndex=-1;render();});
 
+  // Geometry depends on viewport/panel dimensions, not on orbital phase.
+  // Cache layout reads until resize; keep the approved transform math intact.
+  window.addEventListener('resize',()=>{dimensionsCache=null;},{passive:true});
+  if('ResizeObserver' in window){const observer=new ResizeObserver(()=>{dimensionsCache=null;});observer.observe(stage);observer.observe(panels[0]);}
   stage.classList.add('orbit-active');
   stage.classList.add('is-ready');
   render();

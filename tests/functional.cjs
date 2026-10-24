@@ -27,7 +27,7 @@ const assert = require('node:assert/strict');
  await page.locator('[data-language="es"]').last().click();
  await page.locator('[data-view="player"]').click(); await page.waitForTimeout(250);
  assert.match(await page.locator('#mock-status').innerText(),/ILUSTRATIV|SIMULAD/i);
- assert.equal(await page.locator('a[href^="mailto:contact@rhs-labs.com"]').count()>0,true);
+ assert.equal(await page.locator('a[href^="mailto:sales@rhs-labs.com"]').count()>0,true);
  assert.equal(await page.locator('input,form').count(),0,'no simulated lead collection');
  await page.locator('#motion-toggle').click();
  assert.equal(await page.locator('.backlight').evaluate(el=>getComputedStyle(el).animationPlayState),'paused','pause includes CSS backlight');

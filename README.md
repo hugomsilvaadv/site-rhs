@@ -16,13 +16,18 @@ python3 -m http.server 8000 --bind 0.0.0.0 --directory public
 
 `tools/stage.mjs` includes only public files. Never deploy the checkout root: it contains internal studio documentation. Vercel configuration selects `public/` and runs the staging script with Node; no framework or dependency installation is required.
 
-The verified existing production origin is recorded in `site.config.json` (`https://site-rhs.vercel.app`), matching the repository homepage and live original deployment. Override it only with a verified HTTPS `PUBLIC_SITE_ORIGIN`; Vercel's injected `VERCEL_PROJECT_PRODUCTION_URL` is a fallback when no configured origin exists. Staging then generates absolute canonical/hreflang/OG metadata and sitemap/robots. A production build fails if neither exists. Do not substitute a guessed domain.
+The canonical origin is `https://rhs-labs.com`, explicitly specified by the owner for this alignment round and recorded in `site.config.json`. Canonical, hreflang, Open Graph and sitemap use this origin in the staged output; preview hosting stays on Vercel. This configuration does not change DNS or establish a production-domain deployment. `PUBLIC_SITE_ORIGIN` may override the configured origin only for a deliberately verified deployment.
+
+The new sectors are maintained in `tools/sections.py`; `tools/render.py` preserves the approved hero/header and renders both languages. This round is preview-only, pending final approval.
 
 ## Verify
 
 The prepared cloud environment supplies Playwright and Chromium. With the local website serving on port 8000:
 
 ```sh
+node tests/sectors.cjs
+node tests/alignment-audit.cjs
+node tests/mobile-orbit.cjs
 node tests/functional.cjs
 node tests/staging.cjs
 node tests/visual.cjs

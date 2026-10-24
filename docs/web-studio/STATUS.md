@@ -35,3 +35,7 @@ O Codex relatou `403 Forbidden` no CONNECT do proxy cloud do seu ambiente. A Ver
 
 ## Alterações posteriores de documentação
 Registros de status e planejamento foram atualizados após a publicação, sem alterações de interface. Qualquer commit subsequente no `main` pode disparar novo deploy automático da Vercel; verificar o commit/deployment efetivo antes de registrar uma versão posterior como produção.
+
+## Nova rodada — alinhamento setor por setor
+
+A missão anterior foi publicada e permanece como baseline de produção. A nova missão utiliza `feature/rhs-site-sector-by-sector-alignment` e termina em preview para aprovação final, sem merge automático. Consulte `ALIGNMENT_STATUS.md`, `SECTOR_ALIGNMENT_PLAN.md` e `alignment-evidence/` para o estado desta rodada. O canônico configurado no novo preview será `https://rhs-labs.com`, conforme instrução explícita; o contato principal será `sales@rhs-labs.com`.

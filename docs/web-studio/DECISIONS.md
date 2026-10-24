@@ -32,3 +32,13 @@ A prévia **V6 — Órbita Sem Cortes** foi aceita como base para integração. 
 | RHS-016 | Melhorias invisíveis do hero: ARIA traduzida, teclado/reduced-motion, pausa de acessibilidade e uma leitura de largura por frame; nenhuma mudança na geometria, imagens ou velocidade matemática padrão. | Comparação determinística com a V6 passou em 7 larguras |
 
 | RHS-017 | Não integrar em main com smoke externo do preview bloqueado por rede, mesmo com build Vercel SUCCESS. Preservar produção anterior até aplicar a regra de rede já salva e executar o gate. | Bloqueio verificável, não falta de autorização do proprietário |
+
+## Aditivo — alinhamento setor a setor
+
+| ID | Decisão | Origem / estado |
+|---|---|---|
+| RHS-018 | Setores 2–9 seguem a imagem enviada, com notebook limpo no 2, grafo semântico no 4, pagamentos coerentes no 5 e marca vetorial plana no 8. Não propor outra direção visual. | Nova missão expressa; implementado para preview |
+| RHS-019 | Canônico passa a `https://rhs-labs.com` e contato principal a `sales@rhs-labs.com`. Configuração não comprova caixa postal nem altera DNS. | Decisão explícita do usuário; substitui canônico da rodada anterior |
+| RHS-020 | Esta rodada termina em preview auditado para aprovação final; não herdar autorização de merge da missão anterior para publicar o novo refinamento. | Novo escopo expresso |
+| RHS-021 | HERO permanece visualmente idêntico. Diagnóstico em 320/375/390/430 encontrou transition none/0s; cache de dimensões até resize remove leitura de layout por frame sem alterar matemática, imagens ou velocidade. | Testes de geometria e regressão visual executados |
+| RHS-022 | Gráficos são explicativos e usam dados simulados: contas periféricas uniformes, relações rotuladas, unidade explícita em depósitos/saques e fila sem botões financeiros reais. | Copy/Compliance e Design aplicados |

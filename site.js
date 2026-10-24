@@ -58,7 +58,7 @@
  const app = document.querySelector('.rhs-app');
  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
  const motion = document.getElementById('motion-toggle');
- let index = 0, timer = null, paused = false, hovered = false;
+ let index = 2, timer = null, paused = false, hovered = false;
  function render(i) {
   if (!reduced.matches) panel.animate([{opacity:.65,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],{duration:360,easing:'ease-out'});
   index = i;
@@ -108,7 +108,7 @@
   motion.textContent = lang === 'es' ? (paused ? 'Reanudar movimiento' : 'Pausar movimiento') : (paused ? 'Resume motion' : 'Pause motion');
   document.dispatchEvent(new CustomEvent('rhs:motion', {detail:paused})); schedule();
  });
- render(0); schedule();
+ render(index); schedule();
  // Privacy information is a real disclosure, not a fabricated legal document.
  document.querySelectorAll('a[href="#privacy"]').forEach(a => a.addEventListener('click', () => {document.getElementById('privacy').open = true;}));
  if (location.hash === '#privacy') document.getElementById('privacy').open = true;
