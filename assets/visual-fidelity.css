@@ -105,3 +105,15 @@
  .rhs-content .rhs-risk li{font-size:11px;}
  .rhs-content .rhs-activity .rhs-evidence{font-size:11px;}
 }
+
+
+/* Measured against 667px-wide approved desktop reference: four portrait-ish product cards. */
+@media(min-width:1024px){
+ .rhs-content .rhs-product{min-height:305px;}
+}
+/* The mobile orbital light ribbons intentionally extend beyond the viewport.
+   Clip the document's painting area to prevent their 2px horizontal scroll. */
+@media(max-width:767px){
+ html{overflow-x:clip;}
+ body{overflow-x:clip;}
+}
