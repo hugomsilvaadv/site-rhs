@@ -30,6 +30,8 @@ fs.mkdirSync(out,{recursive:true});
     assert.notEqual(first.laptop,'none','laptop image visible '+width+'/'+lang);
     assert.ok(!first.expanded,'demo collapsed initially '+width+'/'+lang);
     const pic=page.locator('.rhs-mobile-laptop img');
+    await pic.scrollIntoViewIfNeeded();
+    await pic.evaluate(el=>el.decode());
     assert.ok(await pic.evaluate(el=>el.complete && el.naturalWidth>0),'laptop image loaded '+width+'/'+lang);
     if([390,430].includes(width)){
       await page.locator('#home').screenshot({path:out+'/'+lang+'-mobile-hero-'+width+'.png'});
