@@ -106,5 +106,10 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add docs/web-studio/visual-qa-current/
-            git diff --cached --quiet || (git commit -m "test: capture reference-comparison audit evidence" && git push origin HEAD:feature/rhs-site-sector-by-sector-alignment)
+            if ! git diff --cached --quiet; then
+              git commit -m "test: capture reference-comparison audit evidence"
+              git fetch origin feature/rhs-site-sector-by-sector-alignment
+              git rebase origin/feature/rhs-site-sector-by-sector-alignment
+              git push origin HEAD:feature/rhs-site-sector-by-sector-alignment
+            fi
           fi
