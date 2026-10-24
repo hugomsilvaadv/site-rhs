@@ -16,7 +16,7 @@ python3 -m http.server 8000 --bind 0.0.0.0 --directory public
 
 `tools/stage.mjs` includes only public files. Never deploy the checkout root: it contains internal studio documentation. Vercel configuration selects `public/` and runs the staging script with Node; no framework or dependency installation is required.
 
-The verified existing production origin is recorded in `site.config.json` (`https://site-rhs.vercel.app`), matching the repository homepage and live original deployment. Override it only with a verified HTTPS `PUBLIC_SITE_ORIGIN`; Vercel's injected `VERCEL_PROJECT_PRODUCTION_URL` is a fallback when no configured origin exists. Staging then generates absolute canonical/hreflang/OG metadata and sitemap/robots. A production build fails if neither exists. Do not substitute a guessed domain.
+The verified existing production origin is recorded in `site.config.json` (`https://rhs-labs.com`), verified as the RHS Labs custom production domain. Override it only with a verified HTTPS `PUBLIC_SITE_ORIGIN`; Vercel's injected `VERCEL_PROJECT_PRODUCTION_URL` is a fallback when no configured origin exists. Staging then generates absolute canonical/hreflang/OG metadata and sitemap/robots. A production build fails if neither exists. Do not substitute a guessed domain.
 
 ## Verify
 

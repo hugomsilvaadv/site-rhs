@@ -37,3 +37,28 @@
 html[data-motion="paused"] #home .backlight{animation-play-state:paused}
 
 .rhs-mobile-language{display:none}@media(max-width:840px){#main-nav .rhs-mobile-language{display:flex;gap:14px}}
+
+/* RHS visual refinement v3 — semantic intelligence map, minimal notebook shell, flat brand mark. */
+.rhs-content .rhs-workspace{background:#081522}
+.rhs-content .rhs-device{position:relative;margin:24px auto 42px;max-width:1140px;border:1px solid #526778;border-radius:15px 15px 8px 8px;padding:13px 11px 15px;background:linear-gradient(145deg,#263748,#0c1829 55%,#1a293a);box-shadow:0 21px 48px #0006}
+.rhs-content .rhs-device::after{content:"";position:absolute;left:-5%;right:-5%;bottom:-27px;height:28px;background:linear-gradient(#a0acb6 0%,#596977 38%,#243441 80%,#101d2a 100%);clip-path:polygon(5% 0%,95% 0%,100% 78%,98% 100%,2% 100%,0% 78%);border-radius:0 0 15px 15px}
+.rhs-content .rhs-device-camera{display:block;width:5px;height:5px;margin:-6px auto 8px;background:#4d6b7a;border-radius:50%;box-shadow:0 0 0 2px #132536}
+.rhs-content .rhs-device .rhs-app{border-radius:7px;box-shadow:none}
+.rhs-content .rhs-intelligence{background:#091625}
+.rhs-content .rhs-intel-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(240px,.75fr);gap:33px;align-items:center}
+.rhs-content .rhs-network-scene{background:#0a1c2b;border:1px solid #264d62;border-radius:15px;overflow:hidden;box-shadow:0 16px 36px #0003}
+.rhs-content .rhs-graph-meta{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;font-size:9px;letter-spacing:.1em;padding:14px 19px 0;color:#89b6c0}
+.rhs-content .rhs-network{display:block;width:100%;height:auto}
+.rhs-content .rhs-graph-footer{display:flex;flex-wrap:wrap;align-items:center;gap:7px 12px;padding:0 19px 18px;font-size:11px;color:#a9c5d2}
+.rhs-content .rhs-graph-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.rhs-content .dot-device{background:#35d8c8}.rhs-content .dot-payment{background:#54afff}.rhs-content .dot-ip{background:#8197ab}
+.rhs-content .rhs-graph-copy{display:grid;gap:18px}
+.rhs-content .rhs-insight{display:flex;gap:14px;border-bottom:1px solid #264458;padding-bottom:17px}
+.rhs-content .rhs-insight-number{color:#52c9bf;font-size:11px;padding-top:4px}
+.rhs-content .rhs-insight h3{margin:0 0 5px;font-size:16px}.rhs-content .rhs-insight p{font-size:13px;line-height:1.7}
+.rhs-content .rhs-intel-note{border-left:2px solid #31bdb2;padding-left:14px;font-size:12px;color:#c7e7e9}
+.rhs-content .rhs-company{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr) minmax(120px,.4fr)}
+.rhs-content .rhs-brand-symbol{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#e8f5f5;font:500 16px Sora,system-ui,sans-serif}
+.rhs-content .rhs-brand-symbol svg{width:min(100%,130px);height:auto}
+@media(max-width:900px){.rhs-content .rhs-intel-grid{grid-template-columns:1fr}.rhs-content .rhs-graph-copy{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.rhs-content .rhs-intel-note{grid-column:1/-1}.rhs-content .rhs-company{grid-template-columns:1fr 1fr}.rhs-content .rhs-brand-symbol{grid-column:1/-1}}
+@media(max-width:767px){.rhs-content .rhs-device{border:0;padding:0;background:transparent;box-shadow:none;margin:18px auto 0}.rhs-content .rhs-device::after,.rhs-content .rhs-device-camera{display:none}.rhs-content .rhs-device .rhs-app{border-radius:12px;box-shadow:0 12px 28px #0005}.rhs-content .rhs-graph-copy{grid-template-columns:1fr}.rhs-content .rhs-company{grid-template-columns:1fr}.rhs-content .rhs-brand-symbol{margin-top:14px}}

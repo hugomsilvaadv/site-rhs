@@ -13,3 +13,12 @@
 | P1 | Preview e release autorizado | PUBLICADO: PR #1 merged, preview externo PASS com acesso temporário Vercel, produção EN/ES validada |
 | P2 | Desempenho | Lighthouse local documentado; manter hero aprovado; confirmar métricas em hosting final |
 | P2 | Compatibilidade adicional | Safari/Firefox/Edge não executados; Chromium verificado |
+
+## Refinamento v3 — 2026-10-23
+- Hero: correção técnica de transição de CSS concorrente com a órbita JS, sem redesenho; teste real iOS pendente.
+- Produtos: manter resumo dos quatro pilares + Complete, sem catálogo detalhado nesta rodada.
+- Setor 2: notebook discreto; setor 4: grafo de evidências explicável; setor 8: logo plano.
+- SEO: domínio canônico rhs-labs.com.
+- Sem página adicional de Use Cases ou catálogo de funcionalidades nesta rodada.
+- Pauta reduzida dos sócios em MEETING_SHORTLIST.md.
+- Alterações isoladas em feature/rhs-site-visual-refinement-v3, ainda não em produção.
