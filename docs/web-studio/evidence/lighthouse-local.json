@@ -1,0 +1,105 @@
+{
+  "tool": "Lighthouse 13.0.1",
+  "url": "http://127.0.0.1:8000/",
+  "mode": "mobile simulated throttling; local Python HTTP server, no gzip/cache headers; production not tested",
+  "scores": {
+    "performance": 76,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 85
+  },
+  "metrics": {
+    "first-contentful-paint": "1.8\u00a0s",
+    "largest-contentful-paint": "4.7\u00a0s",
+    "total-blocking-time": "280\u00a0ms",
+    "cumulative-layout-shift": "0",
+    "speed-index": "2.7\u00a0s"
+  },
+  "failed_audits": [
+    {
+      "id": "first-contentful-paint",
+      "title": "First Contentful Paint",
+      "display": "1.8\u00a0s"
+    },
+    {
+      "id": "largest-contentful-paint",
+      "title": "Largest Contentful Paint",
+      "display": "4.7\u00a0s"
+    },
+    {
+      "id": "speed-index",
+      "title": "Speed Index",
+      "display": "2.7\u00a0s"
+    },
+    {
+      "id": "total-blocking-time",
+      "title": "Total Blocking Time",
+      "display": "280\u00a0ms"
+    },
+    {
+      "id": "max-potential-fid",
+      "title": "Max Potential First Input Delay",
+      "display": "320\u00a0ms"
+    },
+    {
+      "id": "interactive",
+      "title": "Time to Interactive",
+      "display": "4.7\u00a0s"
+    },
+    {
+      "id": "mainthread-work-breakdown",
+      "title": "Minimize main-thread work",
+      "display": "2.4\u00a0s"
+    },
+    {
+      "id": "unused-css-rules",
+      "title": "Reduce unused CSS",
+      "display": "Est savings of 15\u00a0KiB"
+    },
+    {
+      "id": "hreflang",
+      "title": "Document doesn't have a valid `hreflang`",
+      "display": null
+    },
+    {
+      "id": "canonical",
+      "title": "Document does not have a valid `rel=canonical`",
+      "display": null
+    },
+    {
+      "id": "cache-insight",
+      "title": "Use efficient cache lifetimes",
+      "display": "Est savings of 619\u00a0KiB"
+    },
+    {
+      "id": "document-latency-insight",
+      "title": "Document request latency",
+      "display": "Est savings of 12\u00a0KiB"
+    },
+    {
+      "id": "forced-reflow-insight",
+      "title": "Forced reflow",
+      "display": null
+    },
+    {
+      "id": "image-delivery-insight",
+      "title": "Improve image delivery",
+      "display": "Est savings of 409\u00a0KiB"
+    },
+    {
+      "id": "lcp-discovery-insight",
+      "title": "LCP request discovery",
+      "display": null
+    },
+    {
+      "id": "network-dependency-tree-insight",
+      "title": "Network dependency tree",
+      "display": null
+    },
+    {
+      "id": "render-blocking-insight",
+      "title": "Render blocking requests",
+      "display": "Est savings of 690\u00a0ms"
+    }
+  ]
+}

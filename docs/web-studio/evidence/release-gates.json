@@ -1,0 +1,15 @@
+{
+  "state": "BLOCKED_BEFORE_PRODUCTION_MERGE",
+  "pull_request": "https://github.com/hugomsilvaadv/site-rhs/pull/1",
+  "implementation_commit": "6ccb5b35c4315c4b8f4104ad286e2fa95baf3900",
+  "vercel_status": "success",
+  "vercel_dashboard": "https://vercel.com/drhugomsilva-4234/site-rhs/JAHR6iDa4sLPShqusCQ2BeniKfaD",
+  "preview_url": "https://site-rhs-git-feature-rhs-site-complete-v2-drhugomsilva-4234.vercel.app",
+  "preview_http_check": "URLError: Tunnel connection failed: 403 Forbidden",
+  "preview_rule_saved_in_environment_draft": true,
+  "production_url_existing": "https://site-rhs.vercel.app",
+  "production_baseline_unchanged": "e14e2c3f5befade075dfc3009ea63b6fc1ee170c",
+  "main_merged": false,
+  "production_new_version_verified": false,
+  "minimal_external_action": "Apply the saved exact preview hostname network rule in environment settings; then rerun the preview checks before the already-authorized merge."
+}

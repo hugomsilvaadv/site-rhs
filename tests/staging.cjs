@@ -1,0 +1,10 @@
+const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');const{spawnSync}=require('node:child_process');
+const root=path.join(__dirname,'..');
+const result=spawnSync(process.execPath,['tools/stage.mjs'],{cwd:root,env:{...process.env,PUBLIC_SITE_ORIGIN:'https://example.test'},encoding:'utf8'});
+assert.equal(result.status,0,result.stderr);
+for(const p of ['docs','tools','tests','.agents','.github','assets/hero-v6-fragment.html'])assert.equal(fs.existsSync(path.join(root,'public',p)),false,p);
+const sitemap=fs.readFileSync(path.join(root,'public/sitemap.xml'),'utf8');
+assert.ok(sitemap.includes('https://example.test/es/'));assert.ok(sitemap.includes('https://example.test/'));
+const html=fs.readFileSync(path.join(root,'public/index.html'),'utf8');assert.ok(html.includes('rel="canonical" href="https://example.test/"'));assert.ok(html.includes('property="og:image" content="https://example.test/assets/dashboard-1.webp"'));
+const bad=spawnSync(process.execPath,['tools/stage.mjs'],{cwd:root,env:{...process.env,PUBLIC_SITE_ORIGIN:'http://localhost:8000/path'},encoding:'utf8'});assert.notEqual(bad.status,0,'invalid production origin is rejected');
+console.log('PASS: deployment allowlist, sitemap, absolute metadata and invalid-origin guard');

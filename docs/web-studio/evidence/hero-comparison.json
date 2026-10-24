@@ -1,0 +1,37 @@
+[
+  {
+    "width": 390,
+    "reference_size": [
+      390,
+      808
+    ],
+    "integrated_size": [
+      390,
+      808
+    ],
+    "differing_pixels": 386,
+    "difference_bbox": [
+      0,
+      807,
+      390,
+      808
+    ],
+    "identical_excluding_last_raster_row": true,
+    "method": "Same reduced-motion initial phase; identical locally served Sora/DM Sans font bytes routed into original reference. Header excluded; final row may sample adjacent lower-section background."
+  },
+  {
+    "width": 1440,
+    "reference_size": [
+      1440,
+      979
+    ],
+    "integrated_size": [
+      1440,
+      979
+    ],
+    "differing_pixels": 0,
+    "difference_bbox": null,
+    "identical_excluding_last_raster_row": true,
+    "method": "Same reduced-motion initial phase; identical locally served Sora/DM Sans font bytes routed into original reference. Header excluded; final row may sample adjacent lower-section background."
+  }
+]

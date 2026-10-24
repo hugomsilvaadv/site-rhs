@@ -1,0 +1,215 @@
+{
+  "responsive": [
+    {
+      "lang": "en",
+      "w": 320,
+      "scrollWidth": 320,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "en",
+      "w": 390,
+      "scrollWidth": 390,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "en",
+      "w": 768,
+      "scrollWidth": 768,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "en",
+      "w": 1024,
+      "scrollWidth": 1024,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "en",
+      "w": 1280,
+      "scrollWidth": 1280,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "en",
+      "w": 1440,
+      "scrollWidth": 1440,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "en",
+      "w": 1920,
+      "scrollWidth": 1920,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "es",
+      "w": 320,
+      "scrollWidth": 320,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "es",
+      "w": 390,
+      "scrollWidth": 390,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "es",
+      "w": 768,
+      "scrollWidth": 768,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "es",
+      "w": 1024,
+      "scrollWidth": 1024,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "es",
+      "w": 1280,
+      "scrollWidth": 1280,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "es",
+      "w": 1440,
+      "scrollWidth": 1440,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    },
+    {
+      "lang": "es",
+      "w": 1920,
+      "scrollWidth": 1920,
+      "broken": [],
+      "missingTargets": [],
+      "h1": 1,
+      "bodyHasForbidden": false,
+      "fontSora": true,
+      "fontDM": true
+    }
+  ],
+  "interactions": [
+    [
+      "menuOpen",
+      "true"
+    ],
+    [
+      "menuEscapeClose",
+      "false",
+      true
+    ],
+    [
+      "tabEnd",
+      "true"
+    ],
+    [
+      "tabHome",
+      "true"
+    ],
+    [
+      "privacyOpened",
+      ""
+    ],
+    [
+      "pauseStopsOrbit",
+      true
+    ],
+    [
+      "reducedStatic",
+      true
+    ],
+    [
+      "reducedManualFront",
+      "true"
+    ],
+    [
+      "publicPath",
+      "robots.txt",
+      200
+    ],
+    [
+      "publicPath",
+      "sitemap.xml",
+      404
+    ],
+    [
+      "publicPath",
+      "docs/web-studio/PRODUCT_BRIEF.md",
+      200
+    ],
+    [
+      "publicPath",
+      "tools/render.py",
+      200
+    ]
+  ],
+  "errors": [],
+  "network": []
+}
