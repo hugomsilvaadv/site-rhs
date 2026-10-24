@@ -61,8 +61,8 @@ def render(t):
 <meta property="og:type" content="website"><meta property="og:title" content="{t['title']}"><meta property="og:description" content="{t['description']}"><meta property="og:locale" content="{'es_ES' if es else 'en_US'}"><meta property="og:image" content="/assets/dashboard-1.webp"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="/assets/dashboard-1.webp" as="image" fetchpriority="high">
 <link rel="preload" href="/assets/fonts/sora-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/dm-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css"><link rel="stylesheet" href="/assets/hero-v6.css"><link rel="stylesheet" href="/site.css">
-<script src="/site.js" defer></script><script src="/assets/hero-v6.js" defer></script>
+<link rel="stylesheet" href="/assets/fonts.css"><link rel="stylesheet" href="/assets/hero-v6.css"><link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/assets/visual-fidelity.css">
+<script src="/site.js" defer></script><script src="/assets/visual-fidelity.js" defer></script><script src="/assets/hero-v6.js" defer></script>
 </head><body><a class="rhs-skip" href="#platform">{t['skip']}</a>
 {header}<main>{hero}
 {lower_page(lang,views)}</main></body></html>'''
