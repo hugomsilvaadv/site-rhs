@@ -7,6 +7,16 @@ on:
       - feature/rhs-site-sector-by-sector-alignment
     paths:
       - '.github/workflows/visual-reference-audit.yml'
+      - 'index.html'
+      - 'es/index.html'
+      - 'site.css'
+      - 'site.js'
+      - 'assets/visual-fidelity.css'
+      - 'assets/visual-fidelity.js'
+      - 'assets/hero-v6.css'
+      - 'assets/hero-v6.js'
+      - 'tools/sections.py'
+      - 'tools/render.py'
 
 permissions:
   contents: write
@@ -33,6 +43,7 @@ jobs:
       - name: Generate EN and ES pages and run website
         run: |
           python tools/render.py
+          git diff --exit-code -- index.html es/index.html
           python -m http.server 8000 --bind 127.0.0.1 >/tmp/rhs-audit-server.log 2>&1 &
       - name: Capture comparison screenshots and layout metrics
         run: |
