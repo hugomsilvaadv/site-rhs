@@ -18,10 +18,39 @@
   const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
   let phase=0, lastFrame=null, requestId=0, activeIndex=-1, bias=0, manual=null;
   let touchX=0;
+  // Mobile: the 3D projection forces full-size dashboards to overlap.
+  // Use a clean, one-screen-at-a-time showcase. The desktop 3D orbit is unchanged.
+  const phone=window.matchMedia('(max-width: 560px)');
+  let mobileIndex=0, mobileElapsed=0;
+  const mobileInterval=6500;
+  function renderMobile(){
+    panels.forEach((panel,index)=>{
+      const selected=index===mobileIndex;
+      panel.style.transform='translate(-50%, -50%) translate3d(0px, 0px, 0px) rotateY(0deg) scale(1)';
+      panel.style.opacity=selected?'1':'0';
+      panel.style.visibility=selected?'visible':'hidden';
+      panel.style.filter='none';
+      panel.style.zIndex=selected?'3':'0';
+      panel.setAttribute('aria-hidden',selected?'false':'true');
+      panel.dataset.inFront=String(selected);
+      panel.dataset.angle=String(mobileIndex*TAU/panels.length);
+      panel.dataset.depth=selected?'1':'-1';
+    });
+    activeIndex=mobileIndex;
+    dots.forEach((dot,index)=>{
+      dot.classList.toggle('is-current',index===mobileIndex);
+      if(index===mobileIndex)dot.setAttribute('aria-current','true');
+      else dot.removeAttribute('aria-current');
+    });
+    if(title)title.textContent=String(mobileIndex+1).padStart(2,'0')+'  /  '+names[mobileIndex];
+  }
 
+
+  let dimensionsCache=null;
   function dimensions(){
+    if(dimensionsCache) return dimensionsCache;
     const width=stage.clientWidth;
-    return {
+    return dimensionsCache={
       width,
       // Responsive orbital radius keeps all three entire dashboards within
       // the available viewport, even at the widest point of their orbit.
@@ -34,6 +63,8 @@
   }
 
   function render(){
+    if(phone.matches){renderMobile();return;}
+    panels.forEach(panel=>{panel.style.visibility='visible';});
     const {radiusX,radiusZ,radiusY,width}=dimensions();
     let foremost=0;
     let foremostDepth=-Infinity;
@@ -73,6 +104,15 @@
     // Avoid a large position jump when the tab was hidden or the browser suspended.
     const delta=Math.min(60,Math.max(0,time-lastFrame));
     lastFrame=time;
+    if(phone.matches){
+      if(!reducedMotion.matches && !paused){
+        mobileElapsed+=delta;
+        if(mobileElapsed>=mobileInterval){mobileElapsed%=mobileInterval;mobileIndex=(mobileIndex+1)%panels.length;}
+      }
+      renderMobile();
+      requestId=requestAnimationFrame(animate);
+      return;
+    }
     if(!reducedMotion.matches && !paused){
       phase=(phase+delta*angularSpeed)%TAU;
       if(manual){
@@ -87,6 +127,7 @@
   }
 
   function bringToFront(index){
+    if(phone.matches){mobileIndex=index;mobileElapsed=0;renderMobile();return;}
     if(reducedMotion.matches){phase=index*TAU/panels.length;bias=0;render();return;}
     // Optionally accelerate smoothly to the chosen panel without teleporting it.
     const actual=(phase+bias)%TAU;
@@ -100,11 +141,15 @@
     const dx=event.changedTouches[0].clientX-touchX;
     if(Math.abs(dx)>45)bringToFront((activeIndex+(dx<0?1:2))%panels.length);
   },{passive:true});
-  reducedMotion.addEventListener?.('change',()=>{if(reducedMotion.matches){manual=null;}});
+  reducedMotion.addEventListener?.('change',()=>{if(reducedMotion.matches){manual=null;} mobileElapsed=0;render();});
   document.addEventListener('visibilitychange',()=>{lastFrame=null;if(document.hidden){cancelAnimationFrame(requestId);}else{requestId=requestAnimationFrame(animate);}});
   document.addEventListener('rhs:motion',e=>{paused=e.detail;});
   document.addEventListener('rhs:language',()=>{names=document.documentElement.lang==='es'?namesES:namesEN;activeIndex=-1;render();});
 
+  // Geometry depends on viewport/panel dimensions, not on orbital phase.
+  // Cache layout reads until resize; keep the approved transform math intact.
+  window.addEventListener('resize',()=>{dimensionsCache=null;render();},{passive:true});
+  if('ResizeObserver' in window){const observer=new ResizeObserver(()=>{dimensionsCache=null;});observer.observe(stage);observer.observe(panels[0]);}
   stage.classList.add('orbit-active');
   stage.classList.add('is-ready');
   render();

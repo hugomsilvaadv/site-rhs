@@ -1,0 +1,708 @@
+{
+  "responsive": [
+    {
+      "width": 320,
+      "scroll": 320,
+      "lang": "en",
+      "canonical": "https://rhs-labs.com/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Operational backoffice and player context for organized, accountable workflows.",
+        "Deposits, withdrawals and exception reviews in one operational picture.",
+        "Account, device and payment links that add context to investigations.",
+        "Rules, alerts and case context to investigate suspicious patterns."
+      ],
+      "graphLabels": "P-48213: P-77104 — Shared device; P-66290 — Shared payment method; P-90311 — Related identity signal; P-22018 — Shared network context; P-33862 — Similar activity. Illustrative links. A connection alone does not establish fraud.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20commercial%20enquiry"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 320,
+      "scroll": 320,
+      "lang": "es",
+      "canonical": "https://rhs-labs.com/es/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Backoffice operativo y contexto del jugador para flujos organizados y trazables.",
+        "Depósitos, retiros y revisión de excepciones en una misma visión operativa.",
+        "Vínculos entre cuentas, dispositivos y pagos que aportan contexto a la investigación.",
+        "Reglas, alertas y contexto de casos para investigar patrones sospechosos."
+      ],
+      "graphLabels": "P-48213: P-77104 — Dispositivo compartido; P-66290 — Medio de pago compartido; P-90311 — Señal de identidad relacionada; P-22018 — Contexto de red compartido; P-33862 — Actividad similar. Vínculos ilustrativos. Una conexión por sí sola no demuestra fraude.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20consulta%20comercial"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 375,
+      "scroll": 375,
+      "lang": "en",
+      "canonical": "https://rhs-labs.com/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Operational backoffice and player context for organized, accountable workflows.",
+        "Deposits, withdrawals and exception reviews in one operational picture.",
+        "Account, device and payment links that add context to investigations.",
+        "Rules, alerts and case context to investigate suspicious patterns."
+      ],
+      "graphLabels": "P-48213: P-77104 — Shared device; P-66290 — Shared payment method; P-90311 — Related identity signal; P-22018 — Shared network context; P-33862 — Similar activity. Illustrative links. A connection alone does not establish fraud.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20commercial%20enquiry"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 375,
+      "scroll": 375,
+      "lang": "es",
+      "canonical": "https://rhs-labs.com/es/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Backoffice operativo y contexto del jugador para flujos organizados y trazables.",
+        "Depósitos, retiros y revisión de excepciones en una misma visión operativa.",
+        "Vínculos entre cuentas, dispositivos y pagos que aportan contexto a la investigación.",
+        "Reglas, alertas y contexto de casos para investigar patrones sospechosos."
+      ],
+      "graphLabels": "P-48213: P-77104 — Dispositivo compartido; P-66290 — Medio de pago compartido; P-90311 — Señal de identidad relacionada; P-22018 — Contexto de red compartido; P-33862 — Actividad similar. Vínculos ilustrativos. Una conexión por sí sola no demuestra fraude.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20consulta%20comercial"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 390,
+      "scroll": 390,
+      "lang": "en",
+      "canonical": "https://rhs-labs.com/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Operational backoffice and player context for organized, accountable workflows.",
+        "Deposits, withdrawals and exception reviews in one operational picture.",
+        "Account, device and payment links that add context to investigations.",
+        "Rules, alerts and case context to investigate suspicious patterns."
+      ],
+      "graphLabels": "P-48213: P-77104 — Shared device; P-66290 — Shared payment method; P-90311 — Related identity signal; P-22018 — Shared network context; P-33862 — Similar activity. Illustrative links. A connection alone does not establish fraud.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20commercial%20enquiry"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 390,
+      "scroll": 390,
+      "lang": "es",
+      "canonical": "https://rhs-labs.com/es/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Backoffice operativo y contexto del jugador para flujos organizados y trazables.",
+        "Depósitos, retiros y revisión de excepciones en una misma visión operativa.",
+        "Vínculos entre cuentas, dispositivos y pagos que aportan contexto a la investigación.",
+        "Reglas, alertas y contexto de casos para investigar patrones sospechosos."
+      ],
+      "graphLabels": "P-48213: P-77104 — Dispositivo compartido; P-66290 — Medio de pago compartido; P-90311 — Señal de identidad relacionada; P-22018 — Contexto de red compartido; P-33862 — Actividad similar. Vínculos ilustrativos. Una conexión por sí sola no demuestra fraude.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20consulta%20comercial"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 430,
+      "scroll": 430,
+      "lang": "en",
+      "canonical": "https://rhs-labs.com/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Operational backoffice and player context for organized, accountable workflows.",
+        "Deposits, withdrawals and exception reviews in one operational picture.",
+        "Account, device and payment links that add context to investigations.",
+        "Rules, alerts and case context to investigate suspicious patterns."
+      ],
+      "graphLabels": "P-48213: P-77104 — Shared device; P-66290 — Shared payment method; P-90311 — Related identity signal; P-22018 — Shared network context; P-33862 — Similar activity. Illustrative links. A connection alone does not establish fraud.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20commercial%20enquiry"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 430,
+      "scroll": 430,
+      "lang": "es",
+      "canonical": "https://rhs-labs.com/es/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Backoffice operativo y contexto del jugador para flujos organizados y trazables.",
+        "Depósitos, retiros y revisión de excepciones en una misma visión operativa.",
+        "Vínculos entre cuentas, dispositivos y pagos que aportan contexto a la investigación.",
+        "Reglas, alertas y contexto de casos para investigar patrones sospechosos."
+      ],
+      "graphLabels": "P-48213: P-77104 — Dispositivo compartido; P-66290 — Medio de pago compartido; P-90311 — Señal de identidad relacionada; P-22018 — Contexto de red compartido; P-33862 — Actividad similar. Vínculos ilustrativos. Una conexión por sí sola no demuestra fraude.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20consulta%20comercial"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 768,
+      "scroll": 768,
+      "lang": "en",
+      "canonical": "https://rhs-labs.com/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Operational backoffice and player context for organized, accountable workflows.",
+        "Deposits, withdrawals and exception reviews in one operational picture.",
+        "Account, device and payment links that add context to investigations.",
+        "Rules, alerts and case context to investigate suspicious patterns."
+      ],
+      "graphLabels": "P-48213: P-77104 — Shared device; P-66290 — Shared payment method; P-90311 — Related identity signal; P-22018 — Shared network context; P-33862 — Similar activity. Illustrative links. A connection alone does not establish fraud.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20commercial%20enquiry"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 768,
+      "scroll": 768,
+      "lang": "es",
+      "canonical": "https://rhs-labs.com/es/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Backoffice operativo y contexto del jugador para flujos organizados y trazables.",
+        "Depósitos, retiros y revisión de excepciones en una misma visión operativa.",
+        "Vínculos entre cuentas, dispositivos y pagos que aportan contexto a la investigación.",
+        "Reglas, alertas y contexto de casos para investigar patrones sospechosos."
+      ],
+      "graphLabels": "P-48213: P-77104 — Dispositivo compartido; P-66290 — Medio de pago compartido; P-90311 — Señal de identidad relacionada; P-22018 — Contexto de red compartido; P-33862 — Actividad similar. Vínculos ilustrativos. Una conexión por sí sola no demuestra fraude.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20consulta%20comercial"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 1024,
+      "scroll": 1024,
+      "lang": "en",
+      "canonical": "https://rhs-labs.com/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Operational backoffice and player context for organized, accountable workflows.",
+        "Deposits, withdrawals and exception reviews in one operational picture.",
+        "Account, device and payment links that add context to investigations.",
+        "Rules, alerts and case context to investigate suspicious patterns."
+      ],
+      "graphLabels": "P-48213: P-77104 — Shared device; P-66290 — Shared payment method; P-90311 — Related identity signal; P-22018 — Shared network context; P-33862 — Similar activity. Illustrative links. A connection alone does not establish fraud.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20commercial%20enquiry"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 1024,
+      "scroll": 1024,
+      "lang": "es",
+      "canonical": "https://rhs-labs.com/es/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Backoffice operativo y contexto del jugador para flujos organizados y trazables.",
+        "Depósitos, retiros y revisión de excepciones en una misma visión operativa.",
+        "Vínculos entre cuentas, dispositivos y pagos que aportan contexto a la investigación.",
+        "Reglas, alertas y contexto de casos para investigar patrones sospechosos."
+      ],
+      "graphLabels": "P-48213: P-77104 — Dispositivo compartido; P-66290 — Medio de pago compartido; P-90311 — Señal de identidad relacionada; P-22018 — Contexto de red compartido; P-33862 — Actividad similar. Vínculos ilustrativos. Una conexión por sí sola no demuestra fraude.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20consulta%20comercial"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 1280,
+      "scroll": 1280,
+      "lang": "en",
+      "canonical": "https://rhs-labs.com/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Operational backoffice and player context for organized, accountable workflows.",
+        "Deposits, withdrawals and exception reviews in one operational picture.",
+        "Account, device and payment links that add context to investigations.",
+        "Rules, alerts and case context to investigate suspicious patterns."
+      ],
+      "graphLabels": "P-48213: P-77104 — Shared device; P-66290 — Shared payment method; P-90311 — Related identity signal; P-22018 — Shared network context; P-33862 — Similar activity. Illustrative links. A connection alone does not establish fraud.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20commercial%20enquiry"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 1280,
+      "scroll": 1280,
+      "lang": "es",
+      "canonical": "https://rhs-labs.com/es/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Backoffice operativo y contexto del jugador para flujos organizados y trazables.",
+        "Depósitos, retiros y revisión de excepciones en una misma visión operativa.",
+        "Vínculos entre cuentas, dispositivos y pagos que aportan contexto a la investigación.",
+        "Reglas, alertas y contexto de casos para investigar patrones sospechosos."
+      ],
+      "graphLabels": "P-48213: P-77104 — Dispositivo compartido; P-66290 — Medio de pago compartido; P-90311 — Señal de identidad relacionada; P-22018 — Contexto de red compartido; P-33862 — Actividad similar. Vínculos ilustrativos. Una conexión por sí sola no demuestra fraude.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20consulta%20comercial"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 1440,
+      "scroll": 1440,
+      "lang": "en",
+      "canonical": "https://rhs-labs.com/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Operational backoffice and player context for organized, accountable workflows.",
+        "Deposits, withdrawals and exception reviews in one operational picture.",
+        "Account, device and payment links that add context to investigations.",
+        "Rules, alerts and case context to investigate suspicious patterns."
+      ],
+      "graphLabels": "P-48213: P-77104 — Shared device; P-66290 — Shared payment method; P-90311 — Related identity signal; P-22018 — Shared network context; P-33862 — Similar activity. Illustrative links. A connection alone does not establish fraud.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20commercial%20enquiry"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 1440,
+      "scroll": 1440,
+      "lang": "es",
+      "canonical": "https://rhs-labs.com/es/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Backoffice operativo y contexto del jugador para flujos organizados y trazables.",
+        "Depósitos, retiros y revisión de excepciones en una misma visión operativa.",
+        "Vínculos entre cuentas, dispositivos y pagos que aportan contexto a la investigación.",
+        "Reglas, alertas y contexto de casos para investigar patrones sospechosos."
+      ],
+      "graphLabels": "P-48213: P-77104 — Dispositivo compartido; P-66290 — Medio de pago compartido; P-90311 — Señal de identidad relacionada; P-22018 — Contexto de red compartido; P-33862 — Actividad similar. Vínculos ilustrativos. Una conexión por sí sola no demuestra fraude.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20consulta%20comercial"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 1920,
+      "scroll": 1920,
+      "lang": "en",
+      "canonical": "https://rhs-labs.com/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Operational backoffice and player context for organized, accountable workflows.",
+        "Deposits, withdrawals and exception reviews in one operational picture.",
+        "Account, device and payment links that add context to investigations.",
+        "Rules, alerts and case context to investigate suspicious patterns."
+      ],
+      "graphLabels": "P-48213: P-77104 — Shared device; P-66290 — Shared payment method; P-90311 — Related identity signal; P-22018 — Shared network context; P-33862 — Similar activity. Illustrative links. A connection alone does not establish fraud.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20commercial%20enquiry"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    },
+    {
+      "width": 1920,
+      "scroll": 1920,
+      "lang": "es",
+      "canonical": "https://rhs-labs.com/es/",
+      "imgs": true,
+      "sectors": [
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "anchors": [],
+      "outside": [],
+      "heroTransition": [
+        "0s",
+        "0s",
+        "0s"
+      ],
+      "products": [
+        "Backoffice operativo y contexto del jugador para flujos organizados y trazables.",
+        "Depósitos, retiros y revisión de excepciones en una misma visión operativa.",
+        "Vínculos entre cuentas, dispositivos y pagos que aportan contexto a la investigación.",
+        "Reglas, alertas y contexto de casos para investigar patrones sospechosos."
+      ],
+      "graphLabels": "P-48213: P-77104 — Dispositivo compartido; P-66290 — Medio de pago compartido; P-90311 — Señal de identidad relacionada; P-22018 — Contexto de red compartido; P-33862 — Actividad similar. Vínculos ilustrativos. Una conexión por sí sola no demuestra fraude.",
+      "barSeries": 2,
+      "email": [
+        "mailto:sales@rhs-labs.com",
+        "mailto:sales@rhs-labs.com?subject=Sentinel%20%E2%80%94%20consulta%20comercial"
+      ],
+      "errors": [],
+      "failed": [],
+      "http": []
+    }
+  ],
+  "interactions": "PASS",
+  "resize": "PASS"
+}

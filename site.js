@@ -37,7 +37,7 @@
  en: {
  overview: ['Operations overview', [['OPEN CASES','18'],['ALERTS','6'],['REVIEWS','4']], 'WORKFLOW CONTEXT', [['Payment exceptions','REVIEW QUEUE'],['Linked-account cases','OPEN'],['Policy exceptions','HUMAN REVIEW']]],
  withdrawal: ['Withdrawal queue', [['CASE','WD-48213'],['AMOUNT','1,250.00'],['POLICY','REVIEW']], 'SUPPORTING EVIDENCE', [['Account identity mismatch','REQUIRES REVIEW'],['Device linked to three accounts','CONTEXT'],['Payment-source record','PENDING CHECK']]],
- player: ['Player 360', [['PLAYER','P-48213'],['KYC','REVIEW'],['TAGS','2']], 'ACCOUNT & ACTIVITY HISTORY', [['Identity and KYC history','SIMULATED RECORD'],['Deposits, withdrawals and balance','LINKED EVENTS'],['Bets, casino activity and bonuses','HISTORY'],['Permissions, tags and case timeline','TRACEABLE']]],
+ player: ['Player 360', [['PLAYER ID','P-48213'],['STATUS','REVIEW'],['FIRST SEEN','AUG 2024'],['LAST ACTIVITY','RECENT']], 'ACTIVITY TIMELINE', [['New device detected','2 MIN AGO'],['Deposit with alternate method','14 MIN AGO'],['Linked to related accounts','1 HR AGO'],['Unusual withdrawal pattern','3 HR AGO']]],
  alerts: ['Risk alerts', [['QUEUE','6'],['POLICY','V14'],['OWNER','REVIEWER']], 'CONTEXTUAL ALERTS', [['Unusual withdrawal pattern','REVIEW'],['Bonus and rollover conditions','INVESTIGATE'],['Automated-behavior signal','CONTEXT REQUIRED']]],
  links: ['Account links', [['ACCOUNTS','3'],['SIGNALS','MIXED'],['CASE','OPEN']], 'CONNECTIONS ARE NOT VERDICTS', [['Shared device signal','REQUIRES REVIEW'],['Related payment instrument','COMPARE RECORDS'],['Shared IP address alone','WEAK CONTEXT']]],
  policies: ['Policies & permissions', [['RULE','V14'],['LIMIT','DEFINED'],['REVIEW','HUMAN']], 'SUPERVISED WORKFLOW', [['Approval roles and limits','POLICY-LED'],['Reconciliation and balance exceptions','REVIEW'],['Automated decision write-back','NOT ENABLED']]],
@@ -46,7 +46,7 @@
  es: {
  overview: ['Resumen operativo', [['CASOS ABIERTOS','18'],['ALERTAS','6'],['REVISIONES','4']], 'CONTEXTO OPERATIVO', [['Excepciones de pago','COLA DE REVISIÓN'],['Casos de cuentas vinculadas','ABIERTOS'],['Excepciones de políticas','REVISIÓN HUMANA']]],
  withdrawal: ['Cola de retiros', [['CASO','WD-48213'],['IMPORTE','1.250,00'],['POLÍTICA','REVISIÓN']], 'EVIDENCIAS DE APOYO', [['Discrepancia de identidad','REQUIERE REVISIÓN'],['Dispositivo vinculado a tres cuentas','CONTEXTO'],['Registro del origen del pago','PENDIENTE']]],
- player: ['Player 360', [['JUGADOR','P-48213'],['KYC','REVISIÓN'],['ETIQUETAS','2']], 'HISTORIAL DE CUENTA Y ACTIVIDAD', [['Historial de identidad y KYC','REGISTRO SIMULADO'],['Depósitos, retiros y saldo','EVENTOS VINCULADOS'],['Apuestas, casino y bonos','HISTORIAL'],['Permisos, etiquetas e historial de casos','TRAZABLE']]],
+ player: ['Player 360', [['ID JUGADOR','P-48213'],['ESTADO','REVISIÓN'],['ALTA','AGO 2024'],['ACTIVIDAD','RECIENTE']], 'LÍNEA DE ACTIVIDAD', [['Dispositivo nuevo detectado','HACE 2 MIN'],['Depósito con otro método','HACE 14 MIN'],['Vínculo con cuentas relacionadas','HACE 1 H'],['Patrón atípico de retiro','HACE 3 H']]],
  alerts: ['Alertas de riesgo', [['COLA','6'],['POLÍTICA','V14'],['RESPONSABLE','REVISOR']], 'ALERTAS CONTEXTUALES', [['Patrón inusual de retiros','REVISIÓN'],['Condiciones de bonos y rollover','INVESTIGAR'],['Señal de comportamiento automatizado','REQUIERE CONTEXTO']]],
  links: ['Cuentas vinculadas', [['CUENTAS','3'],['SEÑALES','MIXTAS'],['CASO','ABIERTO']], 'LOS VÍNCULOS NO SON VEREDICTOS', [['Señal de dispositivo compartido','REQUIERE REVISIÓN'],['Instrumento de pago relacionado','COMPARAR REGISTROS'],['Dirección IP compartida por sí sola','CONTEXTO DÉBIL']]],
  policies: ['Políticas y permisos', [['REGLA','V14'],['LÍMITE','DEFINIDO'],['REVISIÓN','HUMANA']], 'FLUJO SUPERVISADO', [['Roles y límites de aprobación','SEGÚN POLÍTICA'],['Excepciones de conciliación y saldo','REVISIÓN'],['Ejecución de decisiones automáticas','NO HABILITADA']]],
@@ -58,7 +58,7 @@
  const app = document.querySelector('.rhs-app');
  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
  const motion = document.getElementById('motion-toggle');
- let index = 0, timer = null, paused = false, hovered = false;
+ let index = 2, timer = null, paused = false, hovered = false;
  function render(i) {
   if (!reduced.matches) panel.animate([{opacity:.65,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],{duration:360,easing:'ease-out'});
   index = i;
@@ -81,8 +81,11 @@
    [label,value].forEach(v => { const span = document.createElement('span'); span.textContent = v; div.append(span); }); return div;
   }));
  }
+ // The approved visual uses a stable Player 360 preview; tabs still work manually.
+ const autoplayWorkspace = false;
  function schedule() {
   clearTimeout(timer);
+  if (!autoplayWorkspace) return;
   if (paused || hovered || document.hidden || reduced.matches || app.contains(document.activeElement)) return;
   timer = setTimeout(() => { render((index + 1) % tabs.length); schedule(); }, 6500);
  }
@@ -108,7 +111,29 @@
   motion.textContent = lang === 'es' ? (paused ? 'Reanudar movimiento' : 'Pausar movimiento') : (paused ? 'Resume motion' : 'Pause motion');
   document.dispatchEvent(new CustomEvent('rhs:motion', {detail:paused})); schedule();
  });
- render(0); schedule();
+ render(index); schedule();
+ // On small screens show the laptop image first, with an optional full
+ // interactive workspace. This avoids presenting an oversized vertical tab
+ // interface in place of the notebook mockup requested by the owner.
+ const overview=document.querySelector('.rhs-overview');
+ const demoToggle=document.querySelector('.rhs-demo-toggle');
+ const demoTarget=document.getElementById('workspace');
+ const mobileNotebook=matchMedia('(max-width: 767px)');
+ function setDemo(open,scroll=false){
+  if(!overview || !demoToggle || !demoTarget) return;
+  overview.classList.toggle('demo-open',open);
+  demoToggle.setAttribute('aria-expanded',String(open));
+  demoToggle.textContent=lang==='es'?(open?'Cerrar demostración interactiva':'Abrir demostración interactiva del Player 360'):(open?'Close interactive demo':'Open interactive Player 360');
+  if(scroll && open)requestAnimationFrame(()=>demoTarget.scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'}));
+ }
+ if(demoToggle)demoToggle.addEventListener('click',()=>{
+  setDemo(!overview.classList.contains('demo-open'),!overview.classList.contains('demo-open'));
+ });
+ document.querySelectorAll('a[href="#workspace"]').forEach(link=>link.addEventListener('click',e=>{
+  if(!mobileNotebook.matches)return;
+  e.preventDefault();setDemo(true,true);
+ }));
+ if(location.hash==='#workspace' && mobileNotebook.matches)setDemo(true);
  // Privacy information is a real disclosure, not a fabricated legal document.
  document.querySelectorAll('a[href="#privacy"]').forEach(a => a.addEventListener('click', () => {document.getElementById('privacy').open = true;}));
  if (location.hash === '#privacy') document.getElementById('privacy').open = true;

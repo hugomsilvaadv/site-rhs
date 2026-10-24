@@ -1,0 +1,266 @@
+[
+  {
+    "lang": "en",
+    "width": 320,
+    "first": {
+      "visible": 1,
+      "index": 0,
+      "clipped": {
+        "left": 19.203125,
+        "right": 19.203125,
+        "top": 18.5625,
+        "bottom": 18.5625
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "01  /  Operations Control Center"
+    },
+    "clicked": {
+      "visible": 1,
+      "index": 2,
+      "clipped": {
+        "left": 19.203125,
+        "right": 19.203125,
+        "top": 18.5625,
+        "bottom": 18.5625
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "03  /  Payments and Risk Overview"
+    },
+    "errors": []
+  },
+  {
+    "lang": "es",
+    "width": 320,
+    "first": {
+      "visible": 1,
+      "index": 0,
+      "clipped": {
+        "left": 19.203125,
+        "right": 19.203125,
+        "top": 18.5625,
+        "bottom": 18.5625
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "01  /  Centro de control operativo"
+    },
+    "clicked": {
+      "visible": 1,
+      "index": 2,
+      "clipped": {
+        "left": 19.203125,
+        "right": 19.203125,
+        "top": 18.5625,
+        "bottom": 18.5625
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "03  /  Vista de pagos y riesgo"
+    },
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 375,
+    "first": {
+      "visible": 1,
+      "index": 0,
+      "clipped": {
+        "left": 22.5,
+        "right": 22.5,
+        "top": 7.0546875,
+        "bottom": 7.0546875
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "01  /  Operations Control Center"
+    },
+    "clicked": {
+      "visible": 1,
+      "index": 2,
+      "clipped": {
+        "left": 22.5,
+        "right": 22.5,
+        "top": 7.0546875,
+        "bottom": 7.0546875
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "03  /  Payments and Risk Overview"
+    },
+    "errors": []
+  },
+  {
+    "lang": "es",
+    "width": 375,
+    "first": {
+      "visible": 1,
+      "index": 0,
+      "clipped": {
+        "left": 22.5,
+        "right": 22.5,
+        "top": 7.0546875,
+        "bottom": 7.0546875
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "01  /  Centro de control operativo"
+    },
+    "clicked": {
+      "visible": 1,
+      "index": 2,
+      "clipped": {
+        "left": 22.5,
+        "right": 22.5,
+        "top": 7.0546875,
+        "bottom": 7.0546875
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "03  /  Vista de pagos y riesgo"
+    },
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 390,
+    "first": {
+      "visible": 1,
+      "index": 0,
+      "clipped": {
+        "left": 23.40625,
+        "right": 23.40625,
+        "top": 7.3515625,
+        "bottom": 7.3515625
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "01  /  Operations Control Center"
+    },
+    "clicked": {
+      "visible": 1,
+      "index": 2,
+      "clipped": {
+        "left": 23.40625,
+        "right": 23.40625,
+        "top": 7.3515625,
+        "bottom": 7.3515625
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "03  /  Payments and Risk Overview"
+    },
+    "errors": []
+  },
+  {
+    "lang": "es",
+    "width": 390,
+    "first": {
+      "visible": 1,
+      "index": 0,
+      "clipped": {
+        "left": 23.40625,
+        "right": 23.40625,
+        "top": 7.3515625,
+        "bottom": 7.3515625
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "01  /  Centro de control operativo"
+    },
+    "clicked": {
+      "visible": 1,
+      "index": 2,
+      "clipped": {
+        "left": 23.40625,
+        "right": 23.40625,
+        "top": 7.3515625,
+        "bottom": 7.3515625
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "03  /  Vista de pagos y riesgo"
+    },
+    "errors": []
+  },
+  {
+    "lang": "en",
+    "width": 430,
+    "first": {
+      "visible": 1,
+      "index": 0,
+      "clipped": {
+        "left": 25.8046875,
+        "right": 25.8046875,
+        "top": 8.1328125,
+        "bottom": 8.1328125
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "01  /  Operations Control Center"
+    },
+    "clicked": {
+      "visible": 1,
+      "index": 2,
+      "clipped": {
+        "left": 25.8046875,
+        "right": 25.8046875,
+        "top": 8.1328125,
+        "bottom": 8.1328125
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "03  /  Payments and Risk Overview"
+    },
+    "errors": []
+  },
+  {
+    "lang": "es",
+    "width": 430,
+    "first": {
+      "visible": 1,
+      "index": 0,
+      "clipped": {
+        "left": 25.8046875,
+        "right": 25.8046875,
+        "top": 8.1328125,
+        "bottom": 8.1328125
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "01  /  Centro de control operativo"
+    },
+    "clicked": {
+      "visible": 1,
+      "index": 2,
+      "clipped": {
+        "left": 25.8046875,
+        "right": 25.8046875,
+        "top": 8.1328125,
+        "bottom": 8.1328125
+      },
+      "overflow": 0,
+      "laptop": "block",
+      "expanded": false,
+      "header": "03  /  Vista de pagos y riesgo"
+    },
+    "errors": []
+  }
+]

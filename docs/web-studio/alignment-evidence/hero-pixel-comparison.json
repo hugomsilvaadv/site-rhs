@@ -1,0 +1,30 @@
+[
+  {
+    "width": 390,
+    "size": [
+      390,
+      808
+    ],
+    "difference_bbox": [
+      0,
+      807,
+      390,
+      808
+    ],
+    "core_identical_excluding_last_raster_row": true
+  },
+  {
+    "width": 1440,
+    "size": [
+      1440,
+      979
+    ],
+    "difference_bbox": [
+      0,
+      978,
+      1440,
+      979
+    ],
+    "core_identical_excluding_last_raster_row": true
+  }
+]

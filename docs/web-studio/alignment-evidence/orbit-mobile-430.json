@@ -1,0 +1,26 @@
+{
+  "width": 430,
+  "mode": "Chromium Pixel 7 emulation; concurrent pages, not a physical device",
+  "seconds": 68.10020000000112,
+  "cycles": 2.00821239506354,
+  "samples": 673,
+  "fronts": [
+    0,
+    1,
+    2,
+    0,
+    1,
+    2,
+    0
+  ],
+  "minimum": {
+    "left": 16.51485824584961,
+    "right": 16.505294799804688,
+    "top": 52.50762939453125,
+    "bottom": 28.0147705078125,
+    "opacity": 0.75
+  },
+  "allTransformTransitionsDisabled": true,
+  "frameIntervalMedian": 50,
+  "frameIntervalP95": 166.6999999999971
+}

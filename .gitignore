@@ -2,3 +2,5 @@
 node_modules/
 .superpowers/
 public/
+
+__pycache__/

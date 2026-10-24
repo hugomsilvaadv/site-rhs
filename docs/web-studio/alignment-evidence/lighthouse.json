@@ -1,0 +1,17 @@
+{
+  "mode": "Local staged public output; mobile simulated throttling, Python server without gzip/cache headers; not field CWV",
+  "scores": {
+    "performance": 66,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "first-contentful-paint": "1.8\u00a0s",
+    "largest-contentful-paint": "4.7\u00a0s",
+    "total-blocking-time": "610\u00a0ms",
+    "cumulative-layout-shift": "0",
+    "speed-index": "2.9\u00a0s"
+  },
+  "failed_accessibility": []
+}

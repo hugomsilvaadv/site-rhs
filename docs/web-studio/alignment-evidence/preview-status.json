@@ -1,0 +1,13 @@
+{
+  "state": "PREVIEW_GENERATED_LOCAL_AUDIT_PASS_FINAL_APPROVAL_PENDING",
+  "branch": "feature/rhs-site-sector-by-sector-alignment",
+  "implementation_commit": "b3dfd56c881a5e1c097ce11a98ffdf111ccd5383",
+  "pr": "https://github.com/hugomsilvaadv/site-rhs/pull/3",
+  "preview": "https://site-rhs-git-feature-rhs-site-sector-b-3e513d-drhugomsilva-4234.vercel.app",
+  "vercel_status": "success",
+  "dashboard": "https://vercel.com/drhugomsilva-4234/site-rhs/3yGYhQc7wqxPFVXuzPGXfwezjDYk",
+  "remote_smoke": "blocked: CONNECT 403 Forbidden from cloud proxy",
+  "network_rule_saved": true,
+  "production_main_unchanged": "2e4312cc1aa1df5ef6fdc549ace6b33c22e062be",
+  "production_merged_this_round": false
+}

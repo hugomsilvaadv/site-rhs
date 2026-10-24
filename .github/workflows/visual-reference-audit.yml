@@ -1,0 +1,115 @@
+name: RHS visual reference audit (preview only)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/rhs-site-sector-by-sector-alignment
+    paths:
+      - '.github/workflows/visual-reference-audit.yml'
+      - 'index.html'
+      - 'es/index.html'
+      - 'site.css'
+      - 'site.js'
+      - 'assets/visual-fidelity.css'
+      - 'assets/visual-fidelity.js'
+      - 'assets/hero-v6.css'
+      - 'assets/hero-v6.js'
+      - 'tools/sections.py'
+      - 'tools/render.py'
+      - 'tests/mobile-showcase.cjs'
+      - 'tests/mobile-orbit.cjs'
+
+concurrency:
+  group: rhs-visual-reference-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/rhs-site-sector-by-sector-alignment
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser test dependencies
+        run: |
+          npm install --no-save --no-package-lock playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Generate EN and ES pages and run website
+        run: |
+          python tools/render.py
+          git diff --exit-code -- index.html es/index.html
+          python -m http.server 8000 --bind 127.0.0.1 >/tmp/rhs-audit-server.log 2>&1 &
+      - name: Capture comparison screenshots and layout metrics
+        run: |
+          node <<'JS'
+          const {chromium,devices}=require('playwright');
+          const fs=require('fs');
+          const out='docs/web-studio/visual-qa-current';
+          fs.mkdirSync(out,{recursive:true});
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const reports=[];
+            for(const [lang,url] of [['en','/'],['es','/es/']]){
+              for(const width of [320,375,390,430,1440]){
+                const page=await browser.newPage({viewport:{width,height:1000},deviceScaleFactor:1,reducedMotion:'reduce'});
+                const errors=[];
+                page.on('pageerror',e=>errors.push(e.message));
+                page.on('response',r=>{if(r.status()>=400)errors.push(String(r.status())+' '+r.url())});
+                await page.goto('http://127.0.0.1:8000'+url,{waitUntil:'networkidle'});
+                await page.evaluate(()=>document.fonts.ready);
+                const data=await page.evaluate(()=>{
+                  const selector=(id)=>{const el=document.querySelector(id);if(!el)return null;const r=el.getBoundingClientRect();return {x:+r.x.toFixed(1),y:+r.y.toFixed(1),w:+r.width.toFixed(1),h:+r.height.toFixed(1)}};
+                  const sizes={};
+                  for(const id of ['platform','modules','intelligence','payments','how','security','company','contact'])sizes[id]=selector('#'+id);
+                  const bars=[...document.querySelectorAll('#payments .rhs-bars [data-series]')].map(g=>({type:g.dataset.series,rects:[...g.querySelectorAll('rect')].map(r=>({x:+r.getAttribute('x'),width:+r.getAttribute('width'),height:+r.getAttribute('height')}))}));
+                  const nodes=document.querySelectorAll('#intelligence .rhs-graph-account').length;
+                  const decor=document.querySelectorAll('#intelligence .rhs-network-dot').length;
+                  const wrap=document.documentElement.scrollWidth;
+                  const offenders= [...document.querySelectorAll('body *')].map(el=>({el,r:el.getBoundingClientRect()})).filter(({r})=>r.width>0&&r.right>innerWidth+0.5).slice(0,20).map(({el,r})=>({tag:el.tagName,class:String(el.getAttribute('class')||'').slice(0,85),right:+r.right.toFixed(1),width:+r.width.toFixed(1)}));
+                  const css=Object.fromEntries(['.rhs-chart-panel','.rhs-queue','.rhs-notebook-screen','.rhs-network-visual'].map(s=>[s,getComputedStyle(document.querySelector(s)).backgroundColor]));
+                  return {sizes,bars,nodes,decor,wrap,css,offenders};
+                });
+                if(width===1440)for(const id of ['platform','modules','intelligence','payments','how','security','company','contact']){
+                  await page.locator('#'+id).screenshot({path:out+'/'+lang+'-'+id+'-1440.png'});
+                }
+                if([390,430].includes(width))for(const id of ['platform','intelligence','payments']){
+                  await page.locator('#'+id).screenshot({path:out+'/'+lang+'-'+id+'-'+width+'.png'});
+                }
+                reports.push({lang,width,errors,...data});
+                await page.close();
+              }
+            }
+            fs.writeFileSync(out+'/metrics.json',JSON.stringify(reports,null,2));
+            await browser.close();
+            if(reports.some(r=>r.errors.length||r.wrap>r.width))process.exitCode=1;
+            console.log('Captured',reports.length,'cases; browser errors:',reports.flatMap(r=>r.errors)); console.log('Horizontal overflow:',reports.filter(r=>r.wrap>r.width).map(r=>({lang:r.lang,width:r.width,scroll:r.wrap,offenders:r.offenders})));
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+      - name: Verify mobile hero and laptop behavior
+        run: node tests/mobile-showcase.cjs
+      - name: Commit visual audit evidence to feature branch
+        if: always()
+        run: |
+          if [ -d docs/web-studio/visual-qa-current ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add docs/web-studio/visual-qa-current/
+            if ! git diff --cached --quiet; then
+              git commit -m "test: capture reference-comparison audit evidence"
+              git fetch origin feature/rhs-site-sector-by-sector-alignment
+              git rebase origin/feature/rhs-site-sector-by-sector-alignment
+              git push origin HEAD:feature/rhs-site-sector-by-sector-alignment
+            fi
+          fi

@@ -1,0 +1,106 @@
+[
+  {
+    "width": 320,
+    "mode": "Chromium Pixel 7 emulation; concurrent pages, not a physical device",
+    "seconds": 68.90040000000037,
+    "cycles": 2.009867606471696,
+    "samples": 681,
+    "fronts": [
+      0,
+      1,
+      2,
+      0,
+      1,
+      2,
+      0
+    ],
+    "minimum": {
+      "left": 17.014137268066406,
+      "right": 17.02227020263672,
+      "top": 44.627716064453125,
+      "bottom": 16.22314453125,
+      "opacity": 0.75
+    },
+    "allTransformTransitionsDisabled": true,
+    "frameIntervalMedian": 50,
+    "frameIntervalP95": 166.70000000000437
+  },
+  {
+    "width": 375,
+    "mode": "Chromium Pixel 7 emulation; concurrent pages, not a physical device",
+    "seconds": 67.90029999999888,
+    "cycles": 2.009151409227782,
+    "samples": 677,
+    "fronts": [
+      0,
+      1,
+      2,
+      0,
+      1,
+      2,
+      0
+    ],
+    "minimum": {
+      "left": 17.015499114990234,
+      "right": 17.003997802734375,
+      "top": 48.642852783203125,
+      "bottom": 22.18109130859375,
+      "opacity": 0.75
+    },
+    "allTransformTransitionsDisabled": true,
+    "frameIntervalMedian": 50,
+    "frameIntervalP95": 166.70000000000073
+  },
+  {
+    "width": 390,
+    "mode": "Chromium Pixel 7 emulation; concurrent pages, not a physical device",
+    "seconds": 67.30959999999963,
+    "cycles": 2.0089285923074525,
+    "samples": 671,
+    "fronts": [
+      0,
+      1,
+      2,
+      0,
+      1,
+      2,
+      0
+    ],
+    "minimum": {
+      "left": 16.776958465576172,
+      "right": 16.74449920654297,
+      "top": 49.695281982421875,
+      "bottom": 23.795166015625,
+      "opacity": 0.75
+    },
+    "allTransformTransitionsDisabled": true,
+    "frameIntervalMedian": 50,
+    "frameIntervalP95": 166.59999999999854
+  },
+  {
+    "width": 430,
+    "mode": "Chromium Pixel 7 emulation; concurrent pages, not a physical device",
+    "seconds": 68.10020000000112,
+    "cycles": 2.00821239506354,
+    "samples": 673,
+    "fronts": [
+      0,
+      1,
+      2,
+      0,
+      1,
+      2,
+      0
+    ],
+    "minimum": {
+      "left": 16.51485824584961,
+      "right": 16.505294799804688,
+      "top": 52.50762939453125,
+      "bottom": 28.0147705078125,
+      "opacity": 0.75
+    },
+    "allTransformTransitionsDisabled": true,
+    "frameIntervalMedian": 50,
+    "frameIntervalP95": 166.6999999999971
+  }
+]
