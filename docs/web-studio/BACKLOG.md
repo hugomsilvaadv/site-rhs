@@ -20,5 +20,6 @@
 - [x] HERO preservado e otimização técnica de leituras de dimensões; regressão visual/geometria e resize verificados.
 - [x] sales@rhs-labs.com e canônico rhs-labs.com na saída pública.
 - [x] QA independente em 18 combinações; controles, pausa, teclado e reduced-motion.
-- [ ] Preview Vercel desta branch e smoke externo.
+- [x] Preview Vercel desta branch e PR #3 gerados com status SUCCESS.
+- [ ] Smoke externo do novo preview: proxy CONNECT 403; regra exata salva, aplicação efetiva pendente.
 - [ ] Aprovação final do proprietário; produção fora desta rodada até decisão posterior.

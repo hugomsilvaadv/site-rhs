@@ -32,4 +32,17 @@ O conflito CSS/RAF suspeito não se reproduziu: as três telas já computavam tr
 ## Limitações
 Mailbox de vendas não verificada; nenhum email enviado. Safari/iPhone e Chrome Android físicos não disponíveis; Chromium/Pixel 7 emulado, sem alegar teste físico. WebKit e Firefox não instalados. Não há backend de demonstração ou ações financeiras reais.
 
-Preview/PR e resultado de smoke externo serão registrados após geração pela Vercel. Estado nesta revisão: IMPLEMENTADO / VALIDADO LOCALMENTE / AGUARDANDO PREVIEW E APROVAÇÃO FINAL.
+## Preview gerado — aprovação final pendente
+- PR: https://github.com/hugomsilvaadv/site-rhs/pull/3
+- Preview: https://site-rhs-git-feature-rhs-site-sector-b-3e513d-drhugomsilva-4234.vercel.app
+- Commit da implementação: b3dfd56c881a5e1c097ce11a98ffdf111ccd5383; Vercel status SUCCESS, deployment 3yGYhQc7wqxPFVXuzPGXfwezjDYk.
+- Smoke externo: CONNECT 403 Forbidden do proxy. Regra exata salva no rascunho de rede; retry continua negado. Isso não prova falha da aplicação nem substitui validação externa.
+- Instruções de inicialização do ambiente atualizadas para não herdar publicação automática da missão anterior. Para liberar o smoke, revisar/salvar a regra e publicar a configuração do ambiente; não é uma publicação do site.
+- main conferida inalterada em 2e4312cc1aa1df5ef6fdc549ace6b33c22e062be. Nenhum merge ou deploy de produção nesta rodada.
+
+## Desempenho medido, com limites
+- Observação isolada de 6 s, Chromium Pixel 7 emulado a 390: 355 frames, mediana 16.7 ms, p95 16.8 ms; um intervalo acima de 50 ms. Não equivale a iPhone/Android físico.
+- Observações concorrentes de duas voltas em quatro larguras tiveram mediana de 50 ms sob carga; usadas para continuidade/limites, não para alegar 60fps universal.
+- Lighthouse local mobile: performance 66, acessibilidade 100, boas práticas 100, SEO 100, CLS 0, LCP 4.7 s, TBT 610 ms. Servidor Python sem gzip/cache; não são Core Web Vitals de produção. O HERO visual aprovado foi preservado; performance segue como limitação registrada.
+
+Estado: **IMPLEMENTADO / AUDITORIA LOCAL PASS / PREVIEW GERADO / SMOKE EXTERNO PENDENTE POR REDE / APROVAÇÃO FINAL PENDENTE**.

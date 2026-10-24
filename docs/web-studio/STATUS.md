@@ -39,3 +39,5 @@ Registros de status e planejamento foram atualizados após a publicação, sem a
 ## Nova rodada — alinhamento setor por setor
 
 A missão anterior foi publicada e permanece como baseline de produção. A nova missão utiliza `feature/rhs-site-sector-by-sector-alignment` e termina em preview para aprovação final, sem merge automático. Consulte `ALIGNMENT_STATUS.md`, `SECTOR_ALIGNMENT_PLAN.md` e `alignment-evidence/` para o estado desta rodada. O canônico configurado no novo preview será `https://rhs-labs.com`, conforme instrução explícita; o contato principal será `sales@rhs-labs.com`.
+
+Preview da rodada: https://site-rhs-git-feature-rhs-site-sector-b-3e513d-drhugomsilva-4234.vercel.app (Vercel SUCCESS no commit b3dfd56); PR #3. Auditoria local independente PASS. Smoke externo bloqueado por CONNECT 403; regra salva no rascunho. Produção permanece em 2e4312c e aprovação final deste refinamento está pendente.
