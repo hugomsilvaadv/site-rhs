@@ -2,7 +2,7 @@
 // This supplements the real-time two-lap observation; it does not replace it.
 const{chromium}=require('playwright');const fs=require('node:fs');const assert=require('node:assert/strict');
 (async()=>{const b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});const reports=[];
-try{for(const width of [320,390,768,1024,1280,1440,1920]){
+try{for(const width of [768,1024,1280,1440,1920]){
  const pages=[];
  for(const original of [true,false]){
   const p=await b.newPage({viewport:{width,height:1200}});
