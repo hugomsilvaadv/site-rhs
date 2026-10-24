@@ -81,8 +81,11 @@
    [label,value].forEach(v => { const span = document.createElement('span'); span.textContent = v; div.append(span); }); return div;
   }));
  }
+ // The approved visual uses a stable Player 360 preview; tabs still work manually.
+ const autoplayWorkspace = false;
  function schedule() {
   clearTimeout(timer);
+  if (!autoplayWorkspace) return;
   if (paused || hovered || document.hidden || reduced.matches || app.contains(document.activeElement)) return;
   timer = setTimeout(() => { render((index + 1) % tabs.length); schedule(); }, 6500);
  }
