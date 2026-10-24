@@ -60,8 +60,9 @@ jobs:
                   const nodes=document.querySelectorAll('#intelligence .rhs-graph-account').length;
                   const decor=document.querySelectorAll('#intelligence .rhs-network-dot').length;
                   const wrap=document.documentElement.scrollWidth;
+                  const offenders= [...document.querySelectorAll('body *')].map(el=>({el,r:el.getBoundingClientRect()})).filter(({r})=>r.width>0&&r.right>innerWidth+0.5).slice(0,20).map(({el,r})=>({tag:el.tagName,class:String(el.getAttribute('class')||'').slice(0,85),right:+r.right.toFixed(1),width:+r.width.toFixed(1)}));
                   const css=Object.fromEntries(['.rhs-chart-panel','.rhs-queue','.rhs-notebook-screen','.rhs-network-visual'].map(s=>[s,getComputedStyle(document.querySelector(s)).backgroundColor]));
-                  return {sizes,bars,nodes,decor,wrap,css};
+                  return {sizes,bars,nodes,decor,wrap,css,offenders};
                 });
                 if(width===1440)for(const id of ['platform','modules','intelligence','payments','how','security','company','contact']){
                   await page.locator('#'+id).screenshot({path:out+'/'+lang+'-'+id+'-1440.png'});
@@ -76,7 +77,7 @@ jobs:
             fs.writeFileSync(out+'/metrics.json',JSON.stringify(reports,null,2));
             await browser.close();
             if(reports.some(r=>r.errors.length||r.wrap>r.width))process.exitCode=1;
-            console.log('Captured',reports.length,'cases; browser errors:',reports.flatMap(r=>r.errors));
+            console.log('Captured',reports.length,'cases; browser errors:',reports.flatMap(r=>r.errors)); console.log('Horizontal overflow:',reports.filter(r=>r.wrap>r.width).map(r=>({lang:r.lang,width:r.width,scroll:r.wrap,offenders:r.offenders})));
           })().catch(e=>{console.error(e);process.exit(1)});
           JS
       - name: Commit visual audit evidence to feature branch
