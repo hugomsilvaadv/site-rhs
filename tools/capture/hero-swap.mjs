@@ -1,34 +1,41 @@
-// Deliberate hero swap: replaces the three concept dashboards of the 3D orbit with approved product
-// captures (front: Player 360 summary; then the withdrawals queue and reports), updates the integrity
-// manifest on purpose and switches the hero badge to product UI. Run only after every hero capture
-// was reviewed and approved (screens.mjs --approve), then record the change in DECISIONS.md.
-//   node tools/capture/hero-swap.mjs [--check]
+// The hero swap point. Until it runs, the 3D orbit keeps the three approved concept dashboards. When the
+// real captures exist (not placeholders) and their clean hero copies were made by screens.mjs
+// (assets/hero/<name>.webp, 1586×992), this script rewrites the integrity manifest on purpose and turns the
+// swap on (tools/capture/hero.json); the generator then uses them, front panel first, with the
+// "PRODUCT UI · SYNTHETIC DATA" badge under the orbit.
+//   node tools/capture/hero-swap.mjs --check     what is missing, changes nothing
+//   node tools/capture/hero-swap.mjs             swap (then: python3 tools/render.py, the tests, a DECISIONS entry)
 import { readFile, writeFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { sha256, webpSize } from './lib.mjs';
-import { HERO } from './screens.config.mjs';
+import { sha256, webpSize, siteRoot } from './lib.mjs';
+import { HERO, PRODUCT_DIR, HERO_DIR } from './screens.config.mjs';
 
 export const HERO_ORDER = ['player-360-summary', 'withdrawals-queue', 'reports'];
-const here = path.dirname(fileURLToPath(import.meta.url));
-const root = process.env.SITE_ROOT ? path.resolve(process.env.SITE_ROOT) : path.resolve(here, '../..');
-const manifestPath = path.join(root, 'tools/capture/manifest.json');
+const root = process.env.SITE_ROOT ? path.resolve(process.env.SITE_ROOT) : siteRoot;
+const registryPath = path.join(root, 'tools/capture/placeholders.json');
 const integrityPath = path.join(root, 'docs/web-studio/evidence/asset-integrity.json');
+const statePath = path.join(root, 'tools/capture/hero.json');
 
-const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-const entries = [];
+const placeholders = existsSync(registryPath) ? JSON.parse(await readFile(registryPath, 'utf8')).files : {};
+const problems = [], entries = [];
 for (const name of HERO_ORDER) {
-  const screen = manifest.screens?.[name];
-  assert.ok(screen?.approved, `hero screen not approved yet: ${name}`);
-  assert.ok(screen.hero, `hero copy missing for ${name}: capture it again`);
-  const buffer = await readFile(path.join(root, screen.hero.path));
-  assert.equal(sha256(buffer), screen.hero.sha256, `file changed after approval: ${screen.hero.path}`);
-  assert.deepEqual(webpSize(buffer), { width: HERO.width, height: HERO.height }, `${screen.hero.path} must be ${HERO.width}×${HERO.height}`);
-  entries.push({ file: screen.hero.path, sha256: screen.hero.sha256, bytes: buffer.length });
+  const capture = `${PRODUCT_DIR}/${name}.webp`, copy = `${HERO_DIR}/${name}.webp`;
+  if (!existsSync(path.join(root, capture))) problems.push(`${capture} is missing`);
+  else if (placeholders[capture] === sha256(await readFile(path.join(root, capture)))) problems.push(`${capture} is still the placeholder`);
+  if (!existsSync(path.join(root, copy))) { problems.push(`${copy} is missing (made by screens.mjs with the capture)`); continue; }
+  const buffer = await readFile(path.join(root, copy));
+  const size = webpSize(buffer);
+  if (size.width !== HERO.width || size.height !== HERO.height) problems.push(`${copy} is ${size.width}×${size.height}, not ${HERO.width}×${HERO.height}`);
+  entries.push({ file: copy, sha256: sha256(buffer), bytes: buffer.length });
 }
-if (process.argv.includes('--check')) { console.log('Hero swap ready: ' + entries.map(e => e.file).join(', ')); process.exit(0); }
+if (problems.length) {
+  console.error('Hero swap not ready:\n- ' + problems.join('\n- '));
+  process.exit(process.argv.includes('--check') ? 0 : 1);
+}
+if (process.argv.includes('--check')) { console.log('Hero swap ready: ' + entries.map(entry => entry.file).join(', ')); process.exit(0); }
+assert.equal(entries.length, 3);
 await writeFile(integrityPath, JSON.stringify(entries, null, 2) + '\n');
-manifest.hero = { active: true, screens: HERO_ORDER, swappedAt: new Date().toISOString() };
-await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-console.log('Hero now uses product captures; integrity manifest updated on purpose. Next: python3 tools/render.py, the test suite, and a DECISIONS.md entry.');
+await writeFile(statePath, JSON.stringify({ active: true, screens: HERO_ORDER, swappedAt: new Date().toISOString() }, null, 2) + '\n');
+console.log('Hero swap on; integrity manifest rewritten on purpose. Next: python3 tools/render.py (on Windows: py tools/render.py), node tools/og/og.mjs, the tests, and a DECISIONS.md entry.');

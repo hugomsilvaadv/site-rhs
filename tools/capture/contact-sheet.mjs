@@ -13,12 +13,12 @@ const kb = bytes => (bytes / 1024).toFixed(0) + ' KB';
 
 export function contactSheetHtml(manifest, { imageBase }) {
   const cards = Object.entries(manifest.screens ?? {}).map(([name, screen]) => {
-    const preview = screen.files?.[0];
-    const files = (screen.files ?? []).map(file => `${file.width}×${file.height} · ${kb(file.bytes)} · q${Math.round(file.quality * 100)}${file.overBudget ? ' · <b class="warn">over budget</b>' : ''}`).join('<br>');
+    const preview = screen.file;
+    const files = [screen.file, screen.hero].filter(Boolean).map(file => `${file.path.split('/').pop()} ${file.width}×${file.height} · ${kb(file.bytes)} · q${Math.round(file.quality * 100)}${file.overBudget ? ' · <b class="warn">over budget</b>' : ''}`).join('<br>');
     const warnings = [...(screen.warnings ?? [])].map(warning => `<li>${escape(warning)}</li>`).join('');
-    return `<figure class="${screen.approved ? 'ok' : 'pending'}">
-<div class="thumb">${preview ? `<img src="${escape(imageBase + preview.path)}" alt="">` : '<span>missing</span>'}</div>
-<figcaption><b>${escape(name)}</b> <span class="state">${screen.approved ? 'approved' : 'review pending'}</span>
+    return `<figure class="${screen.failed ? 'pending' : 'ok'}">
+<div class="thumb">${preview ? `<img src="${escape(imageBase + preview.path)}" alt="">` : '<span>not captured: placeholder kept</span>'}</div>
+<figcaption><b>${escape(name)}</b> <span class="state">${screen.failed ? 'failed' : 'captured, review'}</span>
 <small>${escape(screen.route)} · ${escape(screen.viewport?.join('×'))} @${escape(screen.scale)}x</small><small>${files}</small>${screen.review ? `<p class="review">Check: ${escape(screen.review)}</p>` : ''}${screen.failed ? `<ul><li>${escape(screen.failed)}</li></ul>` : ''}${warnings ? `<ul>${warnings}</ul>` : ''}</figcaption></figure>`;
   }).join('\n');
   const source = manifest.source ?? {};
