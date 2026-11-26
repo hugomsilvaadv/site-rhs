@@ -1,45 +1,58 @@
-# Captura das telas reais do back-office
+# Capturas do back-office para o site
 
-Ferramenta que fotografa o back-office real (o checkout ao lado do site) para o site: modo mock, dados sintéticos, inglês, tema escuro, perfil de flags `homologacao`. Nada é publicado sem revisão: cada imagem nasce "review pending" e só entra no site depois de aprovada.
+O script fotografa o back-office real em modo mock (dados sintéticos, inglês, tema escuro) e grava cada tela em `assets/product/<nome>.webp`, por cima do placeholder de mesmo nome e tamanho. A página já aponta para esses arquivos: **a troca é substituir o arquivo**.
 
-Estado em 2026-11-26: a ferramenta está pronta e testada contra o próprio site (`--self-test`), mas **nunca rodou contra o back-office**. O `npm ci` do back-office precisa do pacote privado do design system (GitHub Packages), e esta sessão não tinha o token `read:packages`. Seletores, ids e cortes saíram do código-fonte e precisam ser confirmados na primeira captura.
+## No notebook (Windows, PowerShell)
 
-## Pré-requisitos
+Pré-requisitos: `rhs-pam-backoffice` e `site-rhs` na mesma pasta, o back-office com as dependências instaladas (como já está), Node 24. O Playwright vem do próprio back-office; o navegador pode ser o Edge ou o Chrome instalados.
 
-- Back-office ao lado do site, em `../rhs-pam-backoffice` (ou `BACKOFFICE_DIR`), com `npm ci` feito. O token vai como segredo de rede para `npm.pkg.github.com` no ambiente da nuvem, ou como `NODE_AUTH_TOKEN` no ambiente; nunca em arquivo ou no chat.
-- Playwright e Chromium do ambiente (a nuvem já tem os dois; não rode `playwright install`).
+**1. Back-office em modo mock** (janela 1):
 
-## Passo a passo
+```powershell
+cd C:\caminho\rhs-pam-backoffice
+$env:APP_KIND = "backoffice"; $env:APP_URL = "http://127.0.0.1:3000"
+$env:API_MODE = "mock"; $env:AUTH_PROVIDER = "fake"; $env:FEATURE_FLAG_PROFILE = "homologacao"; $env:I18N_DEFAULT_LOCALE = "en"
+$env:SESSION_SECRETS = node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"
+npx next dev -H 127.0.0.1 -p 3000
+```
 
-1. Suba o back-office em modo de desenvolvimento, só local. `next build` recusa o login falso e o mock:
-   ```bash
-   cd ../rhs-pam-backoffice
-   APP_KIND=backoffice APP_URL=http://127.0.0.1:3000 AUTH_PROVIDER=fake API_MODE=mock FEATURE_FLAG_PROFILE=homologacao \
-   SESSION_SECRETS="$(node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))")" npm run dev -- -H 127.0.0.1
-   ```
-   A primeira visita de cada rota compila e pode levar minutos; o script espera até 300 s.
-2. Confira o plano: `node tools/capture/screens.mjs --dry-run`. Toda rota tem de ser uma tela do menu (`src/config/navigation.ts`).
-3. Capture: `BACKOFFICE_URL=http://127.0.0.1:3000 node tools/capture/screens.mjs`, ou só algumas telas com `--only player-360-summary,reports`. O script entra pelo login falso como `admin` e nunca fotografa `/auth/fake`. Ele não confirma, salva, aprova nem revela nada.
-4. Revise **cada** imagem: abra `tools/capture/contact-sheet.png` (ou o `.html`) e os arquivos de `assets/product/`. A folha mostra, por tela, o que conferir, o que foi escondido e os avisos.
-5. Aprove o que passou: `node tools/capture/screens.mjs --approve player-360-summary,withdrawals-queue,…`. A aprovação confere o SHA-256 do arquivo revisado.
-6. Gere o site: `python3 tools/render.py` e `node tools/stage.mjs`. Só as capturas aprovadas aparecem; o resto continua com a lista de telas.
-7. Troca do hero (de propósito, depois de aprovar `player-360-summary`, `withdrawals-queue` e `reports`): `node tools/capture/hero-swap.mjs --check` e, se der certo, sem `--check`. O manifesto de integridade é reescrito e o selo do hero passa a "PRODUCT UI · SYNTHETIC DATA". Registre a troca em `docs/web-studio/DECISIONS.md`.
-8. Rode os testes do README (inclusive `tests/integrity.cjs` e `tests/product-images.cjs`).
+O script entra pelo login falso como `admin` e escolhe o inglês e o tema escuro por cookie. Se o Turbopack falhar nas junções, use `npx next dev --webpack -H 127.0.0.1 -p 3000`.
 
-## Regras que o script aplica
+**2. Captura** (janela 2):
 
-- Só `localhost`/`127.0.0.1`: nunca um back-office compartilhado ou de produção.
-- Corta a primeira linha do cabeçalho (marca do back-office, busca, selos de fuso e de mock) e, no celular, também a linha da busca. Assim ficam de fora o placeholder que cita o documento nacional e o selo "BRT". A tela `global-search` mantém o cabeçalho.
-- Esconde, sem reescrever, linhas com sinais fora do escopo do site (multicontas, dispositivo, IP, vínculos, a linha "Links", a pontuação do motor) e menções a produtos internos. Cada ocultação fica registrada na folha de contato.
-- Recusa a imagem se aparecer e-mail, documento nacional, token, credencial ou endereço interno na área fotografada.
-- Esconde a sobreposição de desenvolvimento do Next e os toasts; sem cursor, sem animação.
+```powershell
+cd C:\caminho\site-rhs
+$env:CAPTURE_CHANNEL = "msedge"
+node tools/capture/screens.mjs --dry-run
+node tools/capture/screens.mjs
+```
 
-## Riscos conhecidos por tela (do código, a confirmar)
+O `--dry-run` confere se cada rota é uma tela do menu do back-office e diz quais arquivos ainda são placeholder. A primeira visita de cada tela compila e pode levar minutos. Para refazer só algumas: `node tools/capture/screens.mjs --only reports,alerts`. Se o back-office estiver em outra pasta, defina `$env:BACKOFFICE_DIR`.
 
-O mock reproduz a jurisdição de um único país: moeda, meio de pagamento instantâneo, documentos nacionais, fuso horário e lei de privacidade locais aparecem em várias telas, e há textos sintéticos em português. O site é internacional (EN/ES), então isso está em "Decisões a confirmar com os sócios": aceitar, recortar ou pedir um mock neutro ao back-office.
+**3. Revise** `tools/capture/contact-sheet.png` e cada imagem em `assets/product/`. Uma tela que falhar mantém o placeholder.
 
-- `reconciliation`, `data-requests`, `jurisdiction`, `kyc`: nomeiam na própria tela o meio de pagamento local, a lei de privacidade, o país ou os documentos nacionais. Provavelmente ficam fora ou precisam de recorte.
-- `users`: só a aba Papéis. A aba Usuários lista nomes realistas com e-mail e nunca é fotografada.
-- `alerts` e `rules`: as linhas padrão incluem regras de multicontas, dispositivo e IP. A captura usa o filtro real `ruleCode=payee_mismatch` e esconde essas regras.
-- `player-360-summary`: o cartão de dados tem a linha "Links" (dispositivo/documento) e o resumo financeiro cita uma referência interna; os dois ficam escondidos.
-- `withdrawal-detail`: sem preparar o mock, o segundo aprovador aparece como "Not provided". O plano de captura descreve como semear a primeira aprovação, só em memória.
+**4. Commit e push** de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato. O preview da Vercel mostra as telas novas sem nenhuma outra mudança.
+
+## Hero (troca deliberada)
+
+As três imagens atuais da órbita ficam até a troca. Depois que `player-360-summary`, `withdrawals-queue` e `reports` forem capturas reais (o script já grava as cópias 1586×992 em `assets/hero/`):
+
+```powershell
+node tools/capture/hero-swap.mjs --check
+node tools/capture/hero-swap.mjs
+py tools/render.py
+node tools/og/og.mjs
+```
+
+O `hero-swap` regrava o manifesto de integridade de propósito, e o selo sob a órbita passa a "PRODUCT UI · SYNTHETIC DATA". Rode os testes do README e registre a troca em `docs/web-studio/DECISIONS.md`. Sem Python no notebook, faça esse passo numa sessão na nuvem.
+
+## O que o script garante
+
+- Só `localhost`/`127.0.0.1` e só o back-office em mock. Nunca fotografa a página do login falso. Não confirma, salva, aprova nem revela nada.
+- Corta a primeira linha do cabeçalho (marca, busca, selos de fuso e de mock). Esconde, sem reescrever, linhas fora do escopo do site (multicontas, dispositivo, IP, vínculos, pontuação do motor). Recusa a imagem se aparecer e-mail, documento, token ou endereço interno.
+- Grava na imagem o selo "PRODUCT UI · SYNTHETIC DATA" e, no Player 360, os marcadores 1–5 descritos na página.
+- `node tools/capture/placeholders.mjs` recria placeholders que faltarem, sem tocar numa captura real.
+
+## Ao revisar
+
+O mock reproduz a jurisdição de um único país (moeda, meio de pagamento, documentos, fuso e lei de privacidade locais) e tem textos sintéticos em português. Recorte ou deixe de fora o que identificar o país; as notas por tela estão na folha de contato. A aba Usuários (nomes realistas) nunca é fotografada: a tela `users` usa a aba Papéis.

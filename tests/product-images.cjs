@@ -1,76 +1,79 @@
-// The capture path, end to end, without real captures: a temporary copy of the site gets obviously fake
-// "FIXTURE" images and an approved capture manifest, is rendered and staged, and the page must then show
-// them in the tour, the Player 360 (with numbered markers), payments and the hero, each with the single
-// product badge, one image at a time on phones. Nothing is written to the checkout.
+// The image swap, end to end, without real captures.
+// 1. Every screen of the capture plan has its placeholder at the final path and size.
+// 2. In a temporary copy of the site, overwriting placeholders with other files (as the capture does) changes
+//    what the page shows with no other change: same HTML, no regeneration.
+// 3. The hero swap point: hero-swap.mjs refuses placeholders, and with capture copies it rewrites the integrity
+//    manifest and turns the swap on; after regeneration the orbit uses them with the product badge.
+// Nothing is written to the checkout.
 const { chromium } = require('playwright');
 const { spawnSync, spawn } = require('node:child_process');
 const fs = require('node:fs'); const os = require('node:os'); const path = require('node:path'); const crypto = require('node:crypto');
 const assert = require('node:assert/strict');
 const root = path.join(__dirname, '..');
 const PORT = Number(process.env.FIXTURE_PORT || 8097);
-const TOUR = ['player-360-payments', 'withdrawals-queue', 'alerts', 'segments', 'audit', 'reports', 'users'];
-const PHONE = ['player-360-summary-mobile', 'withdrawals-queue-mobile', 'alerts-mobile', 'reports-mobile'];
-const HERO = ['player-360-summary', 'withdrawals-queue', 'reports'];
+const sha = buffer => crypto.createHash('sha256').update(buffer).digest('hex');
+const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X') return [1 + b.readUIntLE(24, 3), 1 + b.readUIntLE(27, 3)]; if (c === 'VP8L') { const v = b.readUInt32LE(21); return [1 + (v & 0x3fff), 1 + ((v >> 14) & 0x3fff)]; } return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff]; };
 (async () => {
+  // 1. placeholders
+  const registry = JSON.parse(fs.readFileSync(path.join(root, 'tools/capture/placeholders.json'), 'utf8')).files;
+  const plan = Object.keys(registry);
+  assert.equal(plan.length, 30, 'one placeholder per screen of the capture plan (26 desktop, 4 phone)');
+  for (const rel of plan) {
+    const buffer = fs.readFileSync(path.join(root, rel));
+    assert.deepEqual(webpSize(buffer), rel.endsWith('-mobile.webp') ? [780, 1688] : [3200, 2000], rel + ' size');
+    assert.equal(sha(buffer), registry[rel], rel + ' is the registered placeholder');
+  }
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rhs-product-images-'));
   let server; const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', args: ['--no-sandbox'] });
   try {
-    for (const name of ['tools', 'assets', 'es', 'index.html', 'site.css', 'site.js', 'robots.txt', 'site.config.json']) fs.cpSync(path.join(root, name), path.join(dir, name), { recursive: true });
-    fs.rmSync(path.join(dir, 'tools/capture/manifest.json'), { force: true });
-    fs.mkdirSync(path.join(dir, 'assets/product'), { recursive: true }); fs.mkdirSync(path.join(dir, 'assets/hero'), { recursive: true });
+    for (const name of ['tools', 'tests', 'assets', 'docs/web-studio/evidence', 'es', 'index.html', 'site.css', 'site.js', 'robots.txt', 'site.config.json']) fs.cpSync(path.join(root, name), path.join(dir, name), { recursive: true });
     const painter = await browser.newPage();
-    const paint = (width, height, label) => painter.evaluate(async ({ width, height, label }) => {
+    const fixture = async (width, height, label) => Buffer.from(await painter.evaluate(async ({ width, height, label }) => {
       const c = document.createElement('canvas'); c.width = width; c.height = height; const x = c.getContext('2d');
-      x.fillStyle = '#0b2131'; x.fillRect(0, 0, width, height); x.strokeStyle = '#2ddaca'; x.lineWidth = 6; x.strokeRect(3, 3, width - 6, height - 6);
-      x.fillStyle = '#e8f6f7'; x.font = `bold ${Math.round(width / 22)}px sans-serif`; x.textAlign = 'center'; x.fillText('FIXTURE ' + label, width / 2, height / 2);
+      x.fillStyle = '#123a2c'; x.fillRect(0, 0, width, height); x.fillStyle = '#ffffff'; x.font = `bold ${Math.round(width / 20)}px sans-serif`; x.textAlign = 'center'; x.fillText('FIXTURE ' + label, width / 2, height / 2);
       const blob = await new Promise(r => c.toBlob(r, 'image/webp', 0.8)); const b = new Uint8Array(await blob.arrayBuffer());
       let s = ''; for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(s);
-    }, { width, height, label });
-    const write = async (rel, width, height, label) => { const buf = Buffer.from(await paint(width, height, label), 'base64'); fs.writeFileSync(path.join(dir, rel), buf); return { path: rel, width, height, bytes: buf.length, quality: 0.8, overBudget: false, sha256: crypto.createHash('sha256').update(buf).digest('hex') }; };
-    const screens = {};
-    for (const name of [...new Set([...TOUR, 'player-360-summary', 'withdrawal-detail'])]) {
-      screens[name] = { route: '/fixture', viewport: [1600, 1000], scale: 2, files: [await write(`assets/product/${name}-1600.webp`, 1600, 1000, name)], warnings: [], approved: true };
-      if (HERO.includes(name)) screens[name].hero = await write(`assets/hero/${name}.webp`, 1586, 992, name);
-    }
-    for (const name of PHONE) screens[name] = { route: '/fixture', viewport: [390, 844], scale: 2, files: [await write(`assets/product/${name}-780.webp`, 780, 1688, name)], warnings: [], approved: true };
-    screens['player-360-summary'].hotspots = { identity: { x: .05, y: .08, w: .9, h: .1 }, money: { x: .05, y: .2, w: .9, h: .12 }, withdrawals: { x: .66, y: .38, w: .3, h: .2 }, alerts: { x: .66, y: .6, w: .3, h: .15 }, history: { x: .05, y: .8, w: .6, h: .15 } };
-    screens.segments.approved = false; // an unreviewed capture must never reach the page
-    fs.writeFileSync(path.join(dir, 'tools/capture/manifest.json'), JSON.stringify({ version: 1, screens, hero: { active: true } }, null, 2));
-    for (const [cmd, args] of [['python3', ['tools/render.py']], [process.execPath, ['tools/stage.mjs']]]) {
-      const run = spawnSync(cmd, args, { cwd: dir, encoding: 'utf8', env: { ...process.env, PUBLIC_SITE_ORIGIN: '' } }); assert.equal(run.status, 0, run.stderr);
-    }
+    }, { width, height, label }), 'base64');
+    const htmlBefore = ['index.html', 'es/index.html'].map(f => fs.readFileSync(path.join(dir, f), 'utf8'));
+    // 2. the capture overwrites two placeholders (desktop and phone) — nothing else changes
+    const swapped = { 'assets/product/withdrawals-queue.webp': await fixture(3200, 2000, 'withdrawals-queue'), 'assets/product/withdrawals-queue-mobile.webp': await fixture(780, 1688, 'withdrawals-queue-mobile') };
+    for (const [rel, buffer] of Object.entries(swapped)) fs.writeFileSync(path.join(dir, rel), buffer);
+    const stage = spawnSync(process.execPath, ['tools/stage.mjs'], { cwd: dir, encoding: 'utf8', env: { ...process.env, PUBLIC_SITE_ORIGIN: '' } });
+    assert.equal(stage.status, 0, stage.stderr);
+    assert.deepEqual(['index.html', 'es/index.html'].map(f => fs.readFileSync(path.join(dir, f), 'utf8')), htmlBefore, 'no page change for the swap');
     server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1', '--directory', path.join(dir, 'public')], { stdio: 'ignore' });
     for (let i = 0; i < 40; i++) { try { await (await fetch(`http://127.0.0.1:${PORT}/`)).text(); break; } catch { await new Promise(r => setTimeout(r, 150)); } }
-    for (const lang of ['en', 'es']) {
-      const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
-      const errors = []; page.on('pageerror', e => errors.push(e.message)); page.on('response', r => { if (r.status() >= 400) errors.push(r.status() + ' ' + r.url()); });
-      await page.goto(`http://127.0.0.1:${PORT}/${lang === 'es' ? 'es/' : ''}`, { waitUntil: 'networkidle' });
-      const hero = await page.evaluate(() => ({ srcs: [...document.querySelectorAll('#carousel-track img')].map(i => i.getAttribute('src')), badge: document.querySelector('.carousel-disclosure').dataset.heroImages, notice: document.querySelector('[data-notice]').dataset.notice }));
-      assert.deepEqual(hero.srcs, HERO.map(name => `/assets/hero/${name}.webp`), 'hero uses the approved captures in order');
-      assert.equal(hero.badge, 'product'); assert.equal(hero.notice, 'available product', 'footer notice for product screens only');
-      for (let i = 0; i < TOUR.length; i++) {
-        await page.locator('#platform [role="tab"]').nth(i).click();
-        const panel = await page.evaluate(() => { const p = [...document.querySelectorAll('#platform [role="tabpanel"]')].find(x => !x.hidden); const img = p.querySelector('.rhs-frame img'); return { id: p.id, img: img && img.getAttribute('src'), alt: img && img.alt, badge: p.querySelector('.rhs-frame .rhs-badge')?.textContent, list: p.querySelectorAll('.rhs-screens').length, chips: p.querySelectorAll('.rhs-screen-chips li').length }; });
-        if (TOUR[i] === 'segments') { assert.equal(panel.img, null, 'unapproved capture stays off the page'); assert.equal(panel.list, 1, 'its area keeps the screens list'); continue; }
-        assert.equal(panel.img, `/assets/product/${TOUR[i]}-1600.webp`, panel.id);
-        assert.ok(panel.alt.length > 20, 'alt text ' + panel.id); assert.match(panel.badge, /Product UI · Synthetic data|Interfaz del producto · Datos sintéticos/); assert.ok(panel.chips > 0);
-      }
-      const marks = await page.evaluate(() => [...document.querySelectorAll('#player-360 .rhs-hotspots circle')].map(c => [+c.getAttribute('cx'), +c.getAttribute('cy')]));
-      assert.equal(marks.length, 5, 'five numbered markers'); assert.ok(marks.every(([x, y]) => x > 0 && x < 1600 && y > 0 && y < 1000), 'markers inside the image');
-      assert.equal(await page.locator('#player-360 .rhs-anatomy-legend li').count(), 5, 'the five parts become the legend');
-      assert.equal(await page.locator('#payments .rhs-wide-shot img').getAttribute('src'), '/assets/product/withdrawal-detail-1600.webp');
-      await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 500) { scrollTo(0, y); await new Promise(r => setTimeout(r, 30)); } });
-      await page.waitForLoadState('networkidle');
-      assert.ok(await page.evaluate(() => [...document.images].filter(i => getComputedStyle(i).display !== 'none' && i.closest(':not([hidden])') && i.getBoundingClientRect().width > 0).every(i => i.complete && i.naturalWidth > 0)), 'visible images load');
-      assert.deepEqual(errors, [], 'no failed requests or script errors');
+    for (const [width, rel] of [[1440, 'assets/product/withdrawals-queue.webp'], [390, 'assets/product/withdrawals-queue-mobile.webp']]) {
+      const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce', ...(width < 600 ? { isMobile: true, hasTouch: true } : {}) });
+      await page.goto(`http://127.0.0.1:${PORT}/#tour-payments`, { waitUntil: 'networkidle' });
+      const img = page.locator('#tour-payments img');
+      await img.scrollIntoViewIfNeeded(); await img.evaluate(i => i.decode());
+      const src = await img.evaluate(i => i.currentSrc);
+      assert.ok(src.endsWith('/' + rel), `${width}px shows ${rel}`);
+      const served = Buffer.from(await (await fetch(src)).arrayBuffer());
+      assert.equal(sha(served), sha(swapped[rel]), `${width}px serves the new file, not the placeholder`);
       await page.close();
-      const phone = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
-      await phone.goto(`http://127.0.0.1:${PORT}/${lang === 'es' ? 'es/' : ''}#tour-payments`, { waitUntil: 'networkidle' });
-      const mobile = await phone.evaluate(() => ({ visible: [...document.querySelectorAll('#platform .rhs-frame img')].filter(i => i.getBoundingClientRect().height > 0).map(i => i.currentSrc.split('/').pop()), overflow: document.documentElement.scrollWidth - innerWidth }));
-      assert.deepEqual(mobile.visible, ['withdrawals-queue-mobile-780.webp'], 'one tour image at a time, the phone capture on phones');
-      assert.equal(mobile.overflow, 0);
-      await phone.close();
     }
-    console.log('PASS: approved captures reach the tour, Player 360 markers, payments and the hero with one product badge; unapproved ones never do; phones get one phone image at a time (EN/ES, fixtures only)');
-  } finally { server?.kill(); await browser.close(); if (process.env.KEEP_FIXTURE) console.log('fixture site kept in ' + dir); else fs.rmSync(dir, { recursive: true, force: true }); }
+    // 3. hero swap point
+    const swap = (extra = []) => spawnSync(process.execPath, ['tools/capture/hero-swap.mjs', ...extra], { cwd: dir, encoding: 'utf8', env: { ...process.env, SITE_ROOT: dir } });
+    assert.notEqual(swap().status, 0, 'hero swap refuses placeholders');
+    assert.ok(!fs.existsSync(path.join(dir, 'tools/capture/hero.json')), 'nothing changed by a refused swap');
+    fs.mkdirSync(path.join(dir, 'assets/hero'), { recursive: true });
+    for (const name of ['player-360-summary', 'withdrawals-queue', 'reports']) {
+      if (name !== 'withdrawals-queue') fs.writeFileSync(path.join(dir, `assets/product/${name}.webp`), await fixture(3200, 2000, name));
+      fs.writeFileSync(path.join(dir, `assets/hero/${name}.webp`), await fixture(1586, 992, 'hero ' + name));
+    }
+    const done = swap();
+    assert.equal(done.status, 0, done.stderr);
+    const integrity = JSON.parse(fs.readFileSync(path.join(dir, 'docs/web-studio/evidence/asset-integrity.json'), 'utf8'));
+    assert.deepEqual(integrity.map(e => e.file), ['assets/hero/player-360-summary.webp', 'assets/hero/withdrawals-queue.webp', 'assets/hero/reports.webp'], 'integrity manifest rewritten on purpose, front panel first');
+    const render = spawnSync('python3', ['tools/render.py'], { cwd: dir, encoding: 'utf8' });
+    assert.equal(render.status, 0, render.stderr);
+    const html = fs.readFileSync(path.join(dir, 'index.html'), 'utf8');
+    assert.ok(integrity.every(e => html.includes(`<img src="/${e.file}"`)), 'orbit uses the capture copies');
+    assert.match(html, /data-hero-images="product">[^<]*PRODUCT UI/, 'badge under the orbit says product UI');
+    const check = spawnSync(process.execPath, [path.join(dir, 'tests/integrity.cjs')], { encoding: 'utf8' });
+    assert.equal(check.status, 0, check.stderr);
+    console.log('PASS: 30 placeholders at the final paths; overwriting a file swaps the image with no page change (desktop and phone); hero swap refuses placeholders, rewrites the integrity manifest and turns the product badge on');
+  } finally { server?.kill(); await browser.close(); fs.rmSync(dir, { recursive: true, force: true }); }
 })().catch(e => { console.error(e); process.exitCode = 1; });
