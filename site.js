@@ -1,18 +1,21 @@
 /* Progressive enhancement for two complete, crawlable static language routes. */
 (() => {
  'use strict';
- const lang = document.documentElement.lang === 'es' ? 'es' : 'en';
+ // Published languages and their routes come from the page's hreflang links (any number of them).
+ const routes = new Map([...document.querySelectorAll('link[rel="alternate"][hreflang]')]
+  .filter(link => link.hreflang !== 'x-default').map(link => [link.hreflang, new URL(link.href, location.href).pathname]));
+ const lang = document.documentElement.lang;
  const qs = new URLSearchParams(location.search);
  const requested = qs.get('lang');
  let preferred;
  try { preferred = localStorage.getItem('rhs-language'); } catch {}
- if ((requested === 'en' || requested === 'es') && requested !== lang) {
+ if (routes.has(requested) && requested !== lang) {
   try { localStorage.setItem('rhs-language', requested); } catch {}
-  location.replace(requested === 'es' ? '/es/' + location.hash : '/' + location.hash); return;
+  location.replace(routes.get(requested) + location.hash); return;
  }
- // Explicit /es/ navigation wins over a stored preference. Root may restore Spanish.
- if (lang === 'en' && preferred === 'es' && requested !== 'en') {
-  location.replace('/es/' + location.hash); return;
+ // An explicit language route wins over a stored preference; only the root may restore another language.
+ if (routes.get(lang) === '/' && routes.has(preferred) && preferred !== lang && requested !== lang) {
+  location.replace(routes.get(preferred) + location.hash); return;
  }
  document.querySelectorAll('[data-language]').forEach(link => link.addEventListener('click', () => {
   try { localStorage.setItem('rhs-language', link.dataset.language); } catch {}
@@ -22,13 +25,13 @@
  const toggle = document.getElementById('menu-toggle');
  function closeMenu(returnFocus = false) {
   menu.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false');
-  toggle.setAttribute('aria-label', lang === 'es' ? 'Abrir navegación' : 'Open navigation');
+  toggle.setAttribute('aria-label', toggle.dataset.labelOpen);
   if (returnFocus) toggle.focus();
  }
  toggle.addEventListener('click', () => {
   const on = !menu.classList.contains('open'); menu.classList.toggle('open', on);
   toggle.setAttribute('aria-expanded', String(on));
-  toggle.setAttribute('aria-label', lang === 'es' ? (on ? 'Cerrar navegación' : 'Abrir navegación') : (on ? 'Close navigation' : 'Open navigation'));
+  toggle.setAttribute('aria-label', on ? toggle.dataset.labelClose : toggle.dataset.labelOpen);
  });
  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => closeMenu()));
  document.addEventListener('keydown', e => { if (e.key === 'Escape' && menu.classList.contains('open')) closeMenu(true); });

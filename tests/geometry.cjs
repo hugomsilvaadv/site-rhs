@@ -23,9 +23,14 @@ try{for(const width of [768,1024,1280,1440,1920]){
   });pages.push(samples);await p.close();
  }
  assert.equal(pages[0].length,pages[1].length);
+ // The orbit transform of every panel must be identical. Bounds are compared to 0.01 px: a new hero
+ // heading moves the whole track, and the subtraction of absolute positions differs in the 5th decimal.
  for(let i=0;i<pages[0].length;i++)for(let n=0;n<3;n++){
-  assert.deepEqual(pages[1][i][n],pages[0][i][n],`V6 geometry mismatch width=${width} sample=${i} panel=${n}`);
-  for(const side of ['left','right','top','bottom'])assert.ok(pages[1][i][n][side]>=-1,`clipping width=${width} ${side}`);
+  assert.equal(pages[1][i][n].style,pages[0][i][n].style,`V6 orbit transform mismatch width=${width} sample=${i} panel=${n}`);
+  for(const side of ['left','right','top','bottom']){
+   assert.ok(Math.abs(pages[1][i][n][side]-pages[0][i][n][side])<=0.01,`V6 bounds mismatch width=${width} sample=${i} panel=${n} ${side}`);
+   assert.ok(pages[1][i][n][side]>=-1,`clipping width=${width} ${side}`);
+  }
  }
  const summary={width,samples:pages[0].length,simulatedSeconds:48,allThreePanelStylesAndBoundsMatchV6:true,noClipping:true};reports.push(summary);console.log(JSON.stringify(summary));
 }fs.writeFileSync(__dirname+'/../docs/web-studio/evidence/geometry-comparison.json',JSON.stringify(reports,null,2));}
