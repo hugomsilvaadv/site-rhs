@@ -190,7 +190,7 @@ async function capture() {
   let commit = '-';
   try { commit = execFileSync('git', ['-C', path.resolve(root, process.env.BACKOFFICE_DIR ?? '../rhs-pam-backoffice'), 'rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).trim(); } catch {}
   manifest.capturedAt = new Date().toISOString();
-  manifest.source = { repo: 'rhs-labs/rhs-pam-backoffice', commit, mode: 'mock', flagProfile: 'homologacao', locale: 'en', theme: 'dark' };
+  manifest.source = { repo: 'back-office', commit, mode: 'mock', flagProfile: 'homologacao', locale: 'en', theme: 'dark' };
   manifest.screens = { ...manifest.screens, ...results };
   await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
   await buildContactSheet({ manifest, htmlPath: path.join(here, 'contact-sheet.html'), pngPath: path.join(here, 'contact-sheet.png'), imageBase: '../../' });
