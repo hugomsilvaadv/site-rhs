@@ -238,7 +238,7 @@ def render_header(code):
  html = replace_once(html, v['languages'], '<span class="lang">' + ' · '.join(language_links(code)) + '</span>')
  html = replace_once(html, v['nav_close'], '<span class="rhs-mobile-language">' + ' · '.join(language_links(code)) + '</span></nav>')
  cta = COPY[code]['cta']
- html = replace_once(html, v['cta'], f'<a class="btn sm" href="{esc(mailto(code, "demo"))}" data-cta="demo">{cta["demo_short"]}<span class="rhs-sr"> {cta["opens"]}</span> ↗</a>')
+ html = replace_once(html, v['cta'], f'<a class="btn sm" href="{esc(mailto(code, "demo"))}" data-cta="demo">{cta["demo_short"]}<span class="rhs-sr"> {cta["opens"]}</span> <span aria-hidden="true">↗</span></a>')
  html = replace_once(html, v['links'], ''.join(f'<a href="{href}">{label}</a>' for label, href in p['nav']))
  return html
 
