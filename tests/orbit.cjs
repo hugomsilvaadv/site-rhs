@@ -3,7 +3,7 @@ const fs=require('node:fs');
 const assert=require('node:assert/strict');
 const out=__dirname+'/../docs/web-studio/evidence/';
 (async()=>{
- const b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
  try{
  const contexts=await Promise.all([1440].map(async width=>{
   const p=await b.newPage({viewport:{width,height:1000}});

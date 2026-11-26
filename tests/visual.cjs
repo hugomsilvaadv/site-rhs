@@ -2,7 +2,7 @@ const {chromium}=require('playwright');
 const fs=require('node:fs');const assert=require('node:assert/strict');
 const path=require('node:path');const root=path.join(__dirname,'..');const out=root+'/docs/web-studio/evidence/';
 (async()=>{
- const b=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',args:['--no-sandbox']});
  const results=[];
  try{
  for(const width of [320,390,768,1024,1280,1440,1920]){
@@ -10,6 +10,7 @@ const path=require('node:path');const root=path.join(__dirname,'..');const out=r
   const errors=[],failed=[];p.on('pageerror',e=>errors.push(e.message));p.on('requestfailed',r=>failed.push(r.url()));
   await p.goto('http://127.0.0.1:8000/',{waitUntil:'networkidle'});
   await p.evaluate(()=>document.fonts.ready);
+  await p.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=innerHeight/2){scrollTo(0,y);await new Promise(r=>setTimeout(r,40))}scrollTo(0,0)});await p.waitForLoadState('networkidle');
   const state=await p.evaluate(()=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,images:[...document.images].every(i=>i.complete&&i.naturalWidth>0),links:[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute('href')).filter(h=>!document.getElementById(h.slice(1)))}));
   assert.equal(state.scroll,state.viewport,`EN overflow ${width}`);assert.ok(state.images);assert.deepEqual(state.links,[]);assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
   if([390,1440].includes(width)){

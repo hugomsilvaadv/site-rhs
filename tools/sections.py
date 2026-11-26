@@ -357,7 +357,9 @@ def player360(t, shots, n):
  visual = ''
  if image:
   boxes = shots[P360_SHOT].get('hotspots') or {}
-  marks = ''.join(f'<g><circle cx="{boxes[key]["x"] * 1600 + 22:.1f}" cy="{boxes[key]["y"] * 1000 + 22:.1f}" r="17"/><text x="{boxes[key]["x"] * 1600 + 22:.1f}" y="{boxes[key]["y"] * 1000 + 28:.1f}" text-anchor="middle">{i + 1}</text></g>' for i, key in enumerate(P360_POINTS) if key in boxes)
+  # Marker at the top-left of each measured part, kept inside the image.
+  spot = lambda box: (min(1560, max(40, box['x'] * 1600 + 34)), min(960, max(40, box['y'] * 1000 + 34)))
+  marks = ''.join(f'<g><circle cx="{spot(boxes[key])[0]:.1f}" cy="{spot(boxes[key])[1]:.1f}" r="30"/><text x="{spot(boxes[key])[0]:.1f}" y="{spot(boxes[key])[1] + 10:.1f}" text-anchor="middle">{i + 1}</text></g>' for i, key in enumerate(P360_POINTS) if key in boxes)
   overlay = f'<svg class="rhs-hotspots" viewBox="0 0 1600 1000" aria-hidden="true" preserveAspectRatio="none">{marks}</svg>' if marks else ''
   visual = frame(t, image, overlay, 'rhs-hotspot-frame')
  return f'''<section id="player-360" class="rhs-sector rhs-p360" data-sector="{n}"><div class="wrap rhs-split">{intro(n, c['head'])}<div class="rhs-p360-visual">{visual}<ol class="rhs-anatomy{' rhs-anatomy-legend' if visual else ''}" aria-label="{esc(c['label'])}">{points}</ol></div></div></section>'''
