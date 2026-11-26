@@ -213,7 +213,9 @@ def render_hero(code, manifest):
  html = replace_once(html, v['title'], f'<p class="screen-name" id="showcase-title" data-suffix="{esc(h["suffix"])}">01 &nbsp; / &nbsp; {esc(names[0])}</p>')
  html = replace_once(html, v['badge'], '<div class="carousel-disclosure" data-hero-images="' + kind + '">' + ' &nbsp;·&nbsp; '.join(h['badge'][kind]) + '</div>')
  for index, ((figure, dot), panel) in enumerate(zip(v['panels'], panels)):
-  loading = 'fetchpriority="high"' if index == 0 else 'decoding="async"'
+  # The front image is fetched first; the two side images wait (low priority) so the headline's font and the
+  # stylesheets are not starved on slow connections. Same bytes, same orbit.
+  loading = 'fetchpriority="high"' if index == 0 else 'decoding="async" fetchpriority="low"'
   html = replace_once(html, figure, f'<figure class="product-screen" data-index="{index}" aria-label="{esc(panel["name"][code])}"><div class="screen-art"><img src="{panel["src"]}" width="{panel["width"]}" height="{panel["height"]}" alt="{esc(panel["alt"][code])}" {loading}></div></figure>')
   current = ' is-current' if index == 0 else ''
   aria_current = ' aria-current="true"' if index == 0 else ''
