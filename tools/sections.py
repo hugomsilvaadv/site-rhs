@@ -1,9 +1,10 @@
 """Lower page (sectors 02–11): the real Sentinel back-office, EN/ES from one source; static, no backend.
 
 Every claim maps to a screen of the back-office menu (its navigation config, with the flag on in the
-`homologacao` profile). Product images come only from captures approved in
-tools/capture/manifest.json; until one is approved, its slot lists the real screens of that area instead of
-a picture, so the page never shows an invented screen. Connected intelligence stays a concept diagram.
+`homologacao` profile). Each product image is assets/product/<screen>.webp: a "Screenshot pending" placeholder
+until the capture (tools/capture/screens.mjs) overwrites it with the real screen, same name and proportion, so
+the swap needs no change here. The capture carries the product badge and the Player 360 markers itself.
+Connected intelligence stays a concept diagram.
 """
 import json
 from html import escape as esc
@@ -11,7 +12,6 @@ from pathlib import Path
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent.parent
-MANIFEST = ROOT / 'tools/capture/manifest.json'
 CONTACT = 'sales@rhs-labs.com'
 
 SHAPES = {
@@ -106,7 +106,7 @@ PRINCIPLE_ICONS = ['layers', 'settings', 'fraud']
 
 COPY = {
 'en': {
- 'badge': 'Product UI · Synthetic data', 'module': 'Module', 'more_aria': 'Explore {name}',
+ 'module': 'Module', 'more_aria': 'Explore {name}',
  'tour': {'head': ['THE BACK-OFFICE', 'Every operational team.<br><em>One back-office.</em>', 'Seven areas cover the daily work of a regulated operator: player support, payments, risk, engagement, compliance, reporting and administration.'],
   'tablist': 'Back-office areas', 'screens': 'Screens in this area',
   'tabs': [
@@ -199,7 +199,7 @@ COPY = {
   'privacy': 'Privacy & enquiries', 'privacynote': 'This static website has no enquiry form or analytics tracker. Only your language preference is stored in this browser. Email opens your own service; please do not share player personal data. Organizational and data-handling details are confirmed before any pilot.'},
 },
 'es': {
- 'badge': 'Interfaz del producto · Datos sintéticos', 'module': 'Módulo', 'more_aria': 'Explorar {name}',
+ 'module': 'Módulo', 'more_aria': 'Explorar {name}',
  'tour': {'head': ['EL BACK-OFFICE', 'Todos los equipos operativos.<br><em>Un solo back-office.</em>', 'Siete áreas cubren el trabajo diario de un operador regulado: atención al jugador, pagos, riesgo, fidelización, cumplimiento, informes y administración.'],
   'tablist': 'Áreas del back-office', 'screens': 'Pantallas de esta área',
   'tabs': [
@@ -295,29 +295,22 @@ COPY = {
 FOOTER_LINKS = ['#platform', '#modules', '#payments', '#compliance', '#security', '#pilot', '#company']
 
 
-def manifest_screens(manifest):
- """Approved captures only: a screen reaches the page after review (tools/capture/screens.mjs --approve)."""
- screens = (manifest or {}).get('screens') or {}
- return {name: screen for name, screen in screens.items() if screen.get('approved') and not screen.get('failed') and screen.get('files')}
+DESKTOP_FILE = (3200, 2000)  # 1600×1000 CSS px at 2×: placeholder and capture share it
+PHONE_FILE = (780, 1688)     # 390×844 at 2×
 
 
-def picture(shots, name, alt, sizes, phone=None, eager=False):
- shot = shots.get(name)
- if not shot:
-  return ''
- files = sorted(shot['files'], key=lambda f: f['width'])
- main = files[0]
- srcset = ', '.join(f'/{f["path"]} {f["width"]}w' for f in files)
- source = ''
- if phone and shots.get(phone):
-  p = sorted(shots[phone]['files'], key=lambda f: f['width'])[-1]
-  source = f'<source media="(max-width: 560px)" srcset="/{p["path"]}" width="{p["width"]}" height="{p["height"]}">'
- loading = 'decoding="async"' if eager else 'loading="lazy" decoding="async"'
- return f'<picture>{source}<img src="/{main["path"]}" srcset="{srcset}" sizes="{sizes}" width="{main["width"]}" height="{main["height"]}" alt="{esc(alt)}" {loading}></picture>'
+def product_src(name):
+ return f'/assets/product/{name}.webp'
 
 
-def frame(t, inner, extra='', cls=''):
- return f'<figure class="rhs-frame {cls}"><div class="rhs-frame-bar" aria-hidden="true"><i></i><i></i><i></i><span>RHS Labs <em>/ Sentinel</em></span></div><div class="rhs-frame-shot">{inner}{extra}</div><figcaption><span class="rhs-badge">{t["badge"]}</span></figcaption></figure>'
+def picture(name, alt, phone=None):
+ """The screen's image, placeholder or capture alike; phones get the phone capture where one exists."""
+ source = f'<source media="(max-width: 560px)" srcset="{product_src(phone)}" width="{PHONE_FILE[0]}" height="{PHONE_FILE[1]}">' if phone else ''
+ return f'<picture>{source}<img src="{product_src(name)}" width="{DESKTOP_FILE[0]}" height="{DESKTOP_FILE[1]}" alt="{esc(alt)}" loading="lazy" decoding="async"></picture>'
+
+
+def frame(inner, cls=''):
+ return f'<figure class="rhs-frame {cls}"><div class="rhs-frame-bar" aria-hidden="true"><i></i><i></i><i></i><span>RHS Labs <em>/ Sentinel</em></span></div><div class="rhs-frame-shot">{inner}</div></figure>'
 
 
 def module_tag(t, module):
@@ -325,7 +318,7 @@ def module_tag(t, module):
  return f'<span class="rhs-module rhs-module-{module}"><b>{t["module"]}</b> {name}</span>'
 
 
-def tour(t, shots, n):
+def tour(t, n):
  c = t['tour']
  tabs, panels = [], []
  for i, (spec, copy) in enumerate(zip(TOUR, c['tabs'])):
@@ -333,12 +326,8 @@ def tour(t, shots, n):
   tabs.append(f'<button type="button" role="tab" class="rhs-tour-tab" id="tour-tab-{key}" aria-controls="tour-{key}" aria-selected="{str(on).lower()}" tabindex="{0 if on else -1}">{icon(spec["icon"])}<span>{copy["label"]}</span></button>')
   bullets = ''.join(f'<li>{icon("check")}<span>{b}</span></li>' for b in copy['bullets'])
   more = f'<a class="rhs-more" href="{spec["more"]}">{copy["more"]} {icon("arrow")}</a>' if spec['more'] and copy['more'] else ''
-  image = picture(shots, spec['shot'], copy['alt'], '(max-width: 767px) calc(100vw - 36px), 56vw', phone=spec['phone'])
   screens = ''.join(f'<li>{icon(ic)}<b>{name}</b><small>{desc}</small></li>' for (ic, _), (name, desc) in zip(spec['screens'], copy['screens']))
-  if image:
-   visual = frame(t, image) + f'<ul class="rhs-screen-chips" aria-label="{esc(c["screens"])}">' + ''.join(f'<li>{name}</li>' for name, _ in copy['screens']) + '</ul>'
-  else:
-   visual = f'<div class="rhs-screens"><p class="rhs-screens-title" id="tour-screens-{key}">{c["screens"]}</p><ul aria-labelledby="tour-screens-{key}">{screens}</ul></div>'
+  visual = frame(picture(spec['shot'], copy['alt'], phone=spec['phone']), 'rhs-frame-phone' if spec['phone'] else '') + f'<div class="rhs-screens"><p class="rhs-screens-title" id="tour-screens-{key}">{c["screens"]}</p><ul aria-labelledby="tour-screens-{key}">{screens}</ul></div>'
   hidden = '' if on else ' hidden'
   panels.append(f'<div class="rhs-tour-panel" role="tabpanel" id="tour-{key}" aria-labelledby="tour-tab-{key}" tabindex="0"{hidden}><div class="rhs-tour-copy">{module_tag(t, spec["module"])}<h3>{copy["title"]}</h3><ul class="rhs-ticks">{bullets}</ul>{more}</div><div class="rhs-tour-visual">{visual}</div></div>')
  return f'''<section id="platform" class="rhs-sector rhs-tour-sector" data-sector="{n}"><div class="wrap"><div class="rhs-section-heading">{intro(n, c['head'])}</div><div class="rhs-tour" data-tour><div class="rhs-tour-tabs" role="tablist" aria-label="{esc(c['tablist'])}">{''.join(tabs)}</div>{''.join(panels)}</div></div></section>'''
@@ -350,29 +339,20 @@ def modules(t, n):
  return f'''<section id="modules" class="rhs-sector rhs-products" data-sector="{n}"><div class="wrap"><div class="rhs-products-heading">{intro(n, c['head'])}</div><div class="rhs-product-grid">{cards}</div><p class="rhs-complete"><b>Complete</b> / {c['complete']}</p></div></section>'''
 
 
-def player360(t, shots, n):
+def player360(t, n):
  c = t['p360']
  points = ''.join(f'<li id="p360-{key}"><b class="rhs-num" aria-hidden="true">{i + 1}</b><div><h3>{title}</h3><p>{text}</p></div></li>' for i, (key, (title, text)) in enumerate(zip(P360_POINTS, c['points'])))
- image = picture(shots, P360_SHOT, c['alt'], '(max-width: 767px) calc(100vw - 36px), 60vw')
- visual = ''
- if image:
-  boxes = shots[P360_SHOT].get('hotspots') or {}
-  # Marker at the top-left of each measured part, kept inside the image.
-  spot = lambda box: (min(1560, max(40, box['x'] * 1600 + 34)), min(960, max(40, box['y'] * 1000 + 34)))
-  marks = ''.join(f'<g><circle cx="{spot(boxes[key])[0]:.1f}" cy="{spot(boxes[key])[1]:.1f}" r="30"/><text x="{spot(boxes[key])[0]:.1f}" y="{spot(boxes[key])[1] + 10:.1f}" text-anchor="middle">{i + 1}</text></g>' for i, key in enumerate(P360_POINTS) if key in boxes)
-  overlay = f'<svg class="rhs-hotspots" viewBox="0 0 1600 1000" aria-hidden="true" preserveAspectRatio="none">{marks}</svg>' if marks else ''
-  visual = frame(t, image, overlay, 'rhs-hotspot-frame')
- return f'''<section id="player-360" class="rhs-sector rhs-p360" data-sector="{n}"><div class="wrap rhs-split">{intro(n, c['head'])}<div class="rhs-p360-visual">{visual}<ol class="rhs-anatomy{' rhs-anatomy-legend' if visual else ''}" aria-label="{esc(c['label'])}">{points}</ol></div></div></section>'''
+ visual = frame(picture(P360_SHOT, c['alt']))
+ return f'''<section id="player-360" class="rhs-sector rhs-p360" data-sector="{n}"><div class="wrap rhs-split">{intro(n, c['head'])}<div class="rhs-p360-visual">{visual}<ol class="rhs-anatomy rhs-anatomy-legend" aria-label="{esc(c['label'])}">{points}</ol></div></div></section>'''
 
 
-def payments(t, shots, n):
+def payments(t, n):
  c = t['payments']
  items = ''.join(f'<li><span class="rhs-mini-icon">{icon(ic)}</span><div><h3>{title}</h3><p>{text}</p></div></li>' for ic, (title, text) in zip(PAYMENT_ICONS, c['items']))
  steps = ''.join(f'<li class="rhs-flow-step{" rhs-flow-optional" if key == "second_approval" else ""}"><span>{c["flow"][key]}</span></li>' for key in FLOW)
  side = ''.join(f'<li>{c["flow"][key]}</li>' for key in FLOW_SIDE)
  flow = f'<figure class="rhs-flow"><figcaption><b>{c["flow_title"]}</b></figcaption><ol class="rhs-flow-steps">{steps}</ol><div class="rhs-flow-side"><b>{c["side"]}</b><ul>{side}</ul></div><p class="rhs-flow-note">{c["flow_note"]}</p></figure>'
- image = picture(shots, PAYMENTS_SHOT, c['alt'], '(max-width: 767px) calc(100vw - 36px), 80vw')
- shot = f'<div class="rhs-wide-shot">{frame(t, image)}</div>' if image else ''
+ shot = f'<div class="rhs-wide-shot">{frame(picture(PAYMENTS_SHOT, c["alt"]))}</div>'
  return f'''<section id="payments" class="rhs-sector rhs-payments-sector" data-sector="{n}"><div class="wrap"><div class="rhs-split">{intro(n, c['head'])}{flow}</div><ul class="rhs-capabilities">{items}</ul>{shot}</div></section>'''
 
 
@@ -423,12 +403,11 @@ def footer(t, languages, notice):
  return f'''<footer class="rhs-footer"><div class="wrap"><div class="rhs-footer-top"><a href="#home" class="rhs-footer-brand">{icon('brand')}<b>RHS Labs <em>/ Sentinel</em></b></a><nav aria-label="{esc(c['nav_label'])}">{links}</nav><div class="rhs-languages">{languages}</div></div><div class="rhs-footer-notes"><p data-notice="{' '.join(notice)}">{text}</p><details id="privacy"><summary>{c['privacy']}</summary><p>{c['privacynote']}</p></details></div></div></footer>'''
 
 
-def lower_page(lang, manifest=None, languages='', hero_kind='concept'):
+def lower_page(lang, languages='', hero_kind='concept'):
  """Sectors 02–11 and the footer. The single footer notice says what the page's images are."""
  t = COPY[lang]
- shots = manifest_screens(manifest)
- sectors = [tour(t, shots, 2), modules(t, 3), player360(t, shots, 4), payments(t, shots, 5), compliance(t, 6),
+ sectors = [tour(t, 2), modules(t, 3), player360(t, 4), payments(t, 5), compliance(t, 6),
             intelligence(t, 7), security(t, 8), pilot(t, 9), about(t, 10), contact(t, 11)]
  html = '\n'.join(sectors)
- notice = ['available'] + (['concept'] if hero_kind == 'concept' else []) + (['product'] if hero_kind == 'product' or 'class="rhs-frame' in html else [])
+ notice = ['available'] + (['concept'] if hero_kind == 'concept' else []) + ['product']
  return '<div class="rhs-content">\n' + html + '\n' + footer(t, languages, notice) + '\n</div>'

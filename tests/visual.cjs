@@ -10,7 +10,8 @@ const path=require('node:path');const root=path.join(__dirname,'..');const out=r
   const errors=[],failed=[];p.on('pageerror',e=>errors.push(e.message));p.on('requestfailed',r=>failed.push(r.url()));
   await p.goto('http://127.0.0.1:8000/',{waitUntil:'networkidle'});
   await p.evaluate(()=>document.fonts.ready);
-  await p.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=innerHeight/2){scrollTo(0,y);await new Promise(r=>setTimeout(r,40))}scrollTo(0,0)});await p.waitForLoadState('networkidle');
+  await p.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=innerHeight/2){scrollTo(0,y);await new Promise(r=>setTimeout(r,40))}scrollTo(0,0)});
+  await p.evaluate(async()=>{for(const tab of document.querySelectorAll('#platform [role="tab"]')){tab.click();const img=document.getElementById(tab.getAttribute('aria-controls')).querySelector('img');if(img){img.scrollIntoView({block:'center'});await img.decode().catch(()=>{});}}document.querySelector('#platform [role="tab"]').click();scrollTo(0,0);});await p.waitForLoadState('networkidle');
   const state=await p.evaluate(()=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth,images:[...document.images].every(i=>i.complete&&i.naturalWidth>0),links:[...document.querySelectorAll('a[href^="#"]')].map(a=>a.getAttribute('href')).filter(h=>!document.getElementById(h.slice(1)))}));
   assert.equal(state.scroll,state.viewport,`EN overflow ${width}`);assert.ok(state.images);assert.deepEqual(state.links,[]);assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
   if([390,1440].includes(width)){

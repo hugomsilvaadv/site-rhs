@@ -243,7 +243,7 @@ def render(code, state=None):
  language, p = LANGUAGES[code], PAGE[code]
  hero, panels = render_hero(code, state)
  header = render_header(code)
- hero_kind = 'product' if (manifest.get('hero') or {}).get('active') else 'concept'
+ hero_kind = 'product' if (state or {}).get('active') else 'concept'
  languages = ''.join(f'<a href="{LANGUAGES[c]["path"]}" data-language="{c}" lang="{c}"' + (' aria-current="page"' if c == code else '') + f'>{LANGUAGES[c]["label"]}</a>' for c in published())
  alternates = ''.join(f'<link rel="alternate" hreflang="{c}" href="{LANGUAGES[c]["path"]}">' for c in published())
  return f'''<!DOCTYPE html>
@@ -258,7 +258,7 @@ def render(code, state=None):
 <script src="/site.js" defer></script><script src="/assets/hero-v6.js" defer></script>
 </head><body><a class="rhs-skip" href="#platform">{p['skip']}</a>
 {header}<main>{hero}
-{lower_page(code, manifest, languages, hero_kind)}</main></body></html>'''
+{lower_page(code, languages, hero_kind)}</main></body></html>'''
 
 
 def route_file(code):
