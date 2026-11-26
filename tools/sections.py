@@ -1,7 +1,7 @@
 """Lower page (sectors 02–11): the real Sentinel back-office, EN/ES from one source; static, no backend.
 
-Every claim maps to a screen of the back-office menu (rhs-labs/rhs-pam-backoffice, src/config/navigation.ts,
-flags on in the `homologacao` profile). Product images come only from captures approved in
+Every claim maps to a screen of the back-office menu (its navigation config, with the flag on in the
+`homologacao` profile). Product images come only from captures approved in
 tools/capture/manifest.json; until one is approved, its slot lists the real screens of that area instead of
 a picture, so the page never shows an invented screen. Connected intelligence stays a concept diagram.
 """
@@ -123,8 +123,8 @@ COPY = {
     'screens': [['Alerts', 'Queue, claim and resolution'], ['Cases', 'Investigation workspace'], ['Rules', 'Metrics, editor and firings'], ['Approvals', 'Four-eyes decisions']],
     'more': '', 'alt': 'Sentinel back-office: alert queue with synthetic alerts.'},
    {'label': 'Bonus & CRM', 'title': 'Campaigns aimed with saved segments.',
-    'bullets': ['Segments built from rules and groups, versioned and counted before you save.', 'Bonus campaigns and bulk actions that target a segment, with a server-side preview.', 'A VIP portfolio: an account manager for each VIP player, with contact restrictions.', 'Service tickets, and CRM templates approved before use.'],
-    'screens': [['Segments', 'Rules, groups and counts'], ['Bonus', 'Campaigns and audiences'], ['Bulk actions', 'Preview, then approve'], ['VIP portfolio', 'Account managers'], ['Service tickets', 'Customer-service follow-up'], ['CRM templates', 'Messages with approval']],
+    'bullets': ['Segments built from rules and groups, versioned and counted before you save.', 'Bonus campaigns for a saved segment, and bulk blocks or releases with a preview; above 50 accounts, a second person approves.', 'A VIP portfolio: an account manager for each VIP player, with contact restrictions.', 'Service tickets, and CRM templates approved before use.'],
+    'screens': [['Segments', 'Rules, groups and counts'], ['Bonus', 'Campaigns and audiences'], ['Bulk actions', 'Preview, then run'], ['VIP portfolio', 'Account managers'], ['Service tickets', 'Customer-service follow-up'], ['CRM templates', 'Messages with approval']],
     'more': '', 'alt': 'Sentinel back-office: segments list with synthetic segments.'},
    {'label': 'Compliance', 'title': 'The controls a regulator expects to see.',
     'bullets': ['An audit report of staff actions, filterable by player, with incident records.', 'Responsible gaming: self-exclusions, pauses and limits, including requests taken by phone or chat.', 'Data-subject requests tracked against their deadline.', 'Versioned policies and terms, with each player\'s acceptance on record.'],
@@ -136,7 +136,7 @@ COPY = {
     'more': '', 'alt': 'Sentinel back-office: reports with synthetic operator totals.'},
    {'label': 'Administration', 'title': 'Access by role. Changes on record.',
     'bullets': ['Users, roles and fine-grained permissions, including custom roles.', 'Approval limits by role and category, and the operator\'s cashier limits.', 'Tags, handling-time targets and jurisdiction parameters in one place.', 'Administrative changes recorded in the audit trail.'],
-    'screens': [['Users & roles', 'Permissions by role'], ['Approval limits', 'Tiers by category'], ['Tags', 'Account tags'], ['SLA targets', 'Handling-time goals'], ['Integrations', 'CRM connection']],
+    'screens': [['Users & roles', 'Permissions by role'], ['Approval limits', 'Tiers by category'], ['Tags', 'Account tags'], ['SLA targets', 'Handling-time goals'], ['Integrations', 'Connection settings']],
     'more': 'Security and integration', 'alt': 'Sentinel back-office: users and roles with synthetic staff accounts.'},
   ]},
  'modules': {'head': ['MODULES', 'Four modules.<br><em>Start with what you need.</em>', 'Core runs the player operation; Payments, Intelligence and Fraud extend it. Choose the scope that fits your operation.'],
@@ -221,8 +221,8 @@ COPY = {
     'screens': [['Alertas', 'Cola, asignación y resolución'], ['Casos', 'Espacio de investigación'], ['Reglas', 'Métricas, editor y disparos'], ['Aprobaciones', 'Decisiones de cuatro ojos']],
     'more': '', 'alt': 'Back-office Sentinel: cola de alertas con alertas sintéticas.'},
    {'label': 'Bonos y CRM', 'title': 'Campañas dirigidas con segmentos guardados.',
-    'bullets': ['Segmentos con reglas y grupos, versionados y contados antes de guardar.', 'Campañas de bonos y acciones masivas dirigidas a un segmento, con vista previa en el servidor.', 'Cartera VIP: un gestor para cada jugador VIP, con restricciones de contacto.', 'Tickets de atención y plantillas de CRM aprobadas antes de usarse.'],
-    'screens': [['Segmentos', 'Reglas, grupos y conteos'], ['Bonos', 'Campañas y audiencias'], ['Acciones masivas', 'Vista previa y aprobación'], ['Cartera VIP', 'Gestores de cuenta'], ['Tickets de atención', 'Seguimiento de atención al cliente'], ['Plantillas de CRM', 'Mensajes con aprobación']],
+    'bullets': ['Segmentos con reglas y grupos, versionados y contados antes de guardar.', 'Campañas de bonos para un segmento guardado, y bloqueos o liberaciones masivas con vista previa; por encima de 50 cuentas, aprueba una segunda persona.', 'Cartera VIP: un gestor para cada jugador VIP, con restricciones de contacto.', 'Tickets de atención y plantillas de CRM aprobadas antes de usarse.'],
+    'screens': [['Segmentos', 'Reglas, grupos y conteos'], ['Bonos', 'Campañas y audiencias'], ['Acciones masivas', 'Vista previa y ejecución'], ['Cartera VIP', 'Gestores de cuenta'], ['Tickets de atención', 'Seguimiento de atención al cliente'], ['Plantillas de CRM', 'Mensajes con aprobación']],
     'more': '', 'alt': 'Back-office Sentinel: lista de segmentos sintéticos.'},
    {'label': 'Cumplimiento', 'title': 'Los controles que un regulador espera ver.',
     'bullets': ['Informe de auditoría de las acciones del equipo, filtrable por jugador, con registro de incidentes.', 'Juego responsable: autoexclusiones, pausas y límites, incluidas solicitudes recibidas por teléfono o chat.', 'Solicitudes de titulares de datos controladas frente a su plazo.', 'Políticas y términos versionados, con la aceptación de cada jugador registrada.'],
@@ -234,7 +234,7 @@ COPY = {
     'more': '', 'alt': 'Back-office Sentinel: informes con totales sintéticos del operador.'},
    {'label': 'Administración', 'title': 'Acceso por rol. Cambios registrados.',
     'bullets': ['Usuarios, roles y permisos detallados, incluidos roles personalizados.', 'Límites de aprobación por rol y categoría, y límites de caja del operador.', 'Etiquetas, objetivos de tiempo de atención y parámetros de jurisdicción en un solo lugar.', 'Cambios administrativos registrados en la auditoría.'],
-    'screens': [['Usuarios y roles', 'Permisos por rol'], ['Límites de aprobación', 'Niveles por categoría'], ['Etiquetas', 'Etiquetas de cuenta'], ['Objetivos de SLA', 'Metas de tiempo de atención'], ['Integraciones', 'Conexión con el CRM']],
+    'screens': [['Usuarios y roles', 'Permisos por rol'], ['Límites de aprobación', 'Niveles por categoría'], ['Etiquetas', 'Etiquetas de cuenta'], ['Objetivos de SLA', 'Metas de tiempo de atención'], ['Integraciones', 'Configuración de conexiones']],
     'more': 'Seguridad e integración', 'alt': 'Back-office Sentinel: usuarios y roles con cuentas sintéticas del equipo.'},
   ]},
  'modules': {'head': ['MÓDULOS', 'Cuatro módulos.<br><em>Empiece por lo que necesita.</em>', 'Core sostiene la operación de jugadores; Payments, Intelligence y Fraud la amplían. Elija el alcance adecuado para su operación.'],
