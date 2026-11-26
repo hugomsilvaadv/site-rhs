@@ -74,7 +74,7 @@ export const screens = [
   { name: 'data-requests', path: '/backoffice/data-requests', ready: 'h1', review: 'The UI title names a local privacy law: crop the title and tab or skip.' },
   { name: 'policies', path: '/backoffice/policies', ready: 'table', hide: ['POLICY_VERSIONS', 'PLAYER_TERMS_VERSION'], review: 'Catalog of versions; internal variable badge hidden.' },
   { name: 'jurisdiction', path: '/backoffice/jurisdiction', ready: 'table', hide: ['JURISDICTION_PARAMETERS'], review: 'The mock jurisdiction names one country, its currency, its privacy law and local ordinances: likely skip.' },
-  { name: 'users', path: '/backoffice/users', ready: 'h1', prepare: async page => { await page.getByRole('tab', { name: 'Roles' }).click(); }, review: 'Roles tab only. The Users tab lists realistic names: never capture it.' },
+  { name: 'users', path: '/backoffice/users', ready: 'h1', prepare: async page => { await page.getByRole('tab', { name: 'Roles' }).click(); }, review: 'Not used on the website: the Users tab lists realistic names (never captured) and, in mock mode, the Roles tab shows the template roles and the role editor, not the five staff roles. Administration uses approval-limits.' },
   { name: 'global-search', path: '/backoffice/withdrawals', keepHeader: true, prepare: async page => { await page.keyboard.press('Control+K'); await page.getByRole('searchbox', { name: 'Global search' }).fill('psp-sim-c1000'); await page.getByText('Enter to search').first().waitFor(); }, review: 'Header kept for the search popover; check the brand label and the time-zone badge.' },
 ];
 

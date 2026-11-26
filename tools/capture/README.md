@@ -49,10 +49,10 @@ O `hero-swap` regrava o manifesto de integridade de propósito, e o selo sob a �
 ## O que o script garante
 
 - Só `localhost`/`127.0.0.1` e só o back-office em mock. Nunca fotografa a página do login falso. Não confirma, salva, aprova nem revela nada.
-- Corta a primeira linha do cabeçalho (marca, busca, selos de fuso e de mock). Esconde, sem reescrever, linhas fora do escopo do site (multicontas, dispositivo, IP, vínculos, pontuação do motor). Recusa a imagem se aparecer e-mail, documento, token ou endereço interno.
+- Corta a primeira linha do cabeçalho (marca, busca, selos de fuso e de mock). Esconde, sem reescrever, linhas fora do escopo do site (multicontas, dispositivo, IP, vínculos, pontuação do motor) e textos que o site não descreve: os selos com nomes de variáveis internas e a nota de escopo da fila KYC. Recusa a imagem se aparecer e-mail, documento, token ou endereço interno.
 - Grava na imagem o selo "PRODUCT UI · SYNTHETIC DATA" e, no Player 360, os marcadores 1–5 descritos na página.
 - `node tools/capture/placeholders.mjs` recria placeholders que faltarem, sem tocar numa captura real.
 
 ## Ao revisar
 
-O mock reproduz a jurisdição de um único país (moeda, meio de pagamento, documentos, fuso e lei de privacidade locais) e tem textos sintéticos em português. Recorte ou deixe de fora o que identificar o país; as notas por tela estão na folha de contato. A aba Usuários (nomes realistas) nunca é fotografada: a tela `users` usa a aba Papéis.
+O mock reproduz a jurisdição de um único país (moeda, meio de pagamento, documentos, fuso e lei de privacidade locais) e tem textos sintéticos em português. Recorte ou deixe de fora o que identificar o país; as notas por tela estão na folha de contato. A aba Usuários (nomes realistas) nunca é fotografada: a tela `users` usa a aba Papéis e não vai ao site, porque no mock essa aba mostra os papéis do template e o editor de papéis, não os cinco papéis da equipe. A área Administration usa `approval-limits`.
