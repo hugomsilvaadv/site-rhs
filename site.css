@@ -18,7 +18,6 @@ html[data-motion="paused"] #home .backlight{animation-play-state:paused}
 .rhs-content .rhs-anchor{display:block;scroll-margin-top:100px}
 .rhs-content .rhs-icon-box{display:grid;place-items:center;border:1px solid #195461;background:linear-gradient(140deg,#0c3944,#062730);color:#21ded1;border-radius:9px;width:57px;height:57px;flex:none;box-shadow:0 0 18px #11d9cb18,inset 0 0 25px #19d7c81a}.rhs-content .rhs-icon-box>.rhs-icon{width:29px;height:29px}
 .rhs-content .rhs-mini-icon{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:8px;border:1px solid #195461;background:linear-gradient(140deg,#0c3944,#062730);color:#2ddaca}.rhs-content .rhs-mini-icon .rhs-icon{width:20px;height:20px}
-.rhs-content .rhs-badge{display:inline-block;font:700 9px/1.3 'DM Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7fd8cf;border:1px solid #23606a;border-radius:99px;padding:3px 9px;background:#05202b}
 
 /* 02 Product tour: one area at a time, ARIA tabs. */
 .rhs-content .rhs-tour-sector{padding-top:64px;background:radial-gradient(ellipse 60% 70% at 78% 60%,rgba(0,223,222,.07),transparent 72%),#04131e}
@@ -41,13 +40,13 @@ html:not(.rhs-js) .rhs-content .rhs-tour-panel[hidden]:target{display:grid}
 .rhs-content .rhs-screens li{display:grid;grid-template-columns:34px 1fr;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:12px;border:1px solid #173f4d;border-radius:8px;background:#05192566}.rhs-content .rhs-screens li .rhs-icon{grid-row:1/3;width:34px;height:34px;padding:7px;border-radius:7px;background:#0a2d3a;color:#33d7ca}
 .rhs-content .rhs-screens b{font-size:14px;font-weight:600;color:var(--rhs-ink)}.rhs-content .rhs-screens small{font-size:12px;line-height:1.4;color:#8eaab8}
 .rhs-content .rhs-screens li:only-child{grid-column:1/-1}
-.rhs-content .rhs-screen-chips{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}.rhs-content .rhs-screen-chips li{font-size:11px;color:#9fb9c6;border:1px solid #1b4150;border-radius:99px;padding:3px 9px}
+.rhs-content .rhs-tour-visual .rhs-screens{margin-top:14px;padding:14px 16px 16px}.rhs-content .rhs-tour-visual .rhs-screens-title{margin-bottom:10px}.rhs-content .rhs-tour-visual .rhs-screens ul{gap:8px}.rhs-content .rhs-tour-visual .rhs-screens li{grid-template-columns:28px 1fr;padding:9px 10px;column-gap:10px}.rhs-content .rhs-tour-visual .rhs-screens li .rhs-icon{width:28px;height:28px;padding:6px}.rhs-content .rhs-tour-visual .rhs-screens b{font-size:13px}.rhs-content .rhs-tour-visual .rhs-screens small{font-size:11.5px}
 
 /* Product screenshots: a dark window frame and one badge. */
 .rhs-content .rhs-frame{margin:0;border:1px solid #1c4b58;border-radius:11px;overflow:hidden;background:#041019;box-shadow:0 0 0 1px rgba(37,241,225,.18),0 0 32px rgba(1,219,209,.1),0 26px 48px rgba(0,0,0,.5)}
 .rhs-content .rhs-frame-bar{display:flex;align-items:center;gap:6px;height:30px;padding:0 12px;background:linear-gradient(90deg,#082333,#061b2b);border-bottom:1px solid #15313f}.rhs-content .rhs-frame-bar i{width:8px;height:8px;border-radius:50%;background:#1e4451}.rhs-content .rhs-frame-bar span{margin-left:8px;font-size:10px;color:#a6c4cf}.rhs-content .rhs-frame-bar em{font-style:normal;color:#25d4c8}
 .rhs-content .rhs-frame-shot{position:relative}.rhs-content .rhs-frame img{display:block;width:100%;height:auto}
-.rhs-content .rhs-frame figcaption{padding:9px 12px;border-top:1px solid #15313f;background:#05141f}
+@media(max-width:560px){.rhs-content .rhs-frame-phone{max-width:300px;margin:0 auto}}
 
 /* 03 Modules. */
 .rhs-content .rhs-products{padding-top:46px;padding-bottom:40px}.rhs-content .rhs-products-heading .rhs-sector-copy{display:grid;grid-template-columns:1fr 1fr;gap:0 65px;align-items:center}.rhs-content .rhs-products-heading .rhs-kicker{grid-column:1/-1}.rhs-content .rhs-products-heading .rhs-sector-copy>p{max-width:560px}.rhs-content .rhs-products-heading h2{font-size:35px;margin-top:20px;margin-bottom:30px}
@@ -64,7 +63,7 @@ html:not(.rhs-js) .rhs-content .rhs-tour-panel[hidden]:target{display:grid}
 .rhs-content .rhs-num{display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;background:#21dfd2;color:#03262b;font:700 13px/1 'DM Sans',sans-serif;box-shadow:0 0 14px #21dfd244}
 .rhs-content .rhs-anatomy h3{font-size:15px;margin:3px 0 5px}.rhs-content .rhs-anatomy p{font-size:13px;line-height:1.5}
 .rhs-content .rhs-anatomy.rhs-anatomy-legend{grid-template-columns:repeat(6,minmax(0,1fr))}.rhs-content .rhs-anatomy.rhs-anatomy-legend li{padding:13px 14px;grid-column:span 2}.rhs-content .rhs-anatomy.rhs-anatomy-legend li:nth-child(n+4){grid-column:span 3}
-.rhs-content .rhs-hotspots{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.rhs-content .rhs-hotspots circle{fill:#21dfd2;stroke:#03262b;stroke-width:6;filter:drop-shadow(0 0 10px rgba(33,223,210,.55))}.rhs-content .rhs-hotspots text{font:700 30px 'DM Sans',sans-serif;fill:#03262b}
+
 
 /* 05 Payments: withdrawal states and six capabilities. */
 .rhs-content .rhs-payments-sector{background:radial-gradient(ellipse at 69% 30%,rgba(4,150,171,.075),transparent 70%),#04131e}

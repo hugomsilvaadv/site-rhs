@@ -11,7 +11,7 @@ from pathlib import Path
 from sections import lower_page
 
 ROOT = Path(__file__).resolve().parent.parent
-MANIFEST = ROOT / 'tools/capture/manifest.json'
+HERO_STATE = ROOT / 'tools/capture/hero.json'  # written by tools/capture/hero-swap.mjs, the hero swap point
 
 LANGUAGES = {
  'en': {'path': '/', 'og_locale': 'en_US', 'label': 'EN', 'name': 'English', 'published': True},
@@ -171,21 +171,25 @@ def replace_once(text, old, new):
  return text.replace(old, new)
 
 
-def capture_manifest():
- return json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {'screens': {}}
+def hero_state():
+ return json.loads(HERO_STATE.read_text()) if HERO_STATE.exists() else {'active': False}
 
 
-def hero_panels(manifest):
- """The three orbit images: approved product captures after the swap, the concept art before it."""
- hero = manifest.get('hero') or {}
- if not hero.get('active'):
+def hero_file_exists(rel):
+ return (ROOT / rel).exists()
+
+
+def hero_panels(state):
+ """The three orbit images: the concept art until the deliberate swap, then the clean 1586×992 copies of
+ the real captures (assets/hero/<screen>.webp), front panel first."""
+ if not (state or {}).get('active'):
   return 'concept', [dict(item, src=item['src'], width=1586, height=992) for item in HERO_CONCEPT]
  panels = []
  for item in HERO_PRODUCT:
-  screen = manifest['screens'].get(item['screen']) or {}
-  if not screen.get('approved') or not screen.get('hero'):
-   raise ValueError('hero swap is active but this capture is not approved: ' + item['screen'])
-  panels.append(dict(item, src='/' + screen['hero']['path'], width=screen['hero']['width'], height=screen['hero']['height']))
+  rel = f'assets/hero/{item["screen"]}.webp'
+  if not hero_file_exists(rel):
+   raise ValueError('hero swap is on but the capture copy is missing: ' + rel)
+  panels.append(dict(item, src='/' + rel, width=1586, height=992))
  return 'product', panels
 
 
@@ -195,9 +199,9 @@ def language_links(code, cls=None):
  return links
 
 
-def render_hero(code, manifest):
+def render_hero(code, state):
  h, v = HERO[code], V6_HERO
- kind, panels = hero_panels(manifest)
+ kind, panels = hero_panels(state)
  html = (ROOT / 'assets/hero-v6-fragment.html').read_text()
  html = replace_once(html, v['h1'], f'<h1>{h["h1"]}</h1>')
  html = replace_once(html, v['subtitle'], f'<p class="hero-subtitle">{h["subtitle"]}</p>')
@@ -236,12 +240,12 @@ def render_header(code):
  return html
 
 
-def render(code, manifest=None):
- manifest = capture_manifest() if manifest is None else manifest
+def render(code, state=None):
+ state = hero_state() if state is None else state
  language, p = LANGUAGES[code], PAGE[code]
- hero, panels = render_hero(code, manifest)
+ hero, panels = render_hero(code, state)
  header = render_header(code)
- hero_kind = 'product' if (manifest.get('hero') or {}).get('active') else 'concept'
+ hero_kind = 'product' if (state or {}).get('active') else 'concept'
  languages = ''.join(f'<a href="{LANGUAGES[c]["path"]}" data-language="{c}" lang="{c}"' + (' aria-current="page"' if c == code else '') + f'>{LANGUAGES[c]["label"]}</a>' for c in published())
  og_image = f'/assets/og-image-{code}.jpg' if (ROOT / f'assets/og-image-{code}.jpg').exists() else '/assets/og-image-en.jpg'
  locale_alternates = ''.join(f'<meta property="og:locale:alternate" content="{LANGUAGES[c]["og_locale"]}">' for c in published() if c != code)
@@ -258,7 +262,7 @@ def render(code, manifest=None):
 <script src="/site.js" defer></script><script src="/assets/hero-v6.js" defer></script>
 </head><body><a class="rhs-skip" href="#platform">{p['skip']}</a>
 {header}<main>{hero}
-{lower_page(code, manifest, languages, hero_kind)}</main></body></html>'''
+{lower_page(code, languages, hero_kind)}</main></body></html>'''
 
 
 def route_file(code):
@@ -268,7 +272,7 @@ def route_file(code):
 
 if __name__ == '__main__':
  check_parity()
- manifest = capture_manifest()
+ state = hero_state()
  for code in published():
-  out = route_file(code); out.parent.mkdir(exist_ok=True, parents=True); out.write_text(render(code, manifest))
+  out = route_file(code); out.parent.mkdir(exist_ok=True, parents=True); out.write_text(render(code, state))
  print('Rendered ' + ', '.join(LANGUAGES[c]['path'] for c in published()) + ' from shared content source.')

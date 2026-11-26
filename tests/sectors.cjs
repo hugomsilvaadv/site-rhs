@@ -31,8 +31,14 @@ assert.equal(await p.locator('#intelligence .rhs-signal').count(),6);assert.matc
 // Nothing invented or out of scope in the lower page, the hero copy or the metadata.
 const text=await p.evaluate(()=>document.querySelector('.rhs-content').innerText+' '+document.querySelector('#home').innerText+' '+document.title+' '+document.querySelector('meta[name="description"]').content);
 assert.doesNotMatch(text,forbidden,'no invented or out-of-scope claims '+where);
-// Images: only approved captures or the approved concept hero; every product image carries the badge.
-for(const img of await p.locator('.rhs-content img').evaluateAll(els=>els.map(e=>({src:e.getAttribute('src'),badge:!!e.closest('.rhs-frame')?.querySelector('.rhs-badge')}))))assert.ok(img.src.startsWith('/assets/product/')&&img.badge,'product image with badge: '+img.src);
+// Product images: assets/product/<screen>.webp of the capture plan (placeholder now, capture later: same file),
+// framed, described, 3200x2000; one per tour area, plus the Player 360 and payments.
+const plan=Object.keys(JSON.parse(require('node:fs').readFileSync(__dirname+'/../tools/capture/placeholders.json','utf8')).files).map(f=>'/'+f);
+const imgs=await p.locator('.rhs-content img').evaluateAll(els=>els.map(e=>({src:e.getAttribute('src'),frame:!!e.closest('.rhs-frame'),alt:e.getAttribute('alt'),size:[e.getAttribute('width'),e.getAttribute('height')],area:e.closest('[role="tabpanel"],section')?.id})));
+assert.equal(imgs.length,9,'seven tour areas, Player 360 and payments '+where);
+for(const img of imgs){assert.ok(plan.includes(img.src),'screen of the capture plan: '+img.src);assert.ok(img.frame,'framed '+img.src);assert.ok(img.alt.length>20,'described '+img.src);assert.deepEqual(img.size,['3200','2000']);}
+assert.deepEqual(imgs.map(i=>i.area),['tour-players','tour-payments','tour-risk','tour-engagement','tour-compliance','tour-reports','tour-admin','player-360','payments']);
+for(const src of await p.locator('.rhs-content picture source').evaluateAll(els=>els.map(e=>e.getAttribute('srcset'))))assert.ok(plan.includes(src)&&src.endsWith('-mobile.webp'),'phone capture of the plan: '+src);
 assert.equal(await p.locator('.rhs-footer [data-notice]').count(),1,'one footer notice');
 assert.ok(await p.locator('a[href^="mailto:sales@rhs-labs.com"]').count());
 assert.equal(await p.locator('link[rel="canonical"]').getAttribute('href'),'https://rhs-labs.com/'+(lang==='es'?'es/':''));
