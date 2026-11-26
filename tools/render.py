@@ -11,7 +11,7 @@ from pathlib import Path
 from sections import COPY, cta_link, lower_page, mailto
 
 ROOT = Path(__file__).resolve().parent.parent
-MANIFEST = ROOT / 'tools/capture/manifest.json'
+HERO_STATE = ROOT / 'tools/capture/hero.json'  # written by tools/capture/hero-swap.mjs, the hero swap point
 
 LANGUAGES = {
  'en': {'path': '/', 'og_locale': 'en_US', 'label': 'EN', 'name': 'English', 'published': True},
@@ -24,44 +24,44 @@ PAGE = {
                        'withdrawals with approval tiers, risk, fraud and compliance. Available for pilot programs.',
         'og_alt': 'RHS Labs Sentinel: player account management for regulated operators.',
         'nav': [['Platform', '#platform'], ['Modules', '#modules'], ['Payments', '#payments'], ['Compliance', '#compliance'], ['Security', '#security'], ['Pilot', '#pilot']],
-        'skip': 'Skip to content', 'back_to_top': 'RHS Labs / Sentinel — Back to top', 'main_menu': 'Main menu',
+        'skip': 'Skip to content', 'back_to_top': 'RHS Labs Sentinel — back to top', 'main_menu': 'Main menu',
         'open_navigation': 'Open navigation', 'close_navigation': 'Close navigation'},
  'es': {'title': 'RHS Labs Sentinel — PAM y back-office para operadores de apuestas regulados',
         'description': 'Gestión de cuentas de jugadores y back-office para operadores de apuestas regulados: Player 360, '
                        'retiros con niveles de aprobación, riesgo, fraude y cumplimiento. Disponible para programas piloto.',
         'og_alt': 'RHS Labs Sentinel: gestión de cuentas de jugadores para operadores regulados.',
         'nav': [['Plataforma', '#platform'], ['Módulos', '#modules'], ['Pagos', '#payments'], ['Cumplimiento', '#compliance'], ['Seguridad', '#security'], ['Piloto', '#pilot']],
-        'skip': 'Saltar al contenido', 'back_to_top': 'RHS Labs / Sentinel — Volver al inicio', 'main_menu': 'Menú principal',
+        'skip': 'Saltar al contenido', 'back_to_top': 'RHS Labs Sentinel — volver al inicio', 'main_menu': 'Menú principal',
         'open_navigation': 'Abrir navegación', 'close_navigation': 'Cerrar navegación'},
 }
 
 # Hero copy. The three images stay the approved concept art until product captures are approved
 # and swapped in on purpose (tools/capture/hero-swap.mjs); the badge under the orbit says which.
 HERO = {
- 'en': {'section': 'Sentinel platform showcase',
+ 'en': {'section': 'Sentinel platform showcase', 'eyebrow': 'SENTINEL PLATFORM',
         'h1': 'Player account management<br> <span>for regulated operators.</span>',
         'subtitle': 'RHS Labs Sentinel is the PAM and back-office for regulated betting operators: '
-                    'Player 360, payments with approval tiers, and risk and compliance in one place.',
+                    'Player 360, withdrawals with approval tiers, risk and compliance, all in one place.',
         'carousel': {'concept': 'Three concept illustrations of Sentinel', 'product': 'Three Sentinel back-office screens'},
         'choose': 'Choose showcase screen', 'show': 'Show {name}', 'suffix': 'CONTINUOUS 3D ORBIT', 'roledescription': 'carousel',
         'pause': 'Pause motion', 'resume': 'Resume motion',
         'badge': {'concept': ['AVAILABLE FOR PILOT PROGRAMS', 'ILLUSTRATIVE CONCEPT', 'SIMULATED DATA'],
                   'product': ['AVAILABLE FOR PILOT PROGRAMS', 'PRODUCT UI', 'SYNTHETIC DATA']},
         'values': [['Player 360', 'Account, wallet and history in one profile'],
-                   ['Payments with approval tiers', 'Four-eyes control on withdrawals'],
+                   ['Payments with approval tiers', 'Four-eyes control above your threshold'],
                    ['Risk and fraud', 'Rules, alerts and cases'],
                    ['Audit trail', 'Who did what, and when']]},
- 'es': {'section': 'Presentación de la plataforma Sentinel',
+ 'es': {'section': 'Presentación de la plataforma Sentinel', 'eyebrow': 'PLATAFORMA SENTINEL',
         'h1': 'Gestión de cuentas de jugadores<br> <span>para operadores regulados.</span>',
         'subtitle': 'RHS Labs Sentinel es el PAM y back-office para operadores de apuestas regulados: '
-                    'Player 360, pagos con niveles de aprobación, y riesgo y cumplimiento en un solo lugar.',
+                    'Player 360, retiros con niveles de aprobación, riesgo y cumplimiento, todo en un solo lugar.',
         'carousel': {'concept': 'Tres ilustraciones conceptuales de Sentinel', 'product': 'Tres pantallas del back-office Sentinel'},
         'choose': 'Elegir una pantalla', 'show': 'Mostrar {name}', 'suffix': 'ÓRBITA 3D CONTINUA', 'roledescription': 'carrusel',
         'pause': 'Pausar movimiento', 'resume': 'Reanudar movimiento',
         'badge': {'concept': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'CONCEPTO ILUSTRATIVO', 'DATOS SIMULADOS'],
                   'product': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'INTERFAZ DEL PRODUCTO', 'DATOS SINTÉTICOS']},
-        'values': [['Player 360', 'Cuenta, billetera e historial en un perfil'],
-                   ['Pagos con niveles de aprobación', 'Control de cuatro ojos en retiros'],
+        'values': [['Player 360', 'Cuenta, billetera e historial en un solo perfil'],
+                   ['Pagos con niveles de aprobación', 'Cuatro ojos por encima de su umbral'],
                    ['Riesgo y fraude', 'Reglas, alertas y casos'],
                    ['Registro de auditoría', 'Quién hizo qué y cuándo']]},
 }
@@ -86,10 +86,10 @@ HERO_PRODUCT = [
  {'screen': 'player-360-summary',
   'name': {'en': 'Player 360 · Summary', 'es': 'Player 360 · Resumen'},
   'alt': {'en': 'Sentinel back-office: Player 360 summary of a synthetic player, with the identity strip, money cards and summary panels.',
-          'es': 'Back-office Sentinel: resumen del Player 360 de un jugador sintético, con la franja de identidad, las tarjetas de dinero y los paneles del resumen.'}},
+          'es': 'Back-office Sentinel: resumen del Player 360 de un jugador sintético, con la franja de identidad, los indicadores financieros y los paneles del resumen.'}},
  {'screen': 'withdrawals-queue',
   'name': {'en': 'Withdrawals queue', 'es': 'Cola de retiros'},
-  'alt': {'en': 'Sentinel back-office: withdrawals queue with synthetic requests, their state and waiting time.',
+  'alt': {'en': 'Sentinel back-office: withdrawal queue with synthetic requests, their state and waiting time.',
           'es': 'Back-office Sentinel: cola de retiros con solicitudes sintéticas, su estado y tiempo de espera.'}},
  {'screen': 'reports',
   'name': {'en': 'Reports', 'es': 'Informes'},
@@ -106,6 +106,7 @@ V6_HERO = {  # strings of the approved fragment that the copy replaces (each mus
  'h1': '<h1>See risk. Stop fraud. <span>Stay ahead.</span></h1>',
  'subtitle': '<p class="hero-subtitle">Connected intelligence across payments, identities, devices and accounts — designed for confident operational decisions.</p>',
  'section': 'aria-label="Sentinel platform showcase"',
+ 'eyebrow': '<span class="hero-eyebrow">RHS LABS &nbsp;/&nbsp; SENTINEL PLATFORM</span>',
  'cta_primary': '<a class="btn" href="#contact">Discuss a pilot <span aria-hidden="true">↗</span></a>',
  'cta_secondary': '<a class="btn alt" href="#platform">Explore the platform</a>',
  'carousel': 'aria-label="Three illustrative Sentinel interfaces"',
@@ -169,21 +170,25 @@ def replace_once(text, old, new):
  return text.replace(old, new)
 
 
-def capture_manifest():
- return json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {'screens': {}}
+def hero_state():
+ return json.loads(HERO_STATE.read_text()) if HERO_STATE.exists() else {'active': False}
 
 
-def hero_panels(manifest):
- """The three orbit images: approved product captures after the swap, the concept art before it."""
- hero = manifest.get('hero') or {}
- if not hero.get('active'):
+def hero_file_exists(rel):
+ return (ROOT / rel).exists()
+
+
+def hero_panels(state):
+ """The three orbit images: the concept art until the deliberate swap, then the clean 1586×992 copies of
+ the real captures (assets/hero/<screen>.webp), front panel first."""
+ if not (state or {}).get('active'):
   return 'concept', [dict(item, src=item['src'], width=1586, height=992) for item in HERO_CONCEPT]
  panels = []
  for item in HERO_PRODUCT:
-  screen = manifest['screens'].get(item['screen']) or {}
-  if not screen.get('approved') or not screen.get('hero'):
-   raise ValueError('hero swap is active but this capture is not approved: ' + item['screen'])
-  panels.append(dict(item, src='/' + screen['hero']['path'], width=screen['hero']['width'], height=screen['hero']['height']))
+  rel = f'assets/hero/{item["screen"]}.webp'
+  if not hero_file_exists(rel):
+   raise ValueError('hero swap is on but the capture copy is missing: ' + rel)
+  panels.append(dict(item, src='/' + rel, width=1586, height=992))
  return 'product', panels
 
 
@@ -193,13 +198,14 @@ def language_links(code, cls=None):
  return links
 
 
-def render_hero(code, manifest):
+def render_hero(code, state):
  h, v = HERO[code], V6_HERO
- kind, panels = hero_panels(manifest)
+ kind, panels = hero_panels(state)
  html = (ROOT / 'assets/hero-v6-fragment.html').read_text()
  html = replace_once(html, v['h1'], f'<h1>{h["h1"]}</h1>')
  html = replace_once(html, v['subtitle'], f'<p class="hero-subtitle">{h["subtitle"]}</p>')
  html = replace_once(html, v['section'], f'aria-label="{esc(h["section"])}"')
+ html = replace_once(html, v['eyebrow'], f'<span class="hero-eyebrow">RHS LABS &nbsp;/&nbsp; {esc(h["eyebrow"])}</span>')
  # Primary CTA: a pre-filled demo e-mail; secondary: how a pilot works (its own e-mail is there).
  cta = COPY[code]['cta']
  html = replace_once(html, v['cta_primary'], f'<a class="btn" href="{esc(mailto(code, "demo"))}" data-cta="demo">{cta["demo"]}<span class="rhs-sr"> {cta["opens"]}</span> <span aria-hidden="true">↗</span></a>')
@@ -234,17 +240,17 @@ def render_header(code):
  html = replace_once(html, v['languages'], '<span class="lang">' + ' · '.join(language_links(code)) + '</span>')
  html = replace_once(html, v['nav_close'], '<span class="rhs-mobile-language">' + ' · '.join(language_links(code)) + '</span></nav>')
  cta = COPY[code]['cta']
- html = replace_once(html, v['cta'], f'<a class="btn sm" href="{esc(mailto(code, "demo"))}" data-cta="demo">{cta["demo_short"]}<span class="rhs-sr"> {cta["opens"]}</span> ↗</a>')
+ html = replace_once(html, v['cta'], f'<a class="btn sm" href="{esc(mailto(code, "demo"))}" data-cta="demo">{cta["demo_short"]}<span class="rhs-sr"> {cta["opens"]}</span> <span aria-hidden="true">↗</span></a>')
  html = replace_once(html, v['links'], ''.join(f'<a href="{href}">{label}</a>' for label, href in p['nav']))
  return html
 
 
-def render(code, manifest=None):
- manifest = capture_manifest() if manifest is None else manifest
+def render(code, state=None):
+ state = hero_state() if state is None else state
  language, p = LANGUAGES[code], PAGE[code]
- hero, panels = render_hero(code, manifest)
+ hero, panels = render_hero(code, state)
  header = render_header(code)
- hero_kind = 'product' if (manifest.get('hero') or {}).get('active') else 'concept'
+ hero_kind = 'product' if (state or {}).get('active') else 'concept'
  languages = ''.join(f'<a href="{LANGUAGES[c]["path"]}" data-language="{c}" lang="{c}"' + (' aria-current="page"' if c == code else '') + f'>{LANGUAGES[c]["label"]}</a>' for c in published())
  og_image = f'/assets/og-image-{code}.jpg' if (ROOT / f'assets/og-image-{code}.jpg').exists() else '/assets/og-image-en.jpg'
  locale_alternates = ''.join(f'<meta property="og:locale:alternate" content="{LANGUAGES[c]["og_locale"]}">' for c in published() if c != code)
@@ -261,7 +267,7 @@ def render(code, manifest=None):
 <script src="/site.js" defer></script><script src="/assets/hero-v6.js" defer></script>
 </head><body><a class="rhs-skip" href="#platform">{p['skip']}</a>
 {header}<main>{hero}
-{lower_page(code, manifest, languages, hero_kind)}</main></body></html>'''
+{lower_page(code, languages, hero_kind)}</main></body></html>'''
 
 
 def route_file(code):
@@ -271,7 +277,7 @@ def route_file(code):
 
 if __name__ == '__main__':
  check_parity()
- manifest = capture_manifest()
+ state = hero_state()
  for code in published():
-  out = route_file(code); out.parent.mkdir(exist_ok=True, parents=True); out.write_text(render(code, manifest))
+  out = route_file(code); out.parent.mkdir(exist_ok=True, parents=True); out.write_text(render(code, state))
  print('Rendered ' + ', '.join(LANGUAGES[c]['path'] for c in published()) + ' from shared content source.')

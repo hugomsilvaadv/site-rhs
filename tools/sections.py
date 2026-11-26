@@ -1,9 +1,10 @@
 """Lower page (sectors 02–11): the real Sentinel back-office, EN/ES from one source; static, no backend.
 
 Every claim maps to a screen of the back-office menu (its navigation config, with the flag on in the
-`homologacao` profile). Product images come only from captures approved in
-tools/capture/manifest.json; until one is approved, its slot lists the real screens of that area instead of
-a picture, so the page never shows an invented screen. Connected intelligence stays a concept diagram.
+`homologacao` profile). Each product image is assets/product/<screen>.webp: a "Screenshot pending" placeholder
+until the capture (tools/capture/screens.mjs) overwrites it with the real screen, same name and proportion, so
+the swap needs no change here. The capture carries the product badge and the Player 360 markers itself.
+Connected intelligence stays a concept diagram.
 """
 import json
 from html import escape as esc
@@ -11,7 +12,6 @@ from pathlib import Path
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent.parent
-MANIFEST = ROOT / 'tools/capture/manifest.json'
 CONTACT = 'sales@rhs-labs.com'
 
 SHAPES = {
@@ -106,89 +106,89 @@ PRINCIPLE_ICONS = ['layers', 'settings', 'fraud']
 
 COPY = {
 'en': {
- 'badge': 'Product UI · Synthetic data', 'module': 'Module', 'more_aria': 'Explore {name}',
- 'tour': {'head': ['THE BACK-OFFICE', 'Every operational team.<br><em>One back-office.</em>', 'Seven areas cover the daily work of a regulated operator: player support, payments, risk, engagement, compliance, reporting and administration.'],
+ 'module': 'Module',
+ 'tour': {'head': ['THE BACK-OFFICE', 'Every operational team.<br><em>One back-office.</em>', 'Seven areas cover the daily work of a regulated operator: player accounts, payments, risk, engagement, compliance, reporting and administration.'],
   'tablist': 'Back-office areas', 'screens': 'Screens in this area',
   'tabs': [
    {'label': 'Players', 'title': 'Find any player. See the whole account.',
     'bullets': ['Quick search and seven combinable criteria, with up to 200 results per page.', 'Player 360 in eight areas: summary, KYC, payments, wallet, risk, limits, games and history.', 'Personal data masked by default; staff with permission reveal one field at a time, with a reason.', 'Notes, tags, segments and the VIP account manager on the profile.'],
     'screens': [['Search', 'Quick and advanced search'], ['Player 360', 'The full account in eight areas'], ['KYC queue', 'Documents waiting for review'], ['Responsible gaming', 'Self-exclusions, pauses and limits'], ['Data-subject requests', 'Privacy requests by deadline']],
-    'more': 'Inside the Player 360', 'alt': 'Sentinel back-office: the payments area of a synthetic player\'s Player 360.'},
+    'more': 'Inside Player 360', 'alt': 'Sentinel back-office: the payments area of a synthetic player\'s Player 360.'},
    {'label': 'Payments', 'title': 'Withdrawals under control, from request to payout.',
     'bullets': ['A withdrawal queue that flags every request waiting past your handling-time target.', 'Approval limits by role and player category, with a second approver above the threshold.', 'Unmatched incoming payments linked to a player or returned, with a second approval.', 'Ledger search across players, with totals and CSV export.'],
     'screens': [['Withdrawals', 'Queue and decision steps'], ['Transactions', 'Ledger search and CSV'], ['Reconciliation', 'Unmatched incoming payments'], ['Adjustment batches', 'CSV batches with approval'], ['Cashier limits', 'Operator payment limits'], ['Approval limits', 'Who approves how much']],
-    'more': 'Payments in detail', 'alt': 'Sentinel back-office: withdrawals queue with synthetic requests.'},
-   {'label': 'Risk & Fraud', 'title': 'From an alert to a decided case.',
-    'bullets': ['Alert queue with filters, claim and assignment, and bulk resolution by root cause.', 'Cases with triage, notes, linked withdrawals and closure by root cause.', 'Rules with fire counts and false-positive rates, simulated before a change is proposed; blocking changes need a second approver.', 'Fraud points per player, manual adjustments with a reason, and rule exemptions approved by a second person.'],
+    'more': 'Payments in detail', 'alt': 'Sentinel back-office: withdrawal queue with synthetic requests.'},
+   {'label': 'Risk & fraud', 'title': 'From alert to closed case.',
+    'bullets': ['Alert queue with filters, claim and assignment, and bulk resolution by root cause.', 'Cases with triage, notes, linked withdrawals and closure by root cause.', 'Rules with fire counts and false-positive rates; changes are simulated before they are proposed, and a blocking rule needs a second approver to take effect.', 'Fraud points per player, manual adjustments with a reason, and rule exemptions approved by a second person.'],
     'screens': [['Alerts', 'Queue, claim and resolution'], ['Cases', 'Investigation workspace'], ['Rules', 'Metrics, editor and firings'], ['Approvals', 'Four-eyes decisions']],
     'more': '', 'alt': 'Sentinel back-office: alert queue with synthetic alerts.'},
-   {'label': 'Bonus & CRM', 'title': 'Campaigns aimed with saved segments.',
-    'bullets': ['Segments built from rules and groups, versioned and counted before you save.', 'Bonus campaigns for a saved segment, and bulk blocks or releases with a preview; above 50 accounts, a second person approves.', 'A VIP portfolio: an account manager for each VIP player, with contact restrictions.', 'Service tickets, and CRM templates approved before use.'],
+   {'label': 'Bonus & CRM', 'title': 'Campaigns aimed at saved segments.',
+    'bullets': ['Segments built from rules and groups, versioned and counted before you save.', 'Bonus campaigns for a saved segment, plus bulk blocks or releases that are previewed first and need a second approver above 50 accounts.', 'A VIP portfolio: an account manager for each VIP player, with contact restrictions.', 'Service tickets, and CRM templates approved before use.'],
     'screens': [['Segments', 'Rules, groups and counts'], ['Bonus', 'Campaigns and audiences'], ['Bulk actions', 'Preview, then run'], ['VIP portfolio', 'Account managers'], ['Service tickets', 'Customer-service follow-up'], ['CRM templates', 'Messages with approval']],
-    'more': '', 'alt': 'Sentinel back-office: segments list with synthetic segments.'},
-   {'label': 'Compliance', 'title': 'The controls a regulator expects to see.',
-    'bullets': ['An audit report of staff actions, filterable by player, with incident records.', 'Responsible gaming: self-exclusions, pauses and limits, including requests taken by phone or chat.', 'Data-subject requests tracked against their deadline.', 'Versioned policies and terms, with each player\'s acceptance on record.'],
+    'more': '', 'alt': 'Sentinel back-office: segment list with synthetic segments.'},
+   {'label': 'Compliance', 'title': 'Compliance controls, built into daily work.',
+    'bullets': ['An audit report of staff actions, filterable by player, exportable to CSV, XML or Excel, with a one-click integrity check.', 'Responsible gaming: self-exclusions, pauses and limits, including requests taken by phone or chat.', 'Data-subject requests tracked against their deadlines.', 'Versioned policies and terms, with each player\'s acceptance on record.'],
     'screens': [['Audit report', 'Who did what, and when'], ['Responsible gaming', 'Requests and exclusions'], ['KYC queue', 'Documents to review'], ['Data-subject requests', 'Privacy deadlines'], ['Policies & terms', 'Versions and acceptance'], ['Jurisdiction', 'Parameters and time zone']],
     'more': 'Compliance and control', 'alt': 'Sentinel back-office: audit report with synthetic entries.'},
-   {'label': 'Reports', 'title': 'The numbers operations and finance ask for.',
+   {'label': 'Reports', 'title': 'The numbers your operations and finance teams ask for.',
     'bullets': ['Operator financial summary, including the balance held for players.', 'Margin by product, negative balances and active blocks for the chosen period.', 'Withdrawal payout times and the health of scheduled jobs.', 'Staff productivity, exportable as CSV.'],
     'screens': [['Reports', 'Finance, risk and operations']],
     'more': '', 'alt': 'Sentinel back-office: reports with synthetic operator totals.'},
    {'label': 'Administration', 'title': 'Access by role. Changes on record.',
-    'bullets': ['Users, roles and fine-grained permissions, including custom roles.', 'Approval limits by role and category, and the operator\'s cashier limits.', 'Tags, handling-time targets and jurisdiction parameters in one place.', 'Administrative changes recorded in the audit trail.'],
-    'screens': [['Users & roles', 'Permissions by role'], ['Approval limits', 'Tiers by category'], ['Tags', 'Account tags'], ['SLA targets', 'Handling-time goals'], ['Integrations', 'Connection settings']],
+    'bullets': ['Five staff roles built from granular permissions, reflected in menus and screens, and enforced by the API.', 'Approval limits by role and category, and the operator\'s cashier limits.', 'Tag catalog, handling-time targets and jurisdiction parameters.', 'Administrative changes recorded in the audit trail.'],
+    'screens': [['Users & roles', 'Staff access and permissions'], ['Approval limits', 'Tiers by category'], ['Tags', 'Account tags'], ['SLA targets', 'Handling-time goals'], ['Integrations', 'Connection settings']],
     'more': 'Security and integration', 'alt': 'Sentinel back-office: users and roles with synthetic staff accounts.'},
   ]},
- 'modules': {'head': ['MODULES', 'Four modules.<br><em>Start with what you need.</em>', 'Core runs the player operation; Payments, Intelligence and Fraud extend it. Choose the scope that fits your operation.'],
+ 'modules': {'head': ['MODULES', 'Four modules.<br><em>Start with what you need.</em>', 'Core covers player accounts, compliance and administration; Payments, Intelligence and Fraud extend it. Choose the scope that fits your operation.'],
   'cards': [['Core', 'Player search, Player 360, KYC, responsible gaming, compliance and administration.'],
             ['Payments', 'Withdrawal queue and approvals, limits, reconciliation, adjustment batches and the ledger.'],
             ['Intelligence', 'Reports and segments: player balances, margins, negative balances, blocks and job health.'],
             ['Fraud', 'Alerts, cases, rules, fraud points and four-eyes approvals.']],
-  'complete': 'Complete brings the four modules together.', 'link': 'See {name}'},
- 'p360': {'head': ['PLAYER 360', 'One profile.<br><em>Every decision in context.</em>', 'The Player 360 brings an account\'s identity, money, risk and history together, and lets your team act without leaving the profile.'],
-  'label': 'Parts of the Player 360', 'alt': 'Sentinel back-office: Player 360 summary of a synthetic player, with numbered markers on the parts described beside it.',
+  'complete': 'All four modules: Core, Payments, Intelligence and Fraud.', 'link': 'See {name}'},
+ 'p360': {'head': ['PLAYER 360', 'One profile.<br><em>Every decision in context.</em>', 'Player 360 brings an account\'s identity, money, risk and history together, and lets your team act without leaving the profile.'],
+  'label': 'Parts of Player 360', 'alt': 'Sentinel back-office: Player 360 summary of a synthetic player, with numbered markers on the parts described beside it.',
   'points': [['Identity strip', 'KYC status, locks, risk tags and account age, always in view.'],
-             ['Money cards', 'Nine cards — deposits, withdrawals, net deposits, bonus, revenue and balance — above every area.'],
+             ['Money cards', 'Nine cards covering deposits, withdrawals, net deposits, bonus, revenue and balance, shown above every area.'],
              ['Pending withdrawals', 'Decided from the profile, with the same steps and four-eyes rules as the queue.'],
              ['Alerts', 'Open alerts in the summary, and manual alerts raised from the profile.'],
              ['History and audit', 'Each account change, before and after, with who made it and why.']]},
- 'payments': {'head': ['PAYMENTS', 'Four eyes on every<br><em>withdrawal that matters.</em>', 'Withdrawals move through explicit states. Limits by role and player category decide who may approve, and a second person approves above the threshold.'],
+ 'payments': {'head': ['PAYMENTS', 'Four eyes on every<br><em>withdrawal above your threshold.</em>', 'Withdrawals move through explicit states. Limits by role and player category decide who may approve, and a second person approves above the threshold.'],
   'items': [['Handling-time target', 'Each request shows how long it has waited and is flagged past your target; a report measures time to payment.'],
             ['Approval tiers', 'Each role approves up to its limit; above the category threshold, a different person gives the second approval.'],
             ['Cashier limits', 'Minimum and maximum deposits and withdrawals, and withdrawal counts per period, by player category.'],
-            ['Unmatched payments', 'Incoming payments without a player, linked or returned: one person asks, another approves.'],
+            ['Unmatched payments', 'Incoming payments that match no player are linked to an account or returned; one person requests, another approves.'],
             ['Adjustment batches', 'Credits and debits for up to 200 accounts from a CSV, previewed line by line and approved by another person.'],
-            ['CSV export', 'Ledger search by id or payment-provider reference, with up to 5,000 rows exportable as CSV.']],
+            ['Ledger search and export', 'Search the ledger by ID or payment-provider reference and export up to 5,000 rows as CSV.']],
   'flow_title': 'Withdrawal states', 'flow_note': 'The states a withdrawal goes through in the back-office. A second approval applies above the category threshold.',
   'flow': {'requested': 'Requested', 'verifying': 'Verifying', 'in_review': 'In review', 'approved': 'Approved', 'second_approval': 'Second approval', 'sent': 'Sent', 'confirmed': 'Confirmed',
            'held': 'Held', 'rejected': 'Rejected', 'failed': 'Failed', 'reversed': 'Reversed'},
-  'side': 'Other outcomes', 'alt': 'Sentinel back-office: a synthetic withdrawal with its approval steps.'},
+  'side': 'Other states', 'alt': 'Sentinel back-office: a synthetic withdrawal with its approval steps.'},
  'compliance': {'head': ['COMPLIANCE & CONTROL', 'Controls you can<br><em>show a regulator.</em>', 'Responsible gaming, KYC, privacy and policy acceptance sit in the same back-office as the operation, with staff actions on record.'],
-  'items': [['Audit trail', 'A searchable audit report of staff actions, filterable by player, with incident records.'],
+  'items': [['Audit trail', 'Who did what and when, before and after, with exports, a hash-chain integrity check and manually recorded incidents.'],
             ['Responsible gaming', 'Self-exclusions, pauses and limits, including requests recorded by an agent.'],
-            ['KYC queue', 'Documents waiting for review across players.'],
-            ['Data-subject requests', 'Privacy requests tracked against their deadline.'],
+            ['KYC queue', 'Documents waiting for review, timed against your target; each check verified or rejected with a reason.'],
+            ['Data-subject requests', 'Privacy requests tracked against their deadlines.'],
             ['Policies and terms', 'Published versions, with each player\'s acceptance on record.'],
             ['Jurisdiction parameters', 'Market settings, including the display time zone, published by authorized staff.'],
-            ['Permissions by role', 'Every screen and action tied to a permission, granted through roles.']]},
- 'intelligence': {'head': ['CONNECTED INTELLIGENCE', 'Signals with context,<br><em>not verdicts.</em>', 'Sentinel gathers the signals around an account — payments, alerts, fraud points, KYC and responsible gaming — so people decide with the whole picture.'],
+            ['Permissions by role', 'Every screen and action tied to a permission, granted through five staff roles.']]},
+ 'intelligence': {'head': ['CONNECTED INTELLIGENCE', 'Signals with context,<br><em>not verdicts.</em>', 'Sentinel gathers the signals around an account — payments, alerts, fraud points, KYC and responsible gaming — so your team decides in context.'],
   'center': 'Account', 'nodes': ['Payments', 'Alerts', 'Fraud points', 'KYC', 'Responsible gaming', 'Audit trail'],
   'note': 'Concept diagram. A signal alone never decides: your team and your policies do.', 'title': 'Signals around one account'},
- 'security': {'head': ['SECURITY & INTEGRATION', 'Built API-first.<br><em>Secured on the server.</em>', 'Staff work in the browser; tokens, sessions and authorization stay on the server and in the API.'],
+ 'security': {'head': ['SECURITY & INTEGRATION', 'Built API-first.<br><em>Secured on the server.</em>', 'Staff work in the browser; only the server can read their session and tokens, and authorization is checked on the server and in the API.'],
   'items': [['API-first', 'Every screen reads and writes through the Sentinel API, the same API your platform integrates with.'],
-            ['Sealed server-side session', 'An encrypted, HttpOnly session cookie; access tokens never reach the browser.'],
-            ['Sign-in with your identity provider', 'Staff sign in through OpenID Connect; the back-office never sees a password.'],
+            ['Sealed session cookie', 'An encrypted, HttpOnly cookie that only the back-office server can open, so access tokens are never readable in the browser.'],
+            ['Sign-in through an identity provider', 'Staff sign in through OpenID Connect; the back-office never sees a password.'],
             ['Operator separation', 'Each operator\'s data is kept apart, and the API authorizes every request.'],
             ['Masked player data', 'Personal data is masked by default; revealing it needs a permission.']],
-  'arch': [['Staff browser', 'No tokens'], ['Back-office server', 'Sealed session, permissions'], ['Sentinel API', 'Authorization, audit'], ['Identity provider', 'Staff sign-in']], 'arch_title': 'How a request travels'},
- 'pilot': {'head': ['PILOT PROGRAM', 'How a pilot<br><em>works.</em>', 'A pilot runs on your jurisdiction\'s rules and your payment flow, with our team working alongside yours.'],
+  'arch': [['Staff browser', 'No readable tokens'], ['Back-office server', 'Sealed session, permissions'], ['Sentinel API', 'Authorization, audit'], ['Identity provider', 'Staff sign-in']], 'arch_title': 'How a request travels'},
+ 'pilot': {'head': ['PILOT PROGRAM', 'How a pilot works,<br><em>step by step.</em>', 'A pilot runs on your jurisdiction\'s rules and your payment flow, with our team working alongside yours.'],
   'steps': [['Discovery', 'We map your operation, jurisdiction, team roles and the modules in scope.'],
-            ['Jurisdiction and rules', 'Parameters, approval limits, rules and policies set up for your market.'],
+            ['Jurisdiction and rules', 'We set up parameters, approval limits, rules and policies for your market.'],
             ['API and payments integration', 'Your platform connects through the Sentinel API; the link to your payment provider is scoped and built with you.'],
-            ['Accompanied operation', 'Your team operates with ours alongside, with agreed goals and regular reviews.']],
+            ['Supported operation', 'Your team operates with ours alongside, with agreed goals and regular reviews.']],
   'cta': 'Discuss a pilot'},
- 'about': {'head': ['ABOUT RHS LABS', 'Software for regulated<br>betting operations.', 'RHS Labs builds Sentinel, the PAM and back-office for regulated operators, around accountable work: permissions, approvals and a record of each decision.', 'Our approach'],
-  'principles': [['Real workflows first', 'Screens follow how operations, payments and compliance teams work.'], ['Modular by design', 'Start with Core; add Payments, Intelligence or Fraud as you grow.'], ['Accountable by default', 'Four-eyes approvals, permissions and audit trails throughout.']],
+ 'about': {'head': ['ABOUT RHS LABS', 'Software for regulated<br>betting operations.', 'RHS Labs builds Sentinel, the PAM and back-office for regulated operators. It is designed around accountable work: permissions, approvals and a record of each decision.', 'See how a pilot works'],
+  'principles': [['Real workflows first', 'Screens follow how operations, payments and compliance teams work.'], ['Modular by design', 'Start with Core; add Payments, Intelligence or Fraud as you grow.'], ['Accountable by default', 'Permissions, four-eyes approvals and an audit trail, built in.']],
   'brandline': 'PAM and back-office<br>for regulated operators.'},
  'contact': {'head': ['GET IN TOUCH', 'See Sentinel with<br>your own use cases.', 'Tell us about your operation and jurisdiction. We will walk you through the back-office with synthetic data and discuss a pilot.'],
   'sales': 'Talk to our team', 'salessub': 'A walkthrough of the back-office for your team, with synthetic data.',
@@ -197,96 +197,96 @@ COPY = {
   'mail': {'demo': ['Sentinel demo request', 'I would like a demo of RHS Labs Sentinel.'], 'pilot': ['Sentinel pilot program', 'We would like to discuss a Sentinel pilot.']},
   'fields': ['Company:', 'Jurisdiction(s):', 'Approximate volume (active players or monthly transactions):', 'Modules of interest (Core, Payments, Intelligence, Fraud):'],
   'greeting': 'Hello RHS Labs team,', 'privacy': 'Please do not include player personal data in this email.'},
- 'footer': {'tagline': 'PAM and back-office for regulated operators.', 'nav': ['Platform', 'Modules', 'Payments', 'Compliance', 'Security', 'Pilot', 'Company'], 'nav_label': 'Footer navigation',
+ 'footer': {'tagline': 'PAM and back-office for regulated operators.', 'nav': ['Platform', 'Modules', 'Payments', 'Compliance', 'Security', 'Pilot', 'Company'], 'nav_label': 'Footer',
   'notice': {'available': 'Sentinel is available for pilot programs; scope and availability are confirmed in commercial discussions.',
              'concept': 'The dashboards at the top of the page are concept illustrations with simulated data, not the current product.',
              'product': 'Product screens show synthetic data from a test environment.'},
-  'privacy': 'Privacy & enquiries', 'privacynote': 'This static website has no enquiry form or analytics tracker. Only your language preference is stored in this browser. Email opens your own service; please do not share player personal data. Organizational and data-handling details are confirmed before any pilot.'},
+  'privacy': 'Privacy & inquiries', 'privacynote': 'This static website has no inquiry form or analytics tracker. Only your language preference is stored in this browser. Email links open your own email app; please do not share player personal data. Organizational and data-handling details are confirmed before any pilot.'},
 },
 'es': {
- 'badge': 'Interfaz del producto · Datos sintéticos', 'module': 'Módulo', 'more_aria': 'Explorar {name}',
- 'tour': {'head': ['EL BACK-OFFICE', 'Todos los equipos operativos.<br><em>Un solo back-office.</em>', 'Siete áreas cubren el trabajo diario de un operador regulado: atención al jugador, pagos, riesgo, fidelización, cumplimiento, informes y administración.'],
+ 'module': 'Módulo',
+ 'tour': {'head': ['EL BACK-OFFICE', 'Todos los equipos operativos.<br><em>Un solo back-office.</em>', 'Siete áreas cubren el trabajo diario de un operador regulado: cuentas de jugadores, pagos, riesgo, fidelización, cumplimiento, informes y administración.'],
   'tablist': 'Áreas del back-office', 'screens': 'Pantallas de esta área',
   'tabs': [
    {'label': 'Jugadores', 'title': 'Encuentre a cualquier jugador. Vea toda la cuenta.',
-    'bullets': ['Búsqueda rápida y siete criterios combinables, con hasta 200 resultados por página.', 'Player 360 en ocho áreas: resumen, KYC, pagos, billetera, riesgo, límites, juego e historial.', 'Datos personales enmascarados por defecto; quien tiene permiso revela un campo por vez, con un motivo.', 'Notas, etiquetas, segmentos y gestor VIP en el perfil.'],
-    'screens': [['Búsqueda', 'Búsqueda rápida y avanzada'], ['Player 360', 'La cuenta completa en ocho áreas'], ['Cola KYC', 'Documentos pendientes de revisión'], ['Juego responsable', 'Autoexclusiones, pausas y límites'], ['Solicitudes de titulares', 'Pedidos de privacidad por plazo']],
+    'bullets': ['Búsqueda rápida y siete criterios combinables, con hasta 200 resultados por página.', 'Player 360 en ocho áreas: resumen, KYC, pagos, billetera, riesgo, límites, juego e historial.', 'Datos personales enmascarados por defecto; quien tiene permiso los revela campo por campo, indicando un motivo.', 'Notas, etiquetas, segmentos y gestor VIP en el perfil.'],
+    'screens': [['Búsqueda', 'Búsqueda rápida y avanzada'], ['Player 360', 'La cuenta completa en ocho áreas'], ['Cola KYC', 'Documentos pendientes de revisión'], ['Juego responsable', 'Autoexclusiones, pausas y límites'], ['Solicitudes de titulares de datos', 'Solicitudes de privacidad por plazo']],
     'more': 'Dentro del Player 360', 'alt': 'Back-office Sentinel: el área de pagos del Player 360 de un jugador sintético.'},
    {'label': 'Pagos', 'title': 'Retiros bajo control, de la solicitud al pago.',
-    'bullets': ['Una cola de retiros que señala cada solicitud que supera su objetivo de tiempo de atención.', 'Límites de aprobación por rol y categoría de jugador, con un segundo aprobador por encima del umbral.', 'Pagos entrantes sin titular, vinculados a un jugador o devueltos con segunda aprobación.', 'Búsqueda en el libro de movimientos, con totales y exportación CSV.'],
+    'bullets': ['Una cola de retiros que señala cada solicitud que supera su objetivo de tiempo de atención.', 'Límites de aprobación por rol y categoría de jugador, con un segundo aprobador por encima del umbral.', 'Pagos entrantes sin titular, vinculados a un jugador o devueltos, con una segunda aprobación.', 'Búsqueda en el libro de movimientos de todos los jugadores, con totales y exportación a CSV.'],
     'screens': [['Retiros', 'Cola y pasos de decisión'], ['Transacciones', 'Libro de movimientos y CSV'], ['Conciliación', 'Pagos entrantes sin titular'], ['Ajustes en lote', 'Lotes CSV con aprobación'], ['Límites de caja', 'Límites de pago del operador'], ['Límites de aprobación', 'Quién aprueba cuánto']],
     'more': 'Pagos en detalle', 'alt': 'Back-office Sentinel: cola de retiros con solicitudes sintéticas.'},
    {'label': 'Riesgo y fraude', 'title': 'De la alerta al caso resuelto.',
-    'bullets': ['Cola de alertas con filtros, asignación y cierre masivo por causa raíz.', 'Casos con triaje, notas, retiros vinculados y cierre por causa raíz.', 'Reglas con disparos y tasa de falsos positivos, simuladas antes de proponer un cambio; los cambios de bloqueo requieren un segundo aprobador.', 'Puntos de fraude por jugador, ajustes manuales con motivo y exenciones de reglas aprobadas por una segunda persona.'],
+    'bullets': ['Cola de alertas con filtros, asignación y cierre masivo por causa raíz.', 'Casos con triaje, notas, retiros vinculados y cierre por causa raíz.', 'Reglas con número de disparos y tasa de falsos positivos; los cambios se simulan antes de proponerse, y una regla de bloqueo necesita un segundo aprobador para entrar en vigor.', 'Puntos de fraude por jugador, ajustes manuales con motivo y exenciones de reglas aprobadas por una segunda persona.'],
     'screens': [['Alertas', 'Cola, asignación y resolución'], ['Casos', 'Espacio de investigación'], ['Reglas', 'Métricas, editor y disparos'], ['Aprobaciones', 'Decisiones de cuatro ojos']],
     'more': '', 'alt': 'Back-office Sentinel: cola de alertas con alertas sintéticas.'},
-   {'label': 'Bonos y CRM', 'title': 'Campañas dirigidas con segmentos guardados.',
-    'bullets': ['Segmentos con reglas y grupos, versionados y contados antes de guardar.', 'Campañas de bonos para un segmento guardado, y bloqueos o liberaciones masivas con vista previa; por encima de 50 cuentas, aprueba una segunda persona.', 'Cartera VIP: un gestor para cada jugador VIP, con restricciones de contacto.', 'Tickets de atención y plantillas de CRM aprobadas antes de usarse.'],
+   {'label': 'Bonos y CRM', 'title': 'Campañas dirigidas a segmentos guardados.',
+    'bullets': ['Segmentos creados con reglas y grupos, versionados y con recuento de cuentas antes de guardar.', 'Campañas de bonos para un segmento guardado, y bloqueos o desbloqueos masivos con vista previa, que requieren una segunda aprobación con más de 50 cuentas.', 'Cartera VIP: un gestor para cada jugador VIP, con restricciones de contacto.', 'Tickets de atención y plantillas de CRM aprobadas antes de usarse.'],
     'screens': [['Segmentos', 'Reglas, grupos y conteos'], ['Bonos', 'Campañas y audiencias'], ['Acciones masivas', 'Vista previa y ejecución'], ['Cartera VIP', 'Gestores de cuenta'], ['Tickets de atención', 'Seguimiento de atención al cliente'], ['Plantillas de CRM', 'Mensajes con aprobación']],
     'more': '', 'alt': 'Back-office Sentinel: lista de segmentos sintéticos.'},
-   {'label': 'Cumplimiento', 'title': 'Los controles que un regulador espera ver.',
-    'bullets': ['Informe de auditoría de las acciones del equipo, filtrable por jugador, con registro de incidentes.', 'Juego responsable: autoexclusiones, pausas y límites, incluidas solicitudes recibidas por teléfono o chat.', 'Solicitudes de titulares de datos controladas frente a su plazo.', 'Políticas y términos versionados, con la aceptación de cada jugador registrada.'],
-    'screens': [['Informe de auditoría', 'Quién hizo qué y cuándo'], ['Juego responsable', 'Solicitudes y exclusiones'], ['Cola KYC', 'Documentos por revisar'], ['Solicitudes de titulares', 'Plazos de privacidad'], ['Políticas y términos', 'Versiones y aceptación'], ['Jurisdicción', 'Parámetros y zona horaria']],
+   {'label': 'Cumplimiento', 'title': 'Controles de cumplimiento integrados en el trabajo diario.',
+    'bullets': ['Informe de auditoría de las acciones del equipo, filtrable por jugador, exportable a CSV, XML o Excel, con verificación de integridad en un clic.', 'Juego responsable: autoexclusiones, pausas y límites, incluidas solicitudes recibidas por teléfono o chat.', 'Solicitudes de titulares de datos, con seguimiento de su plazo.', 'Políticas y términos versionados, con la aceptación de cada jugador registrada.'],
+    'screens': [['Informe de auditoría', 'Quién hizo qué y cuándo'], ['Juego responsable', 'Solicitudes y exclusiones'], ['Cola KYC', 'Documentos por revisar'], ['Solicitudes de titulares de datos', 'Plazos de privacidad'], ['Políticas y términos', 'Versiones y aceptación'], ['Jurisdicción', 'Parámetros y zona horaria']],
     'more': 'Cumplimiento y control', 'alt': 'Back-office Sentinel: informe de auditoría con registros sintéticos.'},
-   {'label': 'Informes', 'title': 'Las cifras que piden operaciones y finanzas.',
-    'bullets': ['Resumen financiero del operador, incluido el saldo que se mantiene para los jugadores.', 'Margen por producto, saldos negativos y bloqueos activos en el período elegido.', 'Tiempos de pago de retiros y estado de las rutinas programadas.', 'Productividad del equipo, exportable en CSV.'],
+   {'label': 'Informes', 'title': 'Las cifras que piden sus equipos de operaciones y finanzas.',
+    'bullets': ['Resumen financiero del operador, incluido el saldo que se mantiene para los jugadores.', 'Margen por producto, saldos negativos y bloqueos activos en el período elegido.', 'Tiempos de pago de los retiros y estado de las tareas programadas.', 'Productividad del equipo, exportable en CSV.'],
     'screens': [['Informes', 'Finanzas, riesgo y operaciones']],
     'more': '', 'alt': 'Back-office Sentinel: informes con totales sintéticos del operador.'},
    {'label': 'Administración', 'title': 'Acceso por rol. Cambios registrados.',
-    'bullets': ['Usuarios, roles y permisos detallados, incluidos roles personalizados.', 'Límites de aprobación por rol y categoría, y límites de caja del operador.', 'Etiquetas, objetivos de tiempo de atención y parámetros de jurisdicción en un solo lugar.', 'Cambios administrativos registrados en la auditoría.'],
-    'screens': [['Usuarios y roles', 'Permisos por rol'], ['Límites de aprobación', 'Niveles por categoría'], ['Etiquetas', 'Etiquetas de cuenta'], ['Objetivos de SLA', 'Metas de tiempo de atención'], ['Integraciones', 'Configuración de conexiones']],
+    'bullets': ['Cinco roles del equipo formados por permisos granulares, reflejados en menús y pantallas, y aplicados por la API.', 'Límites de aprobación por rol y categoría, y límites de caja del operador.', 'Catálogo de etiquetas, objetivos de tiempo de atención y parámetros de jurisdicción.', 'Cambios administrativos registrados en la auditoría.'],
+    'screens': [['Usuarios y roles', 'Acceso del equipo y permisos'], ['Límites de aprobación', 'Niveles por categoría'], ['Etiquetas', 'Etiquetas de cuenta'], ['Objetivos de SLA', 'Metas de tiempo de atención'], ['Integraciones', 'Configuración de conexiones']],
     'more': 'Seguridad e integración', 'alt': 'Back-office Sentinel: usuarios y roles con cuentas sintéticas del equipo.'},
   ]},
- 'modules': {'head': ['MÓDULOS', 'Cuatro módulos.<br><em>Empiece por lo que necesita.</em>', 'Core sostiene la operación de jugadores; Payments, Intelligence y Fraud la amplían. Elija el alcance adecuado para su operación.'],
+ 'modules': {'head': ['MÓDULOS', 'Cuatro módulos.<br><em>Empiece por lo que necesita.</em>', 'Core cubre las cuentas de jugadores, el cumplimiento y la administración; Payments, Intelligence y Fraud lo amplían. Elija el alcance adecuado para su operación.'],
   'cards': [['Core', 'Búsqueda de jugadores, Player 360, KYC, juego responsable, cumplimiento y administración.'],
             ['Payments', 'Cola de retiros y aprobaciones, límites, conciliación, ajustes en lote y libro de movimientos.'],
-            ['Intelligence', 'Informes y segmentos: saldos de jugadores, márgenes, saldos negativos, bloqueos y estado de rutinas.'],
+            ['Intelligence', 'Informes y segmentos: saldos de jugadores, márgenes, saldos negativos, bloqueos y estado de las tareas programadas.'],
             ['Fraud', 'Alertas, casos, reglas, puntos de fraude y aprobaciones de cuatro ojos.']],
-  'complete': 'Complete reúne los cuatro módulos.', 'link': 'Ver {name}'},
- 'p360': {'head': ['PLAYER 360', 'Un perfil.<br><em>Cada decisión en contexto.</em>', 'El Player 360 reúne la identidad, el dinero, el riesgo y el historial de una cuenta, y permite actuar sin salir del perfil.'],
+  'complete': 'Los cuatro módulos: Core, Payments, Intelligence y Fraud.', 'link': 'Ver {name}'},
+ 'p360': {'head': ['PLAYER 360', 'Un perfil.<br><em>Cada decisión en contexto.</em>', 'El Player 360 reúne la identidad, el dinero, el riesgo y el historial de una cuenta, y permite que su equipo actúe sin salir del perfil.'],
   'label': 'Partes del Player 360', 'alt': 'Back-office Sentinel: resumen del Player 360 de un jugador sintético, con marcadores numerados en las partes descritas al lado.',
   'points': [['Franja de identidad', 'Estado KYC, bloqueos, etiquetas de riesgo y antigüedad de la cuenta, siempre visibles.'],
-             ['Tarjetas de dinero', 'Nueve tarjetas —depósitos, retiros, depósitos netos, bonos, ingresos y saldo— sobre cada área.'],
-             ['Retiros pendientes', 'Se deciden desde el perfil, con los mismos pasos y reglas de cuatro ojos que la cola.'],
+             ['Indicadores financieros', 'Nueve indicadores de depósitos, retiros, depósitos netos, bonos, ingresos y saldo, encima de cada área.'],
+             ['Retiros pendientes', 'Se resuelven desde el perfil, con los mismos pasos y reglas de cuatro ojos que en la cola.'],
              ['Alertas', 'Alertas abiertas en el resumen y alertas manuales creadas desde el perfil.'],
              ['Historial y auditoría', 'Cada cambio en la cuenta, antes y después, con quién lo hizo y por qué.']]},
- 'payments': {'head': ['PAGOS', 'Cuatro ojos en cada<br><em>retiro que importa.</em>', 'Los retiros recorren estados explícitos. Los límites por rol y categoría de jugador definen quién puede aprobar, y una segunda persona aprueba por encima del umbral.'],
+ 'payments': {'head': ['PAGOS', 'Cuatro ojos en cada retiro<br><em>por encima de su umbral.</em>', 'Los retiros recorren estados explícitos. Los límites por rol y categoría de jugador definen quién puede aprobar, y una segunda persona aprueba por encima del umbral.'],
   'items': [['Objetivo de tiempo de atención', 'Cada solicitud muestra cuánto lleva esperando y se señala al superar su objetivo; un informe mide el tiempo hasta el pago.'],
             ['Niveles de aprobación', 'Cada rol aprueba hasta su límite; por encima del umbral de la categoría, otra persona da la segunda aprobación.'],
             ['Límites de caja', 'Depósitos y retiros mínimos y máximos, y número de retiros por período, por categoría de jugador.'],
-            ['Pagos sin titular', 'Pagos entrantes sin jugador, vinculados o devueltos: una persona lo solicita y otra lo aprueba.'],
-            ['Ajustes en lote', 'Créditos y débitos de hasta 200 cuentas desde un CSV, revisados línea por línea y aprobados por otra persona.'],
-            ['Exportación CSV', 'Búsqueda en el libro por id o referencia del proveedor de pagos, con hasta 5.000 filas exportables en CSV.']],
+            ['Pagos sin titular', 'Los pagos entrantes sin jugador asociado se vinculan a una cuenta o se devuelven; una persona hace la solicitud y otra la aprueba.'],
+            ['Ajustes en lote', 'Créditos y débitos para hasta 200 cuentas a partir de un CSV, con vista previa línea por línea y aprobación de otra persona.'],
+            ['Búsqueda y exportación', 'Búsqueda en el libro de movimientos por ID o referencia del proveedor de pagos, con exportación de hasta 5000 filas a CSV.']],
   'flow_title': 'Estados de un retiro', 'flow_note': 'Los estados que recorre un retiro en el back-office. La segunda aprobación se aplica por encima del umbral de la categoría.',
   'flow': {'requested': 'Solicitado', 'verifying': 'En verificación', 'in_review': 'En revisión', 'approved': 'Aprobado', 'second_approval': 'Segunda aprobación', 'sent': 'Enviado', 'confirmed': 'Confirmado',
            'held': 'Retenido', 'rejected': 'Rechazado', 'failed': 'Fallido', 'reversed': 'Revertido'},
-  'side': 'Otros desenlaces', 'alt': 'Back-office Sentinel: un retiro sintético con sus pasos de aprobación.'},
- 'compliance': {'head': ['CUMPLIMIENTO Y CONTROL', 'Controles que puede<br><em>mostrar a un regulador.</em>', 'Juego responsable, KYC, privacidad y aceptación de políticas viven en el mismo back-office que la operación, con las acciones del equipo registradas.'],
-  'items': [['Registro de auditoría', 'Un informe de auditoría de las acciones del equipo, filtrable por jugador, con registro de incidentes.'],
+  'side': 'Otros estados', 'alt': 'Back-office Sentinel: un retiro sintético con sus pasos de aprobación.'},
+ 'compliance': {'head': ['CUMPLIMIENTO Y CONTROL', 'Controles que puede<br><em>mostrar a un regulador.</em>', 'Juego responsable, KYC, privacidad y aceptación de políticas se gestionan en el mismo back-office que la operación, con las acciones del equipo registradas.'],
+  'items': [['Registro de auditoría', 'Quién hizo qué y cuándo, antes y después, con exportaciones, verificación de integridad de la cadena de hashes y registro manual de incidentes.'],
             ['Juego responsable', 'Autoexclusiones, pausas y límites, incluidas solicitudes registradas por un agente.'],
-            ['Cola KYC', 'Documentos pendientes de revisión de todos los jugadores.'],
-            ['Solicitudes de titulares', 'Pedidos de privacidad controlados frente a su plazo.'],
+            ['Cola KYC', 'Documentos pendientes de revisión, con el tiempo de espera medido frente a su objetivo; cada verificación se aprueba o se rechaza indicando el motivo.'],
+            ['Solicitudes de titulares de datos', 'Solicitudes de privacidad, con seguimiento de su plazo.'],
             ['Políticas y términos', 'Versiones publicadas, con la aceptación de cada jugador registrada.'],
-            ['Parámetros de jurisdicción', 'Ajustes del mercado, incluida la zona horaria de visualización, publicados por personal autorizado.'],
-            ['Permisos por rol', 'Cada pantalla y acción ligada a un permiso, otorgado mediante roles.']]},
- 'intelligence': {'head': ['INTELIGENCIA CONECTADA', 'Señales con contexto,<br><em>no veredictos.</em>', 'Sentinel reúne las señales alrededor de una cuenta —pagos, alertas, puntos de fraude, KYC y juego responsable— para decidir con el panorama completo.'],
+            ['Parámetros de jurisdicción', 'Configuración del mercado, incluida la zona horaria de visualización, publicada por personal autorizado.'],
+            ['Permisos por rol', 'Cada pantalla y acción ligada a un permiso, otorgado mediante cinco roles del equipo.']]},
+ 'intelligence': {'head': ['INTELIGENCIA CONECTADA', 'Señales con contexto,<br><em>no veredictos.</em>', 'Sentinel reúne las señales alrededor de una cuenta —pagos, alertas, puntos de fraude, KYC y juego responsable— para que su equipo decida con todo el contexto.'],
   'center': 'Cuenta', 'nodes': ['Pagos', 'Alertas', 'Puntos de fraude', 'KYC', 'Juego responsable', 'Auditoría'],
-  'note': 'Diagrama conceptual. Una señal sola nunca decide: deciden su equipo y sus políticas.', 'title': 'Señales alrededor de una cuenta'},
- 'security': {'head': ['SEGURIDAD E INTEGRACIÓN', 'Diseñado API-first.<br><em>Protegido en el servidor.</em>', 'El equipo trabaja en el navegador; tokens, sesiones y autorización permanecen en el servidor y en la API.'],
+  'note': 'Diagrama conceptual. Una señal por sí sola nunca decide: deciden su equipo y sus políticas.', 'title': 'Señales alrededor de una cuenta'},
+ 'security': {'head': ['SEGURIDAD E INTEGRACIÓN', 'Diseñado API-first.<br><em>Protegido en el servidor.</em>', 'El equipo trabaja en el navegador; solo el servidor puede leer su sesión y sus tokens, y la autorización se verifica en el servidor y en la API.'],
   'items': [['API-first', 'Cada pantalla lee y escribe mediante la API de Sentinel, la misma API con la que se integra su plataforma.'],
-            ['Sesión sellada en el servidor', 'Una cookie de sesión cifrada y HttpOnly; los tokens de acceso nunca llegan al navegador.'],
-            ['Acceso con su proveedor de identidad', 'El equipo inicia sesión mediante OpenID Connect; el back-office nunca ve una contraseña.'],
+            ['Cookie de sesión sellada', 'Una cookie cifrada y HttpOnly que solo el servidor del back-office puede abrir; los tokens de acceso nunca son legibles en el navegador.'],
+            ['Acceso mediante un proveedor de identidad', 'El equipo inicia sesión mediante OpenID Connect; el back-office nunca ve una contraseña.'],
             ['Separación entre operadores', 'Los datos de cada operador se mantienen separados y la API autoriza cada solicitud.'],
             ['Datos de jugadores enmascarados', 'Los datos personales se enmascaran por defecto; mostrarlos requiere un permiso.']],
-  'arch': [['Navegador del equipo', 'Sin tokens'], ['Servidor del back-office', 'Sesión sellada, permisos'], ['API de Sentinel', 'Autorización, auditoría'], ['Proveedor de identidad', 'Acceso del equipo']], 'arch_title': 'El recorrido de una solicitud'},
- 'pilot': {'head': ['PROGRAMA PILOTO', 'Cómo funciona<br><em>un piloto.</em>', 'Un piloto funciona con las reglas de su jurisdicción y su flujo de pagos, con nuestro equipo trabajando junto al suyo.'],
-  'steps': [['Descubrimiento', 'Mapeamos su operación, jurisdicción, roles del equipo y los módulos del alcance.'],
-            ['Jurisdicción y reglas', 'Parámetros, límites de aprobación, reglas y políticas configurados para su mercado.'],
+  'arch': [['Navegador del personal', 'Sin tokens legibles'], ['Servidor del back-office', 'Sesión sellada, permisos'], ['API de Sentinel', 'Autorización, auditoría'], ['Proveedor de identidad', 'Acceso del personal']], 'arch_title': 'El recorrido de una solicitud'},
+ 'pilot': {'head': ['PROGRAMA PILOTO', 'Cómo funciona un piloto,<br><em>paso a paso.</em>', 'Un piloto se desarrolla con las reglas de su jurisdicción y su flujo de pagos, y nuestro equipo trabaja junto al suyo.'],
+  'steps': [['Descubrimiento', 'Mapeamos su operación, su jurisdicción, los roles de su equipo y los módulos incluidos en el alcance.'],
+            ['Jurisdicción y reglas', 'Configuramos parámetros, límites de aprobación, reglas y políticas para su mercado.'],
             ['Integración por API y pagos', 'Su plataforma se conecta mediante la API de Sentinel; la conexión con su proveedor de pagos se define y se construye con usted.'],
-            ['Operación acompañada', 'Su equipo opera con el nuestro al lado, con objetivos acordados y revisiones periódicas.']],
+            ['Operación acompañada', 'Su equipo opera con el apoyo del nuestro, con objetivos acordados y revisiones periódicas.']],
   'cta': 'Conversar sobre un piloto'},
- 'about': {'head': ['ACERCA DE RHS LABS', 'Software para operaciones<br>de apuestas reguladas.', 'RHS Labs desarrolla Sentinel, el PAM y back-office para operadores regulados, en torno al trabajo responsable: permisos, aprobaciones y un registro de cada decisión.', 'Nuestro enfoque'],
-  'principles': [['Primero, los flujos reales', 'Las pantallas siguen cómo trabajan los equipos de operaciones, pagos y cumplimiento.'], ['Modular por diseño', 'Empiece con Core y sume Payments, Intelligence o Fraud a medida que crece.'], ['Responsable por defecto', 'Aprobaciones de cuatro ojos, permisos y registros de auditoría en todo el producto.']],
+ 'about': {'head': ['ACERCA DE RHS LABS', 'Software para operaciones<br>de apuestas reguladas.', 'RHS Labs desarrolla Sentinel, el PAM y back-office para operadores regulados. Está diseñado en torno a un trabajo trazable: permisos, aprobaciones y un registro de cada decisión.', 'Cómo funciona un piloto'],
+  'principles': [['Primero, los flujos reales', 'Las pantallas siguen la forma de trabajar de los equipos de operaciones, pagos y cumplimiento.'], ['Modular por diseño', 'Empiece con Core y sume Payments, Intelligence o Fraud a medida que crezca.'], ['Trazable por defecto', 'Permisos, aprobaciones de cuatro ojos y registro de auditoría integrados.']],
   'brandline': 'PAM y back-office<br>para operadores regulados.'},
  'contact': {'head': ['CONTACTO', 'Vea Sentinel con<br>sus propios casos.', 'Cuéntenos sobre su operación y su jurisdicción. Le mostraremos el back-office con datos sintéticos y conversaremos sobre un piloto.'],
   'sales': 'Hable con nuestro equipo', 'salessub': 'Un recorrido por el back-office para su equipo, con datos sintéticos.',
@@ -295,14 +295,18 @@ COPY = {
   'mail': {'demo': ['Solicitud de demostración de Sentinel', 'Me gustaría ver una demostración de RHS Labs Sentinel.'], 'pilot': ['Programa piloto de Sentinel', 'Nos gustaría conversar sobre un piloto de Sentinel.']},
   'fields': ['Empresa:', 'Jurisdicción(es):', 'Volumen aproximado (jugadores activos o transacciones mensuales):', 'Módulos de interés (Core, Payments, Intelligence, Fraud):'],
   'greeting': 'Hola, equipo de RHS Labs:', 'privacy': 'Por favor, no incluya datos personales de jugadores en este correo.'},
- 'footer': {'tagline': 'PAM y back-office para operadores regulados.', 'nav': ['Plataforma', 'Módulos', 'Pagos', 'Cumplimiento', 'Seguridad', 'Piloto', 'Empresa'], 'nav_label': 'Navegación de pie de página',
+ 'footer': {'tagline': 'PAM y back-office para operadores regulados.', 'nav': ['Plataforma', 'Módulos', 'Pagos', 'Cumplimiento', 'Seguridad', 'Piloto', 'Empresa'], 'nav_label': 'Pie de página',
   'notice': {'available': 'Sentinel está disponible para programas piloto; el alcance y la disponibilidad se confirman en las conversaciones comerciales.',
              'concept': 'Los paneles de la parte superior son ilustraciones conceptuales con datos simulados, no el producto actual.',
              'product': 'Las pantallas del producto muestran datos sintéticos de un entorno de pruebas.'},
-  'privacy': 'Privacidad y consultas', 'privacynote': 'Este sitio estático no tiene formularios ni seguimiento analítico. Solo guarda su preferencia de idioma en este navegador. El correo abre su propio servicio; no comparta datos personales de jugadores. Los datos organizativos y el tratamiento de datos se confirman antes de cualquier piloto.'},
+  'privacy': 'Privacidad y consultas', 'privacynote': 'Este sitio estático no tiene formularios de consulta ni herramientas de analítica. Solo guarda su preferencia de idioma en este navegador. Los enlaces de correo abren su propia aplicación de correo; por favor, no comparta datos personales de jugadores. Los detalles organizativos y de tratamiento de datos se confirman antes de cualquier piloto.'},
 },
 }
 FOOTER_LINKS = ['#platform', '#modules', '#payments', '#compliance', '#security', '#pilot', '#company']
+
+
+DESKTOP_FILE = (3200, 2000)  # 1600×1000 CSS px at 2×: placeholder and capture share it
+PHONE_FILE = (780, 1688)     # 390×844 at 2×
 
 
 def mailto(lang, kind):
@@ -318,29 +322,18 @@ def cta_link(lang, kind, cls='btn rhs-cta', arrow=True):
  return f'<a class="{cls}" href="{esc(mailto(lang, kind))}" data-cta="{kind}">{c[kind]}<span class="rhs-sr"> {c["opens"]}</span>{" " + icon("arrow") if arrow else ""}</a>'
 
 
-def manifest_screens(manifest):
- """Approved captures only: a screen reaches the page after review (tools/capture/screens.mjs --approve)."""
- screens = (manifest or {}).get('screens') or {}
- return {name: screen for name, screen in screens.items() if screen.get('approved') and not screen.get('failed') and screen.get('files')}
+def product_src(name):
+ return f'/assets/product/{name}.webp'
 
 
-def picture(shots, name, alt, sizes, phone=None, eager=False):
- shot = shots.get(name)
- if not shot:
-  return ''
- files = sorted(shot['files'], key=lambda f: f['width'])
- main = files[0]
- srcset = ', '.join(f'/{f["path"]} {f["width"]}w' for f in files)
- source = ''
- if phone and shots.get(phone):
-  p = sorted(shots[phone]['files'], key=lambda f: f['width'])[-1]
-  source = f'<source media="(max-width: 560px)" srcset="/{p["path"]}" width="{p["width"]}" height="{p["height"]}">'
- loading = 'decoding="async"' if eager else 'loading="lazy" decoding="async"'
- return f'<picture>{source}<img src="/{main["path"]}" srcset="{srcset}" sizes="{sizes}" width="{main["width"]}" height="{main["height"]}" alt="{esc(alt)}" {loading}></picture>'
+def picture(name, alt, phone=None):
+ """The screen's image, placeholder or capture alike; phones get the phone capture where one exists."""
+ source = f'<source media="(max-width: 560px)" srcset="{product_src(phone)}" width="{PHONE_FILE[0]}" height="{PHONE_FILE[1]}">' if phone else ''
+ return f'<picture>{source}<img src="{product_src(name)}" width="{DESKTOP_FILE[0]}" height="{DESKTOP_FILE[1]}" alt="{esc(alt)}" loading="lazy" decoding="async"></picture>'
 
 
-def frame(t, inner, extra='', cls=''):
- return f'<figure class="rhs-frame {cls}"><div class="rhs-frame-bar" aria-hidden="true"><i></i><i></i><i></i><span>RHS Labs <em>/ Sentinel</em></span></div><div class="rhs-frame-shot">{inner}{extra}</div><figcaption><span class="rhs-badge">{t["badge"]}</span></figcaption></figure>'
+def frame(inner, cls=''):
+ return f'<figure class="rhs-frame {cls}"><div class="rhs-frame-bar" aria-hidden="true"><i></i><i></i><i></i><span>RHS Labs <em>/ Sentinel</em></span></div><div class="rhs-frame-shot">{inner}</div></figure>'
 
 
 def module_tag(t, module):
@@ -348,7 +341,7 @@ def module_tag(t, module):
  return f'<span class="rhs-module rhs-module-{module}"><b>{t["module"]}</b> {name}</span>'
 
 
-def tour(t, shots, n):
+def tour(t, n):
  c = t['tour']
  tabs, panels = [], []
  for i, (spec, copy) in enumerate(zip(TOUR, c['tabs'])):
@@ -356,12 +349,8 @@ def tour(t, shots, n):
   tabs.append(f'<button type="button" role="tab" class="rhs-tour-tab" id="tour-tab-{key}" aria-controls="tour-{key}" aria-selected="{str(on).lower()}" tabindex="{0 if on else -1}">{icon(spec["icon"])}<span>{copy["label"]}</span></button>')
   bullets = ''.join(f'<li>{icon("check")}<span>{b}</span></li>' for b in copy['bullets'])
   more = f'<a class="rhs-more" href="{spec["more"]}">{copy["more"]} {icon("arrow")}</a>' if spec['more'] and copy['more'] else ''
-  image = picture(shots, spec['shot'], copy['alt'], '(max-width: 767px) calc(100vw - 36px), 56vw', phone=spec['phone'])
   screens = ''.join(f'<li>{icon(ic)}<b>{name}</b><small>{desc}</small></li>' for (ic, _), (name, desc) in zip(spec['screens'], copy['screens']))
-  if image:
-   visual = frame(t, image) + f'<ul class="rhs-screen-chips" aria-label="{esc(c["screens"])}">' + ''.join(f'<li>{name}</li>' for name, _ in copy['screens']) + '</ul>'
-  else:
-   visual = f'<div class="rhs-screens"><p class="rhs-screens-title" id="tour-screens-{key}">{c["screens"]}</p><ul aria-labelledby="tour-screens-{key}">{screens}</ul></div>'
+  visual = frame(picture(spec['shot'], copy['alt'], phone=spec['phone']), 'rhs-frame-phone' if spec['phone'] else '') + f'<div class="rhs-screens"><p class="rhs-screens-title" id="tour-screens-{key}">{c["screens"]}</p><ul aria-labelledby="tour-screens-{key}">{screens}</ul></div>'
   hidden = '' if on else ' hidden'
   panels.append(f'<div class="rhs-tour-panel" role="tabpanel" id="tour-{key}" aria-labelledby="tour-tab-{key}" tabindex="0"{hidden}><div class="rhs-tour-copy">{module_tag(t, spec["module"])}<h3>{copy["title"]}</h3><ul class="rhs-ticks">{bullets}</ul>{more}</div><div class="rhs-tour-visual">{visual}</div></div>')
  return f'''<section id="platform" class="rhs-sector rhs-tour-sector" data-sector="{n}"><div class="wrap"><div class="rhs-section-heading">{intro(n, c['head'])}</div><div class="rhs-tour" data-tour><div class="rhs-tour-tabs" role="tablist" aria-label="{esc(c['tablist'])}">{''.join(tabs)}</div>{''.join(panels)}</div></div></section>'''
@@ -373,29 +362,20 @@ def modules(t, n):
  return f'''<section id="modules" class="rhs-sector rhs-products" data-sector="{n}"><div class="wrap"><div class="rhs-products-heading">{intro(n, c['head'])}</div><div class="rhs-product-grid">{cards}</div><p class="rhs-complete"><b>Complete</b> / {c['complete']}</p></div></section>'''
 
 
-def player360(t, shots, n):
+def player360(t, n):
  c = t['p360']
  points = ''.join(f'<li id="p360-{key}"><b class="rhs-num" aria-hidden="true">{i + 1}</b><div><h3>{title}</h3><p>{text}</p></div></li>' for i, (key, (title, text)) in enumerate(zip(P360_POINTS, c['points'])))
- image = picture(shots, P360_SHOT, c['alt'], '(max-width: 767px) calc(100vw - 36px), 60vw')
- visual = ''
- if image:
-  boxes = shots[P360_SHOT].get('hotspots') or {}
-  # Marker at the top-left of each measured part, kept inside the image.
-  spot = lambda box: (min(1560, max(40, box['x'] * 1600 + 34)), min(960, max(40, box['y'] * 1000 + 34)))
-  marks = ''.join(f'<g><circle cx="{spot(boxes[key])[0]:.1f}" cy="{spot(boxes[key])[1]:.1f}" r="30"/><text x="{spot(boxes[key])[0]:.1f}" y="{spot(boxes[key])[1] + 10:.1f}" text-anchor="middle">{i + 1}</text></g>' for i, key in enumerate(P360_POINTS) if key in boxes)
-  overlay = f'<svg class="rhs-hotspots" viewBox="0 0 1600 1000" aria-hidden="true" preserveAspectRatio="none">{marks}</svg>' if marks else ''
-  visual = frame(t, image, overlay, 'rhs-hotspot-frame')
- return f'''<section id="player-360" class="rhs-sector rhs-p360" data-sector="{n}"><div class="wrap rhs-split">{intro(n, c['head'])}<div class="rhs-p360-visual">{visual}<ol class="rhs-anatomy{' rhs-anatomy-legend' if visual else ''}" aria-label="{esc(c['label'])}">{points}</ol></div></div></section>'''
+ visual = frame(picture(P360_SHOT, c['alt']))
+ return f'''<section id="player-360" class="rhs-sector rhs-p360" data-sector="{n}"><div class="wrap rhs-split">{intro(n, c['head'])}<div class="rhs-p360-visual">{visual}<ol class="rhs-anatomy rhs-anatomy-legend" aria-label="{esc(c['label'])}">{points}</ol></div></div></section>'''
 
 
-def payments(t, shots, n):
+def payments(t, n):
  c = t['payments']
  items = ''.join(f'<li><span class="rhs-mini-icon">{icon(ic)}</span><div><h3>{title}</h3><p>{text}</p></div></li>' for ic, (title, text) in zip(PAYMENT_ICONS, c['items']))
  steps = ''.join(f'<li class="rhs-flow-step{" rhs-flow-optional" if key == "second_approval" else ""}"><span>{c["flow"][key]}</span></li>' for key in FLOW)
  side = ''.join(f'<li>{c["flow"][key]}</li>' for key in FLOW_SIDE)
  flow = f'<figure class="rhs-flow"><figcaption><b>{c["flow_title"]}</b></figcaption><ol class="rhs-flow-steps">{steps}</ol><div class="rhs-flow-side"><b>{c["side"]}</b><ul>{side}</ul></div><p class="rhs-flow-note">{c["flow_note"]}</p></figure>'
- image = picture(shots, PAYMENTS_SHOT, c['alt'], '(max-width: 767px) calc(100vw - 36px), 80vw')
- shot = f'<div class="rhs-wide-shot">{frame(t, image)}</div>' if image else ''
+ shot = f'<div class="rhs-wide-shot">{frame(picture(PAYMENTS_SHOT, c["alt"]))}</div>'
  return f'''<section id="payments" class="rhs-sector rhs-payments-sector" data-sector="{n}"><div class="wrap"><div class="rhs-split">{intro(n, c['head'])}{flow}</div><ul class="rhs-capabilities">{items}</ul>{shot}</div></section>'''
 
 
@@ -446,12 +426,11 @@ def footer(t, languages, notice):
  return f'''<footer class="rhs-footer"><div class="wrap"><div class="rhs-footer-top"><a href="#home" class="rhs-footer-brand">{icon('brand')}<b>RHS Labs <em>/ Sentinel</em></b></a><nav aria-label="{esc(c['nav_label'])}">{links}</nav><div class="rhs-languages">{languages}</div></div><div class="rhs-footer-notes"><p data-notice="{' '.join(notice)}">{text}</p><details id="privacy"><summary>{c['privacy']}</summary><p>{c['privacynote']}</p></details></div></div></footer>'''
 
 
-def lower_page(lang, manifest=None, languages='', hero_kind='concept'):
+def lower_page(lang, languages='', hero_kind='concept'):
  """Sectors 02–11 and the footer. The single footer notice says what the page's images are."""
  t = dict(COPY[lang], lang=lang)
- shots = manifest_screens(manifest)
- sectors = [tour(t, shots, 2), modules(t, 3), player360(t, shots, 4), payments(t, shots, 5), compliance(t, 6),
+ sectors = [tour(t, 2), modules(t, 3), player360(t, 4), payments(t, 5), compliance(t, 6),
             intelligence(t, 7), security(t, 8), pilot(t, 9), about(t, 10), contact(t, 11)]
  html = '\n'.join(sectors)
- notice = ['available'] + (['concept'] if hero_kind == 'concept' else []) + (['product'] if hero_kind == 'product' or 'class="rhs-frame' in html else [])
+ notice = ['available'] + (['concept'] if hero_kind == 'concept' else []) + ['product']
  return '<div class="rhs-content">\n' + html + '\n' + footer(t, languages, notice) + '\n</div>'
