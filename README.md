@@ -1,6 +1,6 @@
 # RHS Labs / Sentinel website
 
-Static EN/ES website for RHS Labs Sentinel, the PAM and back-office for regulated betting operators. Every claim maps to a real back-office screen; product images come only from captures of the real back-office (mock mode, synthetic data) approved in `tools/capture/`. Until the hero swap, the three orbit images are concept illustrations and are labeled as such.
+Static EN/ES website for RHS Labs Sentinel, the PAM and back-office for regulated betting operators. Every claim maps to a real back-office screen. Each product image is the file `assets/product/<screen>.webp` of the capture plan in `tools/capture/`: a dark placeholder marked "Screenshot pending" until the real back-office (mock mode, synthetic data) is captured over it. Until the hero swap, the three orbit images are concept illustrations and are labeled as such.
 
 ## Develop
 
@@ -15,7 +15,7 @@ python3 -m http.server 8000 --bind 0.0.0.0 --directory public
 
 `tools/render.py` maintains `/` and `/es/` from a shared content source. Keep both checked-in HTML pages synchronized with it: the visual audit workflow enforces exact generator parity. It reads the approved hero and header fragments; update content in this source, then regenerate. `site.css` scopes lower-page styles. `assets/hero-v6.css` preserves the approved CSS. Hero image bytes must remain identical to the integrity manifest.
 
-Languages are registered in `tools/render.py` (`LANGUAGES`); only published ones are written and linked. Product screenshots come from the real back-office through `tools/capture/` (see its README); nothing reaches the page before it is reviewed and approved there.
+Languages are registered in `tools/render.py` (`LANGUAGES`); only published ones are written and linked. Product screenshots come from the real back-office through `tools/capture/` (see its README): a capture overwrites the placeholder with the same name and size, so the page needs no change. Review the files and the contact sheet before committing them. The hero changes only through `tools/capture/hero-swap.mjs`.
 
 `tools/stage.mjs` includes only public files. Never deploy the checkout root: it contains internal studio documentation. Vercel configuration selects `public/` and runs the staging script with Node; no framework or dependency installation is required.
 

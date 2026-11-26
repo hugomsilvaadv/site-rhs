@@ -1,5 +1,93 @@
 # Estado real — RHS Labs / Sentinel
 
+## Rodada "produto real" — 2026-11-26: em preview, produção intocada
+
+**As capturas estão pendentes.** Nenhuma tela real do back-office foi fotografada até agora. O ambiente da nuvem não tem o token de leitura do pacote privado do design system, e o proprietário decidiu seguir sem ele (RHS-023). Mesmo assim, cada imagem de produto do site já aponta para o arquivo final da lista da fase 1, `assets/product/<tela>.webp`. Hoje esse arquivo é um placeholder escuro, do mesmo tamanho, com o rótulo "Screenshot pending: <tela>". Quando as capturas chegarem, basta substituir o arquivo (RHS-041). O hero continua com as três imagens conceituais até a troca deliberada (RHS-044). **Não publicar em produção com placeholders.**
+
+| Item | Estado em 2026-11-26 |
+|---|---|
+| Produção | Intocada. O `main` está em `b4c11df`, o último release aprovado; nesta rodada não houve merge nem deploy de produção. |
+| Branches e PRs | Seis PRs em rascunho para o `main`, empilhados (cada fase contém as anteriores):<br>- F1 `feat/site-f1-captura-20261126` (#4)<br>- F2 `feat/site-f2-hero-20261126` (#5)<br>- F3 `feat/site-f3-secoes-20261126` (#6)<br>- F4 `feat/site-f4-texto-20261126` (#7)<br>- F5 `feat/site-f5-conversao-20261126` (#8)<br>- F6 `feat/site-f6-qa-20261126`, o PR deste relatório<br>Revisar em ordem ou só o da fase 6. |
+| Preview Vercel | A verificação "Vercel" de cada PR mostra o build concluído (o link está na própria verificação). Os previews têm SSO. O teste externo desta sessão foi bloqueado pelo proxy (403), então a conferência deve ser feita pelo link autenticado. |
+| Capturas | Nenhuma de 30: são 30 placeholders, registrados em `tools/capture/placeholders.json`. O comando `node tools/capture/screens.mjs --dry-run` confere as 30 rotas no menu do back-office e diz o que ainda é placeholder. |
+| Hero | Três imagens conceituais, com os mesmos bytes do manifesto de integridade, e o selo "ILLUSTRATIVE CONCEPT · SIMULATED DATA". O ponto de troca está pronto (`tools/capture/hero-swap.mjs` e `tools/capture/hero.json`); o `--check` recusa, como esperado, enquanto houver placeholders. |
+| Folha de contato | Pendente: ela sai junto com as capturas reais (`tools/capture/contact-sheet.png`). Até agora só rodou o autoteste da ferramenta, contra o site estático. |
+| Antes e depois | `docs/web-studio/real-product-evidence/before-after.md`: cada seção do `main` ao lado da fase 6, em inglês, a 1440 e a 390 px. |
+
+### Como trocar os placeholders (notebook Windows)
+
+1. Siga `tools/capture/README.md`: suba o back-office em modo mock (`API_MODE=mock`, `AUTH_PROVIDER=fake`, `FEATURE_FLAG_PROFILE=homologacao`, inglês) e rode `node tools/capture/screens.mjs --dry-run`, depois `node tools/capture/screens.mjs`.
+2. Revise `tools/capture/contact-sheet.png` e cada arquivo em `assets/product/`. Recorte ou deixe de fora o que identificar o país do mock (decisão j). Nenhum e-mail, documento, nome que pareça real ou dado de equipe.
+3. Faça commit de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato num branch novo, e confira o preview.
+4. Para o hero: rode `node tools/capture/hero-swap.mjs --check` e depois `node tools/capture/hero-swap.mjs`. Em seguida, rode `python3 tools/render.py` e `node tools/og/og.mjs` (sem Python no notebook, faça esse passo numa sessão na nuvem), depois os testes do README, e registre a troca em `DECISIONS.md`.
+
+### Testes da fase 6 (2026-11-26, Chromium local)
+
+Os 11 testes do README passaram sem afrouxar nada:
+- `generator`: as páginas equivalem à saída do gerador, há paridade EN/ES, o 3º idioma fica sem publicar e o ponto de troca do hero funciona.
+- `integrity`: as imagens da órbita batem com o manifesto, e o selo é verdadeiro.
+- `sectors`: os 10 setores, as 7 áreas com módulo e as afirmações proibidas ausentes.
+- `alignment-audit`: 18 combinações EN/ES × largura.
+- `mobile-showcase`: 320, 375, 390 e 430 px.
+- `functional`: idioma, menu, abas do tour com clique, teclado e link direto, contato, pausa, console e movimento reduzido.
+- `staging`.
+- `visual`: 320, 390, 768, 1024, 1280, 1440 e 1920 px, EN/ES.
+- `orbit`: duas voltas.
+- `geometry`: as transformações da órbita idênticas às do `main` em 768 a 1920 px.
+- `product-images`: os 30 placeholders; a troca por arquivo sem mudar a página; o `hero-swap` recusa placeholders e regrava o manifesto.
+
+Também rodaram:
+- O autoteste da captura.
+- O `--dry-run`: nenhuma capturada, 30 placeholders, nenhuma faltando.
+- O `hero-swap --check`, que recusou, como esperado.
+
+As larguras pedidas (375, 768, 1280 e 1920) estão cobertas, nos dois idiomas. Também foram verificados:
+- teclado: o primeiro Tab mostra "Skip to content" e o Enter leva às áreas do tour; há 40 paradas de foco por ciclo, todas com foco visível; menu e abas do tour respondem a setas e Home/End;
+- `prefers-reduced-motion`;
+- console sem erros.
+
+Lighthouse local, com compressão brotli e simulação, sem dados de usuários reais:
+
+| Perfil | Performance | Accessibility | Best practices | SEO | LCP | Peso inicial |
+|---|---|---|---|---|---|---|
+| Celular, EN e ES | 91 | 100 | 100 | 100 | 3,5 s | cerca de 600 KB |
+| Desktop, EN e ES | 100 | 100 | 100 | 100 | 0,7 s | cerca de 690 KB |
+| `main` no celular, para comparar | 85 | 100 | 96 | 100 | 4,3 s | cerca de 580 KB |
+
+Cada imagem do tour só carrega quando a aba abre (lazy). Com as capturas reais, cada imagem terá até 250 KB.
+
+### Pendências
+
+- As capturas e a folha de contato (passo a passo acima). Enquanto isso, os números da legenda do Player 360 não têm marcador na imagem (RHS-043).
+- A troca do hero, as imagens OG com a captura frontal e uma nova rodada de testes.
+- Conferir o preview pelo link autenticado da Vercel, inclusive em Safari e Firefox, e a entrega na caixa `sales@rhs-labs.com` (RHS-039).
+- As decisões dos sócios de a até l em `DECISIONS.md`, entre elas a disponibilidade para piloto (b, RHS-037), o recorte da jurisdição do mock (j) e a legenda da órbita (l).
+- As evidências em PNG desta última rodada não foram versionadas (RHS-048).
+
+### O que o repositório público expõe
+
+O repositório continua público (decisão d, ação do proprietário).
+
+Já expostos antes desta rodada:
+- `docs/` com 50 MB de evidências e os documentos de processo do estúdio (`AGENTS.md`, `.agents/skills`, `PROCESS.md`, `PRODUCT_BRIEF.md`, `BACKLOG.md`).
+- O nome da equipe na Vercel e ids de deployment `dpl_` em `STATUS.md`, `EXECUTION_LOG.md`, `RELEASE_PLAN.md`, `ALIGNMENT_STATUS.md` e nos JSON de evidência.
+- As decisões, inclusive as dos sócios.
+
+Novos nesta rodada:
+- O nome do repositório privado do back-office (`tools/capture/README.md` e a pasta padrão em `tools/capture/lib.mjs`).
+- Os nomes dos cookies do template (`tools/capture/screens.config.mjs`).
+- O plano de captura: as rotas de 30 telas, os seletores e as listas de linhas escondidas.
+- Os filtros de termos proibidos em `tests/sectors.cjs` e `tests/alignment-audit.cjs`, que citam a sigla da plataforma de referência e os termos do mercado do mock.
+
+Commits já publicados no início da rodada (`f5cd300`, `23aa41d`, `656dc05`, `5eaff22`, `e4cfd9b`) trazem ainda:
+- o nome do pacote privado do design system;
+- o nome da variável do token, sem valor;
+- os termos do mercado do mock (meio de pagamento, documento nacional, lei de privacidade e país).
+
+Esses termos foram retirados nas pontas dos branches, mas continuam no histórico, e a missão proíbe reescrevê-lo; se isso importar, a saída é tornar o repositório privado. A varredura do histórico desta rodada não encontrou token, chave nem segredo.
+
+---
+
 Atualizado em 2026-10-23. **SITE 2.0 PUBLICADO EM PRODUÇÃO E CONFERIDO NOS ENDEREÇOS PÚBLICOS EN/ES.**
 
 | Superfície | Evidência atual |
