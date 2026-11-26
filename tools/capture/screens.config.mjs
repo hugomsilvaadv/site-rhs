@@ -10,6 +10,9 @@
 export const DESKTOP = { width: 1600, height: 1000 };
 export const MOBILE = { width: 390, height: 844 };
 export const HERO = { width: 1586, height: 992 };
+// Where the website expects each image: the placeholder and the capture share the path and the proportion.
+export const PRODUCT_DIR = 'assets/product';
+export const HERO_DIR = 'assets/hero';
 export const CONTEXT = { locale: 'en-US', timezoneId: 'America/Sao_Paulo' };
 
 const PLAYER = '00000000-0000-4000-8000-000000000001';
@@ -41,7 +44,8 @@ export const CAPTURE_CSS = 'nextjs-portal{display:none!important}input::placehol
 
 export const screens = [
   { name: 'player-360-summary', path: `/backoffice/players/${PLAYER}`, hero: true, ready: 'section[aria-labelledby="player-strip-title"]', hide: OUT_OF_SCOPE,
-    hotspots: { identity: 'section[aria-labelledby="player-strip-title"]', money: page => page.getByText('Net deposits').first(), withdrawals: page => page.getByRole('heading', { name: /Pending withdrawals/ }).first(), alerts: page => page.getByRole('heading', { name: /Open alerts/ }).first(), history: page => page.getByRole('heading', { name: /Latest changes/ }).first() },
+    // Numbered markers drawn into the capture, matching the five parts described in the Player 360 section.
+    markers: { identity: 'section[aria-labelledby="player-strip-title"]', money: page => page.getByText('Net deposits').first(), withdrawals: page => page.getByRole('heading', { name: /Pending withdrawals/ }).first(), alerts: page => page.getByRole('heading', { name: /Open alerts/ }).first(), history: page => page.getByRole('heading', { name: /Latest changes/ }).first() },
     review: 'Strip, money cards and Summary; no Links row, no rule-engine score, no out-of-scope product mention; masked data only.' },
   { name: 'player-360-summary-mobile', path: `/backoffice/players/${PLAYER}`, viewport: 'mobile', ready: 'section[aria-labelledby="player-strip-title"]', hide: OUT_OF_SCOPE, review: 'Viewport only; strip and money cards.' },
   { name: 'player-360-payments', path: `/backoffice/players/${PLAYER}?tab=payments`, ready: 'h2, h3', hide: [...OUT_OF_SCOPE, 'Score'], review: 'Pending withdrawal card with Approve / Reject / Hold; check the payment-method column and crop the Score column.' },
