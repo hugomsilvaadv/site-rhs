@@ -22,15 +22,13 @@ PAGE = {
  'en': {'title': 'RHS Labs — Sentinel | Operational clarity. Connected risk intelligence.',
         'description': 'Explore Sentinel, the B2B platform in development for operational backoffice, '
                        'payment workflows, risk intelligence and fraud investigations.',
-        'nav': ['Platform', 'Solutions', 'Use Cases', 'Security', 'Company'],
-        'views': ['Overview', 'Withdrawal queue', 'Player 360', 'Risk alerts', 'Account links', 'Policies', 'Audit log'],
+        'nav': [['Platform', '#platform'], ['Modules', '#modules'], ['Payments', '#payments'], ['Compliance', '#compliance'], ['Security', '#security'], ['Pilot', '#pilot']],
         'skip': 'Skip to content', 'back_to_top': 'RHS Labs / Sentinel — Back to top', 'main_menu': 'Main menu',
         'open_navigation': 'Open navigation', 'close_navigation': 'Close navigation', 'cta': 'Discuss a pilot'},
  'es': {'title': 'RHS Labs — Sentinel | Claridad operativa e inteligencia de riesgo.',
         'description': 'Conozca Sentinel, la plataforma B2B en desarrollo para backoffice operativo, '
                        'flujos de pagos, inteligencia de riesgo e investigaciones de fraude.',
-        'nav': ['Plataforma', 'Soluciones', 'Casos de uso', 'Seguridad', 'Empresa'],
-        'views': ['Resumen', 'Cola de retiros', 'Player 360', 'Alertas de riesgo', 'Cuentas vinculadas', 'Políticas', 'Auditoría'],
+        'nav': [['Plataforma', '#platform'], ['Módulos', '#modules'], ['Pagos', '#payments'], ['Cumplimiento', '#compliance'], ['Seguridad', '#security'], ['Piloto', '#pilot']],
         'skip': 'Saltar al contenido', 'back_to_top': 'RHS Labs / Sentinel — Volver al inicio', 'main_menu': 'Menú principal',
         'open_navigation': 'Abrir navegación', 'close_navigation': 'Cerrar navegación', 'cta': 'Conversar sobre un piloto'},
 }
@@ -45,6 +43,7 @@ HERO = {
         'cta_primary': 'Discuss a pilot', 'cta_secondary': 'Explore the platform',
         'carousel': {'concept': 'Three concept illustrations of Sentinel', 'product': 'Three Sentinel back-office screens'},
         'choose': 'Choose showcase screen', 'show': 'Show {name}', 'suffix': 'CONTINUOUS 3D ORBIT', 'roledescription': 'carousel',
+        'pause': 'Pause motion', 'resume': 'Resume motion',
         'badge': {'concept': ['AVAILABLE FOR PILOT PROGRAMS', 'ILLUSTRATIVE CONCEPT', 'SIMULATED DATA'],
                   'product': ['AVAILABLE FOR PILOT PROGRAMS', 'PRODUCT UI', 'SYNTHETIC DATA']},
         'values': [['Player 360', 'Account, wallet and history in one profile'],
@@ -58,6 +57,7 @@ HERO = {
         'cta_primary': 'Conversar sobre un piloto', 'cta_secondary': 'Explorar la plataforma',
         'carousel': {'concept': 'Tres ilustraciones conceptuales de Sentinel', 'product': 'Tres pantallas del back-office Sentinel'},
         'choose': 'Elegir una pantalla', 'show': 'Mostrar {name}', 'suffix': 'ÓRBITA 3D CONTINUA', 'roledescription': 'carrusel',
+        'pause': 'Pausar movimiento', 'resume': 'Reanudar movimiento',
         'badge': {'concept': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'CONCEPTO ILUSTRATIVO', 'DATOS SIMULADOS'],
                   'product': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'INTERFAZ DEL PRODUCTO', 'DATOS SINTÉTICOS']},
         'values': [['Player 360', 'Cuenta, billetera e historial en un perfil'],
@@ -111,6 +111,7 @@ V6_HERO = {  # strings of the approved fragment that the copy replaces (each mus
  'carousel': 'aria-label="Three illustrative Sentinel interfaces"',
  'roledescription': 'aria-roledescription="carousel"',
  'choose': 'aria-label="Choose showcase screen"',
+ 'dots_close': '</div>\n    </div>\n    <p class="screen-name"',
  'title': '<p class="screen-name" id="showcase-title">01 &nbsp; / &nbsp; Operations Control Center</p>',
  'badge': '<div class="carousel-disclosure">PLATFORM IN DEVELOPMENT &nbsp;·&nbsp; ILLUSTRATIVE INTERFACES &nbsp;·&nbsp; SIMULATED DATA</div>',
  'panels': [
@@ -133,6 +134,7 @@ V6_HEADER = {
  'languages': '<span class="lang"><a href="/" data-language="en" lang="en" aria-label="English">EN</a> · <a href="/es/" data-language="es" lang="es" aria-label="Español">ES</a></span>',
  'nav_close': '</nav>',
  'cta': '>Discuss a pilot ↗</a>',
+ 'links': '<a href="#platform">Platform</a><a href="#modules">Solutions</a><a href="#use-cases">Use Cases</a><a href="#security">Security</a><a href="#company">Company</a>',
 }
 
 
@@ -203,6 +205,8 @@ def render_hero(code, manifest):
  html = replace_once(html, v['carousel'], f'aria-label="{esc(h["carousel"][kind])}"')
  html = replace_once(html, v['roledescription'], f'aria-roledescription="{h["roledescription"]}"')
  html = replace_once(html, v['choose'], f'aria-label="{esc(h["choose"])}"')
+ # WCAG 2.2.2: the continuous orbit gets a pause control beside the dots (it also pauses the backlight).
+ html = replace_once(html, v['dots_close'], f'</div>\n      <button class="carousel-pause" id="motion-toggle" type="button" aria-pressed="false" data-label-pause="{esc(h["pause"])}" data-label-resume="{esc(h["resume"])}">{h["pause"]}</button>\n    </div>\n    <p class="screen-name"')
  names = [panel['name'][code] for panel in panels]
  html = replace_once(html, v['title'], f'<p class="screen-name" id="showcase-title" data-suffix="{esc(h["suffix"])}">01 &nbsp; / &nbsp; {esc(names[0])}</p>')
  html = replace_once(html, v['badge'], '<div class="carousel-disclosure" data-hero-images="' + kind + '">' + ' &nbsp;·&nbsp; '.join(h['badge'][kind]) + '</div>')
@@ -226,8 +230,7 @@ def render_header(code):
  html = replace_once(html, v['languages'], '<span class="lang">' + ' · '.join(language_links(code)) + '</span>')
  html = replace_once(html, v['nav_close'], '<span class="rhs-mobile-language">' + ' · '.join(language_links(code)) + '</span></nav>')
  html = replace_once(html, v['cta'], f'>{p["cta"]} ↗</a>')
- for en, local in zip(PAGE['en']['nav'], p['nav']):
-  html = replace_once(html, '>' + en + '</a>', '>' + local + '</a>')
+ html = replace_once(html, v['links'], ''.join(f'<a href="{href}">{label}</a>' for label, href in p['nav']))
  return html
 
 
@@ -236,8 +239,8 @@ def render(code, manifest=None):
  language, p = LANGUAGES[code], PAGE[code]
  hero, panels = render_hero(code, manifest)
  header = render_header(code)
- keys = ['overview', 'withdrawal', 'player', 'alerts', 'links', 'policies', 'audit']
- views = ''.join(f'<button class="menu-btn{" on" if i==2 else ""}" role="tab" id="tab-{k}" aria-controls="mock-panel" aria-selected="{str(i==2).lower()}" tabindex="{0 if i==2 else -1}" data-view="{k}">{name}</button>' for i, (k, name) in enumerate(zip(keys, p['views'])))
+ hero_kind = 'product' if (manifest.get('hero') or {}).get('active') else 'concept'
+ languages = ''.join(f'<a href="{LANGUAGES[c]["path"]}" data-language="{c}" lang="{c}"' + (' aria-current="page"' if c == code else '') + f'>{LANGUAGES[c]["label"]}</a>' for c in published())
  alternates = ''.join(f'<link rel="alternate" hreflang="{c}" href="{LANGUAGES[c]["path"]}">' for c in published())
  return f'''<!DOCTYPE html>
 <html lang="{code}"><head>
@@ -247,11 +250,11 @@ def render(code, manifest=None):
 <meta property="og:type" content="website"><meta property="og:title" content="{p['title']}"><meta property="og:description" content="{p['description']}"><meta property="og:locale" content="{language['og_locale']}"><meta property="og:image" content="/assets/dashboard-1.webp"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="{panels[0]['src']}" as="image" fetchpriority="high">
 <link rel="preload" href="/assets/fonts/sora-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/dm-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css"><link rel="stylesheet" href="/assets/hero-v6.css"><link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/assets/visual-fidelity.css">
-<script src="/site.js" defer></script><script src="/assets/visual-fidelity.js" defer></script><script src="/assets/hero-v6.js" defer></script>
+<link rel="stylesheet" href="/assets/fonts.css"><link rel="stylesheet" href="/assets/hero-v6.css"><link rel="stylesheet" href="/site.css">
+<script src="/site.js" defer></script><script src="/assets/hero-v6.js" defer></script>
 </head><body><a class="rhs-skip" href="#platform">{p['skip']}</a>
 {header}<main>{hero}
-{lower_page(code, views)}</main></body></html>'''
+{lower_page(code, manifest, languages, hero_kind)}</main></body></html>'''
 
 
 def route_file(code):
