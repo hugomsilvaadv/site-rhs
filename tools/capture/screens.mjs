@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 import os from 'node:os';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import { launch, fitWebp, sha256, webpSize, settle, scanForSensitive, visibleStates, boxes } from './lib.mjs';
+import { launch, fitWebp, sha256, webpSize, settle, scanForSensitive, visibleStates, boxes, hideText } from './lib.mjs';
 import { buildContactSheet } from './contact-sheet.mjs';
 import * as plan from './screens.config.mjs';
 
@@ -82,7 +82,7 @@ async function heroFile(encoder, png, screen, heroDir, rel) {
   return { path: rel + name, width: plan.HERO.width, height: plan.HERO.height, bytes: result.bytes, quality: result.quality, overBudget: result.overBudget, sha256: sha256(result.buffer) };
 }
 
-async function captureAll({ base, screens, outDir, heroDir, rel, heroRel, contexts, phrases }) {
+async function captureAll({ base, screens, outDir, heroDir, rel, heroRel, contexts, phrases, crop, css = '', options = {}, signIn }) {
   const browser = await launch();
   const results = {};
   try {
@@ -91,19 +91,30 @@ async function captureAll({ base, screens, outDir, heroDir, rel, heroRel, contex
     for (const kind of ['desktop', 'mobile']) {
       if (!screens.some(screen => (screen.viewport ?? 'desktop') === kind)) continue;
       const size = kind === 'mobile' ? plan.MOBILE : plan.DESKTOP;
-      const context = await browser.newContext({ viewport: size, deviceScaleFactor: 2, colorScheme: 'dark', reducedMotion: 'reduce', locale: 'en-US', ...(kind === 'mobile' ? { isMobile: true, hasTouch: true } : {}) });
+      const context = await browser.newContext({ viewport: size, deviceScaleFactor: 2, colorScheme: 'dark', reducedMotion: 'reduce', locale: 'en-US', ...options, ...(kind === 'mobile' ? { isMobile: true, hasTouch: true } : {}) });
       await contexts?.(context, base);
       sessions[kind] = await context.newPage();
-      await plan.signIn?.(sessions[kind], base);
+      await signIn?.(sessions[kind], base);
     }
     for (const screen of screens) {
       const page = sessions[screen.viewport ?? 'desktop'];
+      const size = screen.viewport === 'mobile' ? plan.MOBILE : plan.DESKTOP;
       const warnings = [];
       try {
-        await page.goto(base + screen.path, { waitUntil: 'networkidle' });
+        await page.setViewportSize(size);
+        await page.goto(base + screen.path, { waitUntil: 'networkidle', timeout: 300000 });
         if (screen.prepare) await screen.prepare(page);
         if (screen.ready) await page.locator(screen.ready).first().waitFor({ state: 'visible', timeout: 15000 });
-        await settle(page);
+        await settle(page, { css });
+        if (screen.hide?.length) {
+          const hidden = await hideText(page, screen.hide);
+          if (hidden) warnings.push(`hid ${hidden} element(s) matching: ${screen.hide.join(' | ')}`);
+        }
+        // Crop the top of the page (e.g. the shell's first header row): the viewport grows by that much,
+        // so the image keeps its frame size.
+        const top = crop && !screen.keepHeader ? Math.ceil(await crop(page)) : 0;
+        if (top > 0) { await page.setViewportSize({ width: size.width, height: size.height + top }); await settle(page, { css }); }
+        const frame = { x: 0, y: top, width: size.width, height: size.height };
         const states = await visibleStates(page, phrases);
         warnings.push(...states.alerts.map(text => 'visible alert: ' + text.slice(0, 80)), ...states.phrases.map(text => 'error/empty text: ' + text));
         const sensitive = await scanForSensitive(page);
@@ -111,12 +122,12 @@ async function captureAll({ base, screens, outDir, heroDir, rel, heroRel, contex
         if (screen.expectSensitive) assert.ok(shown.some(f => f.kind === screen.expectSensitive), 'scanner finds the expected ' + screen.expectSensitive);
         else if (shown.length) throw new Error('sensitive text on screen: ' + shown.map(f => f.kind + ' ' + f.sample).join(', '));
         warnings.push(...sensitive.filter(f => !f.visible).map(f => `outside the image: ${f.kind} ${f.sample}`));
-        const hotspots = screen.hotspots ? await boxes(page, screen.hotspots) : undefined;
+        const hotspots = screen.hotspots ? await boxes(page, screen.hotspots, frame) : undefined;
         if (screen.hotspots) for (const key of Object.keys(screen.hotspots)) if (!hotspots[key]) warnings.push('hotspot not found: ' + key);
-        const png = await page.screenshot({ type: 'png', animations: 'disabled', caret: 'hide' });
+        const png = await page.screenshot({ type: 'png', animations: 'disabled', caret: 'hide', clip: frame });
         const files = await emit(encoder, png, screen, outDir, rel);
         const hero = screen.hero && heroDir ? await heroFile(encoder, png, screen, heroDir, heroRel) : undefined;
-        results[screen.name] = { route: screen.path, viewport: [page.viewportSize().width, page.viewportSize().height], scale: 2, files, ...(hero ? { hero } : {}), ...(hotspots ? { hotspots } : {}), warnings, approved: false };
+        results[screen.name] = { route: screen.path, viewport: [size.width, size.height], scale: 2, ...(top ? { cropTop: top } : {}), files, ...(hero ? { hero } : {}), ...(hotspots ? { hotspots } : {}), warnings, ...(screen.review ? { review: screen.review } : {}), approved: false };
         console.log(`captured ${screen.name}: ${files.map(f => `${f.width}w ${(f.bytes / 1024).toFixed(0)}KB q${f.quality}`).join(', ')}${warnings.length ? ' — ' + warnings.length + ' warning(s)' : ''}`);
       } catch (error) {
         console.error(`FAILED ${screen.name}: ${error.message.split('\n')[0]}`);
@@ -136,10 +147,12 @@ async function selfTest() {
   await mkdir(heroDir, { recursive: true });
   const screens = [
     { name: 'site-home', path: '/', ready: '#home h1', hero: true, hotspots: { heading: '#home h1', carousel: '#hero-carousel' } },
-    { name: 'site-contact', path: '/#contact', ready: '#contact', expectSensitive: 'email' },
+    { name: 'site-contact', path: '/#contact', ready: '#contact', expectSensitive: 'email', keepHeader: true },
+    { name: 'site-contact-hidden', path: '/#contact', ready: '#contact', hide: ['sales@rhs-labs.com'], keepHeader: true },
     { name: 'site-home-mobile', path: '/es/', viewport: 'mobile', ready: '#home h1' },
   ];
-  const results = await captureAll({ base: site, screens, outDir: dir, heroDir, rel: '', heroRel: 'hero/', phrases: [] });
+  const crop = page => page.evaluate(() => document.querySelector('header').getBoundingClientRect().bottom);
+  const results = await captureAll({ base: site, screens, outDir: dir, heroDir, rel: '', heroRel: 'hero/', phrases: [], crop });
   for (const screen of screens) {
     const entry = results[screen.name];
     assert.ok(entry && !entry.failed, `${screen.name} captured (${entry?.failed ?? ''})`);
@@ -153,6 +166,8 @@ async function selfTest() {
   assert.deepEqual(results['site-home-mobile'].files.map(f => [f.width, f.height]), [[plan.MOBILE.width * 2, plan.MOBILE.height * 2]]);
   assert.deepEqual([results['site-home'].hero.width, results['site-home'].hero.height], [plan.HERO.width, plan.HERO.height]);
   assert.ok(results['site-home'].hotspots.heading.w > 0 && results['site-home'].hotspots.carousel.h > 0, 'hotspot boxes measured');
+  assert.ok(results['site-home'].cropTop > 0 && !results['site-contact'].cropTop, 'header crop applied unless kept');
+  assert.ok(results['site-contact-hidden'].warnings.some(w => w.startsWith('hid ')), 'hidden text is reported, and the hidden e-mail no longer fails the scanner');
   const manifest = { version: 1, capturedAt: new Date().toISOString(), source: { repo: 'self-test (static website)', commit: '-', mode: 'static', flagProfile: '-', locale: 'en/es', theme: 'dark' }, screens: results };
   await buildContactSheet({ manifest, htmlPath: path.join(dir, 'contact-sheet.html'), pngPath: path.join(dir, 'contact-sheet.png'), imageBase: '' });
   assert.ok(existsSync(path.join(dir, 'contact-sheet.png')));
@@ -170,7 +185,7 @@ async function capture() {
   const heroDir = path.join(root, 'assets/hero');
   await mkdir(outDir, { recursive: true });
   await mkdir(heroDir, { recursive: true });
-  const results = await captureAll({ base, screens, outDir, heroDir, rel: 'assets/product/', heroRel: 'assets/hero/', contexts: plan.prepareContext, phrases: await plan.errorPhrases?.() ?? [] });
+  const results = await captureAll({ base, screens, outDir, heroDir, rel: 'assets/product/', heroRel: 'assets/hero/', contexts: plan.prepareContext, phrases: await plan.errorPhrases?.() ?? [], crop: plan.headerCrop, css: plan.CAPTURE_CSS ?? '', options: plan.CONTEXT ?? {}, signIn: plan.signIn });
   const manifest = await readManifest();
   let commit = '-';
   try { commit = execFileSync('git', ['-C', path.resolve(root, process.env.BACKOFFICE_DIR ?? '../rhs-pam-backoffice'), 'rev-parse', '--short', 'HEAD'], { encoding: 'utf8' }).trim(); } catch {}

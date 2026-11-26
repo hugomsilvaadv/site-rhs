@@ -19,7 +19,7 @@ export function contactSheetHtml(manifest, { imageBase }) {
     return `<figure class="${screen.approved ? 'ok' : 'pending'}">
 <div class="thumb">${preview ? `<img src="${escape(imageBase + preview.path)}" alt="">` : '<span>missing</span>'}</div>
 <figcaption><b>${escape(name)}</b> <span class="state">${screen.approved ? 'approved' : 'review pending'}</span>
-<small>${escape(screen.route)} · ${escape(screen.viewport?.join('×'))} @${escape(screen.scale)}x</small><small>${files}</small>${warnings ? `<ul>${warnings}</ul>` : ''}</figcaption></figure>`;
+<small>${escape(screen.route)} · ${escape(screen.viewport?.join('×'))} @${escape(screen.scale)}x</small><small>${files}</small>${screen.review ? `<p class="review">Check: ${escape(screen.review)}</p>` : ''}${screen.failed ? `<ul><li>${escape(screen.failed)}</li></ul>` : ''}${warnings ? `<ul>${warnings}</ul>` : ''}</figcaption></figure>`;
   }).join('\n');
   const source = manifest.source ?? {};
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Product screen contact sheet</title><style>
@@ -29,7 +29,7 @@ main{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
 figure{margin:0;border:1px solid #1d4050;border-radius:8px;background:#08192a;overflow:hidden}
 figure.ok{border-color:#2f9e8f}.thumb{position:relative;aspect-ratio:16/10;background:#020b14;overflow:hidden}
 .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.thumb span{position:absolute;inset:0;display:grid;place-items:center;color:#ef8497}figcaption{padding:10px 12px}figcaption small{display:block;color:#8fb0bf;margin-top:3px}
-.state{float:right;font-size:11px;color:#e5c273}.ok .state{color:#4fd6c4}.warn{color:#ef8497}ul{margin:6px 0 0;padding-left:16px;color:#ef8497}
+.state{float:right;font-size:11px;color:#e5c273}.review{margin:6px 0 0;color:#cfe3ea;font-size:12px}.ok .state{color:#4fd6c4}.warn{color:#ef8497}ul{margin:6px 0 0;padding-left:16px;color:#ef8497}
 </style></head><body><h1>Product screen contact sheet</h1>
 <p>${escape(source.repo)} @ ${escape(source.commit)} · mode ${escape(source.mode)} · flags ${escape(source.flagProfile)} · locale ${escape(source.locale)} · theme ${escape(source.theme)} · captured ${escape(manifest.capturedAt)}</p>
 <main>${cards}</main></body></html>`;
