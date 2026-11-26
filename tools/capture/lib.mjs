@@ -109,8 +109,8 @@ export const CAPTURE_CSS = `
 [data-sonner-toaster],[data-sonner-toast],[role="region"][aria-label*="otification"],.toaster{display:none!important}
 html{scrollbar-width:none}::-webkit-scrollbar{display:none}`;
 
-export async function settle(page, { timeout = 15000 } = {}) {
-  await page.addStyleTag({ content: CAPTURE_CSS });
+export async function settle(page, { timeout = 15000, css = '' } = {}) {
+  await page.addStyleTag({ content: CAPTURE_CSS + css });
   await page.evaluate(() => document.fonts.ready);
   await page.waitForFunction(() => !document.querySelector('[aria-busy="true"], [data-loading="true"], .animate-pulse'), null, { timeout });
   await page.mouse.move(1, 1);
@@ -127,16 +127,35 @@ export async function visibleStates(page, phrases) {
   }, phrases);
 }
 
-// Element boxes as fractions of the viewport, for numbered hotspots placed over the image.
-export async function boxes(page, targets) {
+// Element boxes as fractions of the captured frame, for numbered hotspots placed over the image.
+export async function boxes(page, targets, frame) {
   const result = {};
+  const { x: left, y: top, width, height } = frame ?? { x: 0, y: 0, ...page.viewportSize() };
   for (const [key, target] of Object.entries(targets)) {
     const locator = typeof target === 'function' ? target(page) : page.locator(target);
     const box = await locator.first().boundingBox().catch(() => null);
-    if (!box) continue;
-    const { width, height } = page.viewportSize();
+    if (!box || box.y - top >= height || box.y + box.height <= top) continue;
     const round = value => Math.round(value * 10000) / 10000;
-    result[key] = { x: round(box.x / width), y: round(box.y / height), w: round(box.width / width), h: round(box.height / height) };
+    result[key] = { x: round((box.x - left) / width), y: round(Math.max(0, box.y - top) / height), w: round(box.width / width), h: round(box.height / height) };
   }
   return result;
+}
+
+// Hides (never rewrites) every element whose text contains one of the given strings: the closest table
+// row, list item or definition term/description, or the element itself. Returns how many were hidden.
+export async function hideText(page, texts) {
+  return page.evaluate(list => {
+    const nodes = [];
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    let hidden = 0;
+    for (const node of nodes) {
+      if (!node.parentElement || !list.some(text => node.nodeValue.includes(text))) continue;
+      const target = node.parentElement.closest('tr, li, [role="row"], dt, dd') || node.parentElement;
+      // A term and its description go together: hiding one hides its pair.
+      const pair = target.tagName === 'DD' ? target.previousElementSibling : target.tagName === 'DT' ? target.nextElementSibling : null;
+      for (const element of [target, pair]) if (element && element.style.visibility !== 'hidden') { element.style.visibility = 'hidden'; hidden++; }
+    }
+    return hidden;
+  }, texts);
 }
