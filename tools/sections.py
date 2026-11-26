@@ -1,7 +1,7 @@
 """Lower page (sectors 02–11): the real Sentinel back-office, EN/ES from one source; static, no backend.
 
-Every claim maps to a screen of the back-office menu (rhs-labs/rhs-pam-backoffice, src/config/navigation.ts,
-flags on in the `homologacao` profile). Product images come only from captures approved in
+Every claim maps to a screen of the back-office menu (its navigation config, with the flag on in the
+`homologacao` profile). Product images come only from captures approved in
 tools/capture/manifest.json; until one is approved, its slot lists the real screens of that area instead of
 a picture, so the page never shows an invented screen. Connected intelligence stays a concept diagram.
 """
