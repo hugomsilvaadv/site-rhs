@@ -37,11 +37,14 @@ node tests/staging.cjs
 node tests/visual.cjs
 node tests/orbit.cjs
 node tests/geometry.cjs
+node tests/product-images.cjs
 ```
 
 `tests/generator.cjs` and `tests/integrity.cjs` need no browser: the first checks that the checked-in pages equal the generator output, that EN/ES keep the same copy structure, that a registered but unpublished third language changes nothing, and that the hero only swaps to approved product captures; the second checks the orbit images against the integrity manifest and the badge under the orbit.
 
 Visual/geometry reference tests also require the SHA-verified approved reference served on port 8001. Source reference is supplied separately in the user's handoff ZIP, not a public deployment asset. In this cloud task it is in `/workspace/rhs-handoff/RHS_WEB_STUDIO_HANDOFF/reference/`.
+
+`tests/product-images.cjs` renders a temporary copy of the site with obviously fake fixture images and an approved capture manifest, and checks that approved captures reach the tour, the Player 360 markers, payments and the hero, and that unapproved ones never do; it writes nothing to the checkout.
 
 `tests/orbit.cjs` observes the preserved two-lap continuous 3D orbit on desktop; `geometry.cjs` compares the older baseline on tablet/desktop widths only. On phones (up to 560px), the owner-approved correction displays one dashboard at a time, with swipe and dot navigation; `tests/mobile-showcase.cjs` tests this responsive behavior and the mobile laptop image and expandable interactive workspace. The simulated test is not a substitute for live observation. `tests/staging.cjs` uses example.test strictly as an isolated test fixture; rerun staging without the fixture before serving or deployment.
 
