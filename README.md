@@ -1,6 +1,6 @@
 # RHS Labs / Sentinel website
 
-Static EN/ES product website. Sentinel is in development; all interface data is illustrative.
+Static EN/ES website for RHS Labs Sentinel, the PAM and back-office for regulated betting operators. Every claim maps to a real back-office screen; product images come only from captures of the real back-office (mock mode, synthetic data) approved in `tools/capture/`. Until the hero swap, the three orbit images are concept illustrations and are labeled as such.
 
 ## Develop
 
@@ -8,6 +8,7 @@ Use the existing checkout (cloud tasks are already isolated). Python 3 and Node 
 
 ```sh
 python3 tools/render.py
+node tools/og/og.mjs        # Open Graph images from the rendered hero (after copy or hero changes)
 node tools/stage.mjs
 python3 -m http.server 8000 --bind 0.0.0.0 --directory public
 ```

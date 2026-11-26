@@ -19,15 +19,17 @@ LANGUAGES = {
 }
 
 PAGE = {
- 'en': {'title': 'RHS Labs — Sentinel | Operational clarity. Connected risk intelligence.',
-        'description': 'Explore Sentinel, the B2B platform in development for operational backoffice, '
-                       'payment workflows, risk intelligence and fraud investigations.',
+ 'en': {'title': 'RHS Labs Sentinel — PAM and back-office for regulated betting operators',
+        'description': 'Player account management and back-office for regulated betting operators: Player 360, '
+                       'withdrawals with approval tiers, risk, fraud and compliance. Available for pilot programs.',
+        'og_alt': 'RHS Labs Sentinel: player account management for regulated operators.',
         'nav': [['Platform', '#platform'], ['Modules', '#modules'], ['Payments', '#payments'], ['Compliance', '#compliance'], ['Security', '#security'], ['Pilot', '#pilot']],
         'skip': 'Skip to content', 'back_to_top': 'RHS Labs / Sentinel — Back to top', 'main_menu': 'Main menu',
         'open_navigation': 'Open navigation', 'close_navigation': 'Close navigation', 'cta': 'Discuss a pilot'},
- 'es': {'title': 'RHS Labs — Sentinel | Claridad operativa e inteligencia de riesgo.',
-        'description': 'Conozca Sentinel, la plataforma B2B en desarrollo para backoffice operativo, '
-                       'flujos de pagos, inteligencia de riesgo e investigaciones de fraude.',
+ 'es': {'title': 'RHS Labs Sentinel — PAM y back-office para operadores de apuestas regulados',
+        'description': 'Gestión de cuentas de jugadores y back-office para operadores de apuestas regulados: Player 360, '
+                       'retiros con niveles de aprobación, riesgo, fraude y cumplimiento. Disponible para programas piloto.',
+        'og_alt': 'RHS Labs Sentinel: gestión de cuentas de jugadores para operadores regulados.',
         'nav': [['Plataforma', '#platform'], ['Módulos', '#modules'], ['Pagos', '#payments'], ['Cumplimiento', '#compliance'], ['Seguridad', '#security'], ['Piloto', '#pilot']],
         'skip': 'Saltar al contenido', 'back_to_top': 'RHS Labs / Sentinel — Volver al inicio', 'main_menu': 'Menú principal',
         'open_navigation': 'Abrir navegación', 'close_navigation': 'Cerrar navegación', 'cta': 'Conversar sobre un piloto'},
@@ -241,13 +243,15 @@ def render(code, manifest=None):
  header = render_header(code)
  hero_kind = 'product' if (manifest.get('hero') or {}).get('active') else 'concept'
  languages = ''.join(f'<a href="{LANGUAGES[c]["path"]}" data-language="{c}" lang="{c}"' + (' aria-current="page"' if c == code else '') + f'>{LANGUAGES[c]["label"]}</a>' for c in published())
+ og_image = f'/assets/og-image-{code}.jpg' if (ROOT / f'assets/og-image-{code}.jpg').exists() else '/assets/og-image-en.jpg'
+ locale_alternates = ''.join(f'<meta property="og:locale:alternate" content="{LANGUAGES[c]["og_locale"]}">' for c in published() if c != code)
  alternates = ''.join(f'<link rel="alternate" hreflang="{c}" href="{LANGUAGES[c]["path"]}">' for c in published())
  return f'''<!DOCTYPE html>
 <html lang="{code}"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0A1426">
 <title>{p['title']}</title><meta name="description" content="{p['description']}">
 <link rel="canonical" href="{language['path']}">{alternates}<link rel="alternate" hreflang="x-default" href="/">
-<meta property="og:type" content="website"><meta property="og:title" content="{p['title']}"><meta property="og:description" content="{p['description']}"><meta property="og:locale" content="{language['og_locale']}"><meta property="og:image" content="/assets/dashboard-1.webp"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website"><meta property="og:site_name" content="RHS Labs"><meta property="og:title" content="{p['title']}"><meta property="og:description" content="{p['description']}"><meta property="og:locale" content="{language['og_locale']}">{locale_alternates}<meta property="og:image" content="{og_image}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="{esc(p['og_alt'])}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{og_image}">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="{panels[0]['src']}" as="image" fetchpriority="high">
 <link rel="preload" href="/assets/fonts/sora-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/dm-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts.css"><link rel="stylesheet" href="/assets/hero-v6.css"><link rel="stylesheet" href="/site.css">
