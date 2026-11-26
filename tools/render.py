@@ -24,24 +24,24 @@ PAGE = {
                        'withdrawals with approval tiers, risk, fraud and compliance. Available for pilot programs.',
         'og_alt': 'RHS Labs Sentinel: player account management for regulated operators.',
         'nav': [['Platform', '#platform'], ['Modules', '#modules'], ['Payments', '#payments'], ['Compliance', '#compliance'], ['Security', '#security'], ['Pilot', '#pilot']],
-        'skip': 'Skip to content', 'back_to_top': 'RHS Labs / Sentinel — Back to top', 'main_menu': 'Main menu',
+        'skip': 'Skip to content', 'back_to_top': 'RHS Labs Sentinel — back to top', 'main_menu': 'Main menu',
         'open_navigation': 'Open navigation', 'close_navigation': 'Close navigation', 'cta': 'Discuss a pilot'},
  'es': {'title': 'RHS Labs Sentinel — PAM y back-office para operadores de apuestas regulados',
         'description': 'Gestión de cuentas de jugadores y back-office para operadores de apuestas regulados: Player 360, '
                        'retiros con niveles de aprobación, riesgo, fraude y cumplimiento. Disponible para programas piloto.',
         'og_alt': 'RHS Labs Sentinel: gestión de cuentas de jugadores para operadores regulados.',
         'nav': [['Plataforma', '#platform'], ['Módulos', '#modules'], ['Pagos', '#payments'], ['Cumplimiento', '#compliance'], ['Seguridad', '#security'], ['Piloto', '#pilot']],
-        'skip': 'Saltar al contenido', 'back_to_top': 'RHS Labs / Sentinel — Volver al inicio', 'main_menu': 'Menú principal',
+        'skip': 'Saltar al contenido', 'back_to_top': 'RHS Labs Sentinel — volver al inicio', 'main_menu': 'Menú principal',
         'open_navigation': 'Abrir navegación', 'close_navigation': 'Cerrar navegación', 'cta': 'Conversar sobre un piloto'},
 }
 
 # Hero copy. The three images stay the approved concept art until product captures are approved
 # and swapped in on purpose (tools/capture/hero-swap.mjs); the badge under the orbit says which.
 HERO = {
- 'en': {'section': 'Sentinel platform showcase',
+ 'en': {'section': 'Sentinel platform showcase', 'eyebrow': 'SENTINEL PLATFORM',
         'h1': 'Player account management<br> <span>for regulated operators.</span>',
         'subtitle': 'RHS Labs Sentinel is the PAM and back-office for regulated betting operators: '
-                    'Player 360, payments with approval tiers, and risk and compliance in one place.',
+                    'Player 360, withdrawals with approval tiers, risk and compliance, all in one place.',
         'cta_primary': 'Discuss a pilot', 'cta_secondary': 'Explore the platform',
         'carousel': {'concept': 'Three concept illustrations of Sentinel', 'product': 'Three Sentinel back-office screens'},
         'choose': 'Choose showcase screen', 'show': 'Show {name}', 'suffix': 'CONTINUOUS 3D ORBIT', 'roledescription': 'carousel',
@@ -49,21 +49,21 @@ HERO = {
         'badge': {'concept': ['AVAILABLE FOR PILOT PROGRAMS', 'ILLUSTRATIVE CONCEPT', 'SIMULATED DATA'],
                   'product': ['AVAILABLE FOR PILOT PROGRAMS', 'PRODUCT UI', 'SYNTHETIC DATA']},
         'values': [['Player 360', 'Account, wallet and history in one profile'],
-                   ['Payments with approval tiers', 'Four-eyes control on withdrawals'],
+                   ['Payments with approval tiers', 'Four-eyes control above your threshold'],
                    ['Risk and fraud', 'Rules, alerts and cases'],
                    ['Audit trail', 'Who did what, and when']]},
- 'es': {'section': 'Presentación de la plataforma Sentinel',
+ 'es': {'section': 'Presentación de la plataforma Sentinel', 'eyebrow': 'PLATAFORMA SENTINEL',
         'h1': 'Gestión de cuentas de jugadores<br> <span>para operadores regulados.</span>',
         'subtitle': 'RHS Labs Sentinel es el PAM y back-office para operadores de apuestas regulados: '
-                    'Player 360, pagos con niveles de aprobación, y riesgo y cumplimiento en un solo lugar.',
+                    'Player 360, retiros con niveles de aprobación, riesgo y cumplimiento, todo en un solo lugar.',
         'cta_primary': 'Conversar sobre un piloto', 'cta_secondary': 'Explorar la plataforma',
         'carousel': {'concept': 'Tres ilustraciones conceptuales de Sentinel', 'product': 'Tres pantallas del back-office Sentinel'},
         'choose': 'Elegir una pantalla', 'show': 'Mostrar {name}', 'suffix': 'ÓRBITA 3D CONTINUA', 'roledescription': 'carrusel',
         'pause': 'Pausar movimiento', 'resume': 'Reanudar movimiento',
         'badge': {'concept': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'CONCEPTO ILUSTRATIVO', 'DATOS SIMULADOS'],
                   'product': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'INTERFAZ DEL PRODUCTO', 'DATOS SINTÉTICOS']},
-        'values': [['Player 360', 'Cuenta, billetera e historial en un perfil'],
-                   ['Pagos con niveles de aprobación', 'Control de cuatro ojos en retiros'],
+        'values': [['Player 360', 'Cuenta, billetera e historial en un solo perfil'],
+                   ['Pagos con niveles de aprobación', 'Cuatro ojos por encima de su umbral'],
                    ['Riesgo y fraude', 'Reglas, alertas y casos'],
                    ['Registro de auditoría', 'Quién hizo qué y cuándo']]},
 }
@@ -88,10 +88,10 @@ HERO_PRODUCT = [
  {'screen': 'player-360-summary',
   'name': {'en': 'Player 360 · Summary', 'es': 'Player 360 · Resumen'},
   'alt': {'en': 'Sentinel back-office: Player 360 summary of a synthetic player, with the identity strip, money cards and summary panels.',
-          'es': 'Back-office Sentinel: resumen del Player 360 de un jugador sintético, con la franja de identidad, las tarjetas de dinero y los paneles del resumen.'}},
+          'es': 'Back-office Sentinel: resumen del Player 360 de un jugador sintético, con la franja de identidad, los indicadores financieros y los paneles del resumen.'}},
  {'screen': 'withdrawals-queue',
   'name': {'en': 'Withdrawals queue', 'es': 'Cola de retiros'},
-  'alt': {'en': 'Sentinel back-office: withdrawals queue with synthetic requests, their state and waiting time.',
+  'alt': {'en': 'Sentinel back-office: withdrawal queue with synthetic requests, their state and waiting time.',
           'es': 'Back-office Sentinel: cola de retiros con solicitudes sintéticas, su estado y tiempo de espera.'}},
  {'screen': 'reports',
   'name': {'en': 'Reports', 'es': 'Informes'},
@@ -108,6 +108,7 @@ V6_HERO = {  # strings of the approved fragment that the copy replaces (each mus
  'h1': '<h1>See risk. Stop fraud. <span>Stay ahead.</span></h1>',
  'subtitle': '<p class="hero-subtitle">Connected intelligence across payments, identities, devices and accounts — designed for confident operational decisions.</p>',
  'section': 'aria-label="Sentinel platform showcase"',
+ 'eyebrow': '<span class="hero-eyebrow">RHS LABS &nbsp;/&nbsp; SENTINEL PLATFORM</span>',
  'cta_primary': '>Discuss a pilot <span aria-hidden="true">↗</span></a>',
  'cta_secondary': '>Explore the platform</a>',
  'carousel': 'aria-label="Three illustrative Sentinel interfaces"',
@@ -206,6 +207,7 @@ def render_hero(code, state):
  html = replace_once(html, v['h1'], f'<h1>{h["h1"]}</h1>')
  html = replace_once(html, v['subtitle'], f'<p class="hero-subtitle">{h["subtitle"]}</p>')
  html = replace_once(html, v['section'], f'aria-label="{esc(h["section"])}"')
+ html = replace_once(html, v['eyebrow'], f'<span class="hero-eyebrow">RHS LABS &nbsp;/&nbsp; {esc(h["eyebrow"])}</span>')
  html = replace_once(html, v['cta_primary'], f'>{h["cta_primary"]} <span aria-hidden="true">↗</span></a>')
  html = replace_once(html, v['cta_secondary'], f'>{h["cta_secondary"]}</a>')
  html = replace_once(html, v['carousel'], f'aria-label="{esc(h["carousel"][kind])}"')
