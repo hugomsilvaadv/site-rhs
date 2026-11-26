@@ -1,8 +1,8 @@
 # Captura das telas reais do back-office
 
-Ferramenta que fotografa o back-office real (`rhs-labs/rhs-pam-backoffice`) para o site: modo mock, dados sintéticos, inglês, tema escuro, perfil de flags `homologacao`. Nada é publicado sem revisão: cada imagem nasce "review pending" e só entra no site depois de aprovada.
+Ferramenta que fotografa o back-office real (o checkout ao lado do site) para o site: modo mock, dados sintéticos, inglês, tema escuro, perfil de flags `homologacao`. Nada é publicado sem revisão: cada imagem nasce "review pending" e só entra no site depois de aprovada.
 
-Estado em 2026-11-26: a ferramenta está pronta e testada contra o próprio site (`--self-test`), mas **nunca rodou contra o back-office**. O `npm ci` do back-office precisa do pacote privado `@rhs-labs/ui` (GitHub Packages), e esta sessão não tinha o token `read:packages`. Seletores, ids e cortes saíram do código-fonte e precisam ser confirmados na primeira captura.
+Estado em 2026-11-26: a ferramenta está pronta e testada contra o próprio site (`--self-test`), mas **nunca rodou contra o back-office**. O `npm ci` do back-office precisa do pacote privado do design system (GitHub Packages), e esta sessão não tinha o token `read:packages`. Seletores, ids e cortes saíram do código-fonte e precisam ser confirmados na primeira captura.
 
 ## Pré-requisitos
 
@@ -36,9 +36,9 @@ Estado em 2026-11-26: a ferramenta está pronta e testada contra o próprio site
 
 ## Riscos conhecidos por tela (do código, a confirmar)
 
-O mock reproduz a jurisdição brasileira: valores em R$, Pix, CPF/RG/CNH, horário de Brasília e LGPD aparecem em várias telas, e há textos sintéticos em português. O site é internacional (EN/ES), então isso está em "Decisões a confirmar com os sócios": aceitar, recortar ou pedir um mock neutro ao back-office.
+O mock reproduz a jurisdição de um único país: moeda, meio de pagamento instantâneo, documentos nacionais, fuso horário e lei de privacidade locais aparecem em várias telas, e há textos sintéticos em português. O site é internacional (EN/ES), então isso está em "Decisões a confirmar com os sócios": aceitar, recortar ou pedir um mock neutro ao back-office.
 
-- `reconciliation`, `data-requests`, `jurisdiction`, `kyc`: nomeiam Pix, LGPD, Brasil ou documentos brasileiros na própria tela. Provavelmente ficam fora ou precisam de recorte.
+- `reconciliation`, `data-requests`, `jurisdiction`, `kyc`: nomeiam na própria tela o meio de pagamento local, a lei de privacidade, o país ou os documentos nacionais. Provavelmente ficam fora ou precisam de recorte.
 - `users`: só a aba Papéis. A aba Usuários lista nomes realistas com e-mail e nunca é fotografada.
 - `alerts` e `rules`: as linhas padrão incluem regras de multicontas, dispositivo e IP. A captura usa o filtro real `ruleCode=payee_mismatch` e esconde essas regras.
 - `player-360-summary`: o cartão de dados tem a linha "Links" (dispositivo/documento) e o resumo financeiro cita uma referência interna; os dois ficam escondidos.
