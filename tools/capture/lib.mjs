@@ -2,17 +2,28 @@
 // Playwright and Chromium come from the environment, WebP is encoded by Chromium's canvas).
 import { createRequire } from 'node:module';
 import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 
 const require = createRequire(import.meta.url);
+export const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+export const backofficeDir = path.resolve(siteRoot, process.env.BACKOFFICE_DIR ?? '../rhs-pam-backoffice');
 
+// Playwright from this environment, or else from the back-office checkout next to the site
+// (its dev dependency), so a notebook needs no extra install.
 export function playwright() {
-  try { return require('playwright'); }
-  catch { throw new Error('Playwright is not available. Use an environment with Playwright and Chromium (the cloud environment provides both).'); }
+  const from = createRequire(path.join(backofficeDir, 'package.json'));
+  for (const load of [() => require('playwright'), () => from('playwright'), () => from('@playwright/test')]) {
+    try { return load(); } catch {}
+  }
+  throw new Error('Playwright not found: install the back-office dependencies next to the site (or set BACKOFFICE_DIR), or run where Playwright is available.');
 }
 
+// CHROMIUM_PATH picks a browser binary; CAPTURE_CHANNEL an installed browser ("msedge" or "chrome" on Windows).
 export async function launch() {
   const { chromium } = playwright();
-  return chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
+  if (process.env.CHROMIUM_PATH) return chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
+  return chromium.launch(process.env.CAPTURE_CHANNEL ? { channel: process.env.CAPTURE_CHANNEL } : {});
 }
 
 export const sha256 = buffer => createHash('sha256').update(buffer).digest('hex');
@@ -158,4 +169,42 @@ export async function hideText(page, texts) {
     }
     return hidden;
   }, texts);
+}
+
+// The one badge of every product image, drawn into the capture itself (bottom right), so the file carries it
+// wherever it is used. Placeholders carry their own "Screenshot pending" label instead.
+export const STAMP = 'PRODUCT UI · SYNTHETIC DATA';
+export async function stamp(page, { small = false } = {}) {
+  await page.evaluate(({ text, small }) => {
+    const el = document.createElement('div');
+    el.setAttribute('data-capture-stamp', '');
+    el.textContent = text;
+    Object.assign(el.style, { position: 'fixed', right: small ? '10px' : '18px', bottom: small ? '10px' : '16px', zIndex: '2147483647', pointerEvents: 'none',
+      font: `700 ${small ? 9 : 11}px/1 system-ui, sans-serif`, letterSpacing: '.12em', color: '#7ff1e6', background: 'rgba(5,32,43,.94)',
+      border: '1px solid #2a8d99', borderRadius: '999px', padding: small ? '6px 9px' : '7px 12px', boxShadow: '0 4px 16px rgba(0,0,0,.45)' });
+    document.body.append(el);
+  }, { text: STAMP, small });
+}
+
+// Numbered markers on measured parts of the page (the Player 360 parts described on the website).
+export async function drawMarkers(page, targets) {
+  const placed = [];
+  let n = 0;
+  for (const [key, target] of Object.entries(targets)) {
+    n++;
+    const locator = typeof target === 'function' ? target(page) : page.locator(target);
+    const box = await locator.first().boundingBox().catch(() => null);
+    if (!box) continue;
+    await page.evaluate(({ n, x, y }) => {
+      const el = document.createElement('div');
+      el.setAttribute('data-capture-marker', String(n));
+      el.textContent = String(n);
+      Object.assign(el.style, { position: 'fixed', left: `${x}px`, top: `${y}px`, width: '30px', height: '30px', zIndex: '2147483646', pointerEvents: 'none',
+        display: 'grid', placeItems: 'center', borderRadius: '50%', background: '#21dfd2', color: '#03262b', font: '700 15px/1 system-ui, sans-serif',
+        border: '3px solid #03262b', boxShadow: '0 0 0 2px rgba(33,223,210,.55), 0 0 18px rgba(33,223,210,.6)' });
+      document.body.append(el);
+    }, { n, x: Math.max(4, box.x + 6), y: Math.max(4, box.y + 6) });
+    placed.push(key);
+  }
+  return placed;
 }
