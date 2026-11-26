@@ -190,8 +190,13 @@ COPY = {
  'about': {'head': ['ABOUT RHS LABS', 'Software for regulated<br>betting operations.', 'RHS Labs builds Sentinel, the PAM and back-office for regulated operators, around accountable work: permissions, approvals and a record of each decision.', 'Our approach'],
   'principles': [['Real workflows first', 'Screens follow how operations, payments and compliance teams work.'], ['Modular by design', 'Start with Core; add Payments, Intelligence or Fraud as you grow.'], ['Accountable by default', 'Four-eyes approvals, permissions and audit trails throughout.']],
   'brandline': 'PAM and back-office<br>for regulated operators.'},
- 'contact': {'head': ['GET IN TOUCH', 'Let’s discuss<br>your operation.', 'Tell us about your operation and jurisdiction. We will walk you through the back-office with synthetic data and discuss a pilot.'],
-  'sales': 'Talk to sales', 'salessub': 'Start a conversation about your operation.', 'salescta': 'Contact sales', 'emailnote': 'Opens your email application. This website does not send messages.', 'subject': 'Sentinel — commercial enquiry'},
+ 'contact': {'head': ['GET IN TOUCH', 'See Sentinel with<br>your own use cases.', 'Tell us about your operation and jurisdiction. We will walk you through the back-office with synthetic data and discuss a pilot.'],
+  'sales': 'Talk to our team', 'salessub': 'A walkthrough of the back-office for your team, with synthetic data.',
+  'emailnote': 'Each button opens your email application with a short template to complete. This website does not send messages; please do not include player personal data.'},
+ 'cta': {'demo': 'Request a demo', 'demo_short': 'Request a demo', 'pilot': 'Discuss a pilot', 'opens': '(opens your email application)',
+  'mail': {'demo': ['Sentinel demo request', 'I would like a demo of RHS Labs Sentinel.'], 'pilot': ['Sentinel pilot program', 'We would like to discuss a Sentinel pilot.']},
+  'fields': ['Company:', 'Jurisdiction(s):', 'Approximate volume (active players or monthly transactions):', 'Modules of interest (Core, Payments, Intelligence, Fraud):'],
+  'greeting': 'Hello RHS Labs team,', 'privacy': 'Please do not include player personal data in this email.'},
  'footer': {'tagline': 'PAM and back-office for regulated operators.', 'nav': ['Platform', 'Modules', 'Payments', 'Compliance', 'Security', 'Pilot', 'Company'], 'nav_label': 'Footer navigation',
   'notice': {'available': 'Sentinel is available for pilot programs; scope and availability are confirmed in commercial discussions.',
              'concept': 'The dashboards at the top of the page are concept illustrations with simulated data, not the current product.',
@@ -283,8 +288,13 @@ COPY = {
  'about': {'head': ['ACERCA DE RHS LABS', 'Software para operaciones<br>de apuestas reguladas.', 'RHS Labs desarrolla Sentinel, el PAM y back-office para operadores regulados, en torno al trabajo responsable: permisos, aprobaciones y un registro de cada decisión.', 'Nuestro enfoque'],
   'principles': [['Primero, los flujos reales', 'Las pantallas siguen cómo trabajan los equipos de operaciones, pagos y cumplimiento.'], ['Modular por diseño', 'Empiece con Core y sume Payments, Intelligence o Fraud a medida que crece.'], ['Responsable por defecto', 'Aprobaciones de cuatro ojos, permisos y registros de auditoría en todo el producto.']],
   'brandline': 'PAM y back-office<br>para operadores regulados.'},
- 'contact': {'head': ['CONTACTO', 'Conversemos sobre<br>su operación.', 'Cuéntenos sobre su operación y su jurisdicción. Le mostraremos el back-office con datos sintéticos y conversaremos sobre un piloto.'],
-  'sales': 'Hable con ventas', 'salessub': 'Inicie una conversación sobre su operación.', 'salescta': 'Contactar ventas', 'emailnote': 'Abre su aplicación de correo. Este sitio no envía mensajes.', 'subject': 'Sentinel — consulta comercial'},
+ 'contact': {'head': ['CONTACTO', 'Vea Sentinel con<br>sus propios casos.', 'Cuéntenos sobre su operación y su jurisdicción. Le mostraremos el back-office con datos sintéticos y conversaremos sobre un piloto.'],
+  'sales': 'Hable con nuestro equipo', 'salessub': 'Un recorrido por el back-office para su equipo, con datos sintéticos.',
+  'emailnote': 'Cada botón abre su aplicación de correo con una breve plantilla para completar. Este sitio no envía mensajes; no incluya datos personales de jugadores.'},
+ 'cta': {'demo': 'Solicitar una demostración', 'demo_short': 'Solicitar demo', 'pilot': 'Conversar sobre un piloto', 'opens': '(abre su aplicación de correo)',
+  'mail': {'demo': ['Solicitud de demostración de Sentinel', 'Me gustaría ver una demostración de RHS Labs Sentinel.'], 'pilot': ['Programa piloto de Sentinel', 'Nos gustaría conversar sobre un piloto de Sentinel.']},
+  'fields': ['Empresa:', 'Jurisdicción(es):', 'Volumen aproximado (jugadores activos o transacciones mensuales):', 'Módulos de interés (Core, Payments, Intelligence, Fraud):'],
+  'greeting': 'Hola, equipo de RHS Labs:', 'privacy': 'Por favor, no incluya datos personales de jugadores en este correo.'},
  'footer': {'tagline': 'PAM y back-office para operadores regulados.', 'nav': ['Plataforma', 'Módulos', 'Pagos', 'Cumplimiento', 'Seguridad', 'Piloto', 'Empresa'], 'nav_label': 'Navegación de pie de página',
   'notice': {'available': 'Sentinel está disponible para programas piloto; el alcance y la disponibilidad se confirman en las conversaciones comerciales.',
              'concept': 'Los paneles de la parte superior son ilustraciones conceptuales con datos simulados, no el producto actual.',
@@ -293,6 +303,19 @@ COPY = {
 },
 }
 FOOTER_LINKS = ['#platform', '#modules', '#payments', '#compliance', '#security', '#pilot', '#company']
+
+
+def mailto(lang, kind):
+ """Pre-filled e-mail (subject and a short template); no form, no backend. Line breaks are CRLF (RFC 6068)."""
+ c = COPY[lang]['cta']
+ subject, opening = c['mail'][kind]
+ body = '\r\n'.join([c['greeting'], '', opening, '', *c['fields'], '', c['privacy']])
+ return f'mailto:{CONTACT}?subject={quote(subject, safe="")}&body={quote(body, safe="")}'
+
+
+def cta_link(lang, kind, cls='btn rhs-cta', arrow=True):
+ c = COPY[lang]['cta']
+ return f'<a class="{cls}" href="{esc(mailto(lang, kind))}" data-cta="{kind}">{c[kind]}<span class="rhs-sr"> {c["opens"]}</span>{" " + icon("arrow") if arrow else ""}</a>'
 
 
 def manifest_screens(manifest):
@@ -402,7 +425,7 @@ def security(t, n):
 def pilot(t, n):
  c = t['pilot']
  steps = ''.join(f'<li class="rhs-step"><span class="rhs-round-icon">{icon(ic)}</span><b class="rhs-step-number">0{i + 1}</b><h3>{title}</h3><p>{text}</p></li>' for i, (ic, (title, text)) in enumerate(zip(PILOT_ICONS, c['steps'])))
- return f'''<section id="pilot" class="rhs-sector rhs-process" data-sector="{n}"><span id="use-cases" class="rhs-anchor"></span><span id="how" class="rhs-anchor"></span><div class="wrap rhs-split">{intro(n, c['head'], '#contact', c['cta'])}<ol class="rhs-steps">{steps}</ol></div></section>'''
+ return f'''<section id="pilot" class="rhs-sector rhs-process" data-sector="{n}"><span id="use-cases" class="rhs-anchor"></span><span id="how" class="rhs-anchor"></span><div class="wrap rhs-split"><div class="rhs-sector-copy">{kicker(n, c['head'][0])}<h2>{c['head'][1]}</h2><p>{c['head'][2]}</p>{cta_link(t['lang'], 'pilot')}</div><ol class="rhs-steps">{steps}</ol></div></section>'''
 
 
 def about(t, n):
@@ -413,7 +436,7 @@ def about(t, n):
 
 def contact(t, n):
  c = t['contact']
- return f'''<section id="contact" class="rhs-sector rhs-contact" data-sector="{n}"><div class="wrap rhs-split">{intro(n, c['head'])}<div class="rhs-sales-panel"><span class="rhs-icon-box">{icon('layers')}</span><div><h3>{c['sales']}</h3><p>{c['salessub']}</p><a class="rhs-sales-email" href="mailto:{CONTACT}">{CONTACT}</a></div><a class="btn rhs-cta" href="mailto:{CONTACT}?subject={quote(c['subject'])}">{c['salescta']} {icon('arrow')}</a><small>{c['emailnote']}</small></div></div></section>'''
+ return f'''<section id="contact" class="rhs-sector rhs-contact" data-sector="{n}"><div class="wrap rhs-split">{intro(n, c['head'])}<div class="rhs-sales-panel"><span class="rhs-icon-box">{icon('layers')}</span><div><h3>{c['sales']}</h3><p>{c['salessub']}</p><a class="rhs-sales-email" href="mailto:{CONTACT}">{CONTACT}</a></div><div class="rhs-cta-group">{cta_link(t['lang'], 'demo')}{cta_link(t['lang'], 'pilot', 'btn rhs-cta rhs-cta-alt', arrow=False)}</div><small>{c['emailnote']}</small></div></div></section>'''
 
 
 def footer(t, languages, notice):
@@ -425,7 +448,7 @@ def footer(t, languages, notice):
 
 def lower_page(lang, manifest=None, languages='', hero_kind='concept'):
  """Sectors 02–11 and the footer. The single footer notice says what the page's images are."""
- t = COPY[lang]
+ t = dict(COPY[lang], lang=lang)
  shots = manifest_screens(manifest)
  sectors = [tour(t, shots, 2), modules(t, 3), player360(t, shots, 4), payments(t, shots, 5), compliance(t, 6),
             intelligence(t, 7), security(t, 8), pilot(t, 9), about(t, 10), contact(t, 11)]

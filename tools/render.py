@@ -8,7 +8,7 @@ replacement must match exactly once, so a changed fragment fails loudly instead 
 import json
 from html import escape as esc
 from pathlib import Path
-from sections import lower_page
+from sections import COPY, cta_link, lower_page, mailto
 
 ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / 'tools/capture/manifest.json'
@@ -25,14 +25,14 @@ PAGE = {
         'og_alt': 'RHS Labs Sentinel: player account management for regulated operators.',
         'nav': [['Platform', '#platform'], ['Modules', '#modules'], ['Payments', '#payments'], ['Compliance', '#compliance'], ['Security', '#security'], ['Pilot', '#pilot']],
         'skip': 'Skip to content', 'back_to_top': 'RHS Labs / Sentinel — Back to top', 'main_menu': 'Main menu',
-        'open_navigation': 'Open navigation', 'close_navigation': 'Close navigation', 'cta': 'Discuss a pilot'},
+        'open_navigation': 'Open navigation', 'close_navigation': 'Close navigation'},
  'es': {'title': 'RHS Labs Sentinel — PAM y back-office para operadores de apuestas regulados',
         'description': 'Gestión de cuentas de jugadores y back-office para operadores de apuestas regulados: Player 360, '
                        'retiros con niveles de aprobación, riesgo, fraude y cumplimiento. Disponible para programas piloto.',
         'og_alt': 'RHS Labs Sentinel: gestión de cuentas de jugadores para operadores regulados.',
         'nav': [['Plataforma', '#platform'], ['Módulos', '#modules'], ['Pagos', '#payments'], ['Cumplimiento', '#compliance'], ['Seguridad', '#security'], ['Piloto', '#pilot']],
         'skip': 'Saltar al contenido', 'back_to_top': 'RHS Labs / Sentinel — Volver al inicio', 'main_menu': 'Menú principal',
-        'open_navigation': 'Abrir navegación', 'close_navigation': 'Cerrar navegación', 'cta': 'Conversar sobre un piloto'},
+        'open_navigation': 'Abrir navegación', 'close_navigation': 'Cerrar navegación'},
 }
 
 # Hero copy. The three images stay the approved concept art until product captures are approved
@@ -42,7 +42,6 @@ HERO = {
         'h1': 'Player account management<br> <span>for regulated operators.</span>',
         'subtitle': 'RHS Labs Sentinel is the PAM and back-office for regulated betting operators: '
                     'Player 360, payments with approval tiers, and risk and compliance in one place.',
-        'cta_primary': 'Discuss a pilot', 'cta_secondary': 'Explore the platform',
         'carousel': {'concept': 'Three concept illustrations of Sentinel', 'product': 'Three Sentinel back-office screens'},
         'choose': 'Choose showcase screen', 'show': 'Show {name}', 'suffix': 'CONTINUOUS 3D ORBIT', 'roledescription': 'carousel',
         'pause': 'Pause motion', 'resume': 'Resume motion',
@@ -56,7 +55,6 @@ HERO = {
         'h1': 'Gestión de cuentas de jugadores<br> <span>para operadores regulados.</span>',
         'subtitle': 'RHS Labs Sentinel es el PAM y back-office para operadores de apuestas regulados: '
                     'Player 360, pagos con niveles de aprobación, y riesgo y cumplimiento en un solo lugar.',
-        'cta_primary': 'Conversar sobre un piloto', 'cta_secondary': 'Explorar la plataforma',
         'carousel': {'concept': 'Tres ilustraciones conceptuales de Sentinel', 'product': 'Tres pantallas del back-office Sentinel'},
         'choose': 'Elegir una pantalla', 'show': 'Mostrar {name}', 'suffix': 'ÓRBITA 3D CONTINUA', 'roledescription': 'carrusel',
         'pause': 'Pausar movimiento', 'resume': 'Reanudar movimiento',
@@ -108,8 +106,8 @@ V6_HERO = {  # strings of the approved fragment that the copy replaces (each mus
  'h1': '<h1>See risk. Stop fraud. <span>Stay ahead.</span></h1>',
  'subtitle': '<p class="hero-subtitle">Connected intelligence across payments, identities, devices and accounts — designed for confident operational decisions.</p>',
  'section': 'aria-label="Sentinel platform showcase"',
- 'cta_primary': '>Discuss a pilot <span aria-hidden="true">↗</span></a>',
- 'cta_secondary': '>Explore the platform</a>',
+ 'cta_primary': '<a class="btn" href="#contact">Discuss a pilot <span aria-hidden="true">↗</span></a>',
+ 'cta_secondary': '<a class="btn alt" href="#platform">Explore the platform</a>',
  'carousel': 'aria-label="Three illustrative Sentinel interfaces"',
  'roledescription': 'aria-roledescription="carousel"',
  'choose': 'aria-label="Choose showcase screen"',
@@ -135,7 +133,7 @@ V6_HEADER = {
  'open_navigation': 'aria-label="Open navigation"',
  'languages': '<span class="lang"><a href="/" data-language="en" lang="en" aria-label="English">EN</a> · <a href="/es/" data-language="es" lang="es" aria-label="Español">ES</a></span>',
  'nav_close': '</nav>',
- 'cta': '>Discuss a pilot ↗</a>',
+ 'cta': '<a class="btn sm" href="#contact">Discuss a pilot ↗</a>',
  'links': '<a href="#platform">Platform</a><a href="#modules">Solutions</a><a href="#use-cases">Use Cases</a><a href="#security">Security</a><a href="#company">Company</a>',
 }
 
@@ -202,8 +200,10 @@ def render_hero(code, manifest):
  html = replace_once(html, v['h1'], f'<h1>{h["h1"]}</h1>')
  html = replace_once(html, v['subtitle'], f'<p class="hero-subtitle">{h["subtitle"]}</p>')
  html = replace_once(html, v['section'], f'aria-label="{esc(h["section"])}"')
- html = replace_once(html, v['cta_primary'], f'>{h["cta_primary"]} <span aria-hidden="true">↗</span></a>')
- html = replace_once(html, v['cta_secondary'], f'>{h["cta_secondary"]}</a>')
+ # Primary CTA: a pre-filled demo e-mail; secondary: how a pilot works (its own e-mail is there).
+ cta = COPY[code]['cta']
+ html = replace_once(html, v['cta_primary'], f'<a class="btn" href="{esc(mailto(code, "demo"))}" data-cta="demo">{cta["demo"]}<span class="rhs-sr"> {cta["opens"]}</span> <span aria-hidden="true">↗</span></a>')
+ html = replace_once(html, v['cta_secondary'], f'<a class="btn alt" href="#pilot">{cta["pilot"]}</a>')
  html = replace_once(html, v['carousel'], f'aria-label="{esc(h["carousel"][kind])}"')
  html = replace_once(html, v['roledescription'], f'aria-roledescription="{h["roledescription"]}"')
  html = replace_once(html, v['choose'], f'aria-label="{esc(h["choose"])}"')
@@ -231,7 +231,8 @@ def render_header(code):
  html = replace_once(html, v['open_navigation'], f'aria-label="{esc(p["open_navigation"])}" data-label-open="{esc(p["open_navigation"])}" data-label-close="{esc(p["close_navigation"])}"')
  html = replace_once(html, v['languages'], '<span class="lang">' + ' · '.join(language_links(code)) + '</span>')
  html = replace_once(html, v['nav_close'], '<span class="rhs-mobile-language">' + ' · '.join(language_links(code)) + '</span></nav>')
- html = replace_once(html, v['cta'], f'>{p["cta"]} ↗</a>')
+ cta = COPY[code]['cta']
+ html = replace_once(html, v['cta'], f'<a class="btn sm" href="{esc(mailto(code, "demo"))}" data-cta="demo">{cta["demo_short"]}<span class="rhs-sr"> {cta["opens"]}</span> ↗</a>')
  html = replace_once(html, v['links'], ''.join(f'<a href="{href}">{label}</a>' for label, href in p['nav']))
  return html
 

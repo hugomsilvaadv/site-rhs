@@ -34,6 +34,16 @@ assert.doesNotMatch(text,forbidden,'no invented or out-of-scope claims '+where);
 // Images: only approved captures or the approved concept hero; every product image carries the badge.
 for(const img of await p.locator('.rhs-content img').evaluateAll(els=>els.map(e=>({src:e.getAttribute('src'),badge:!!e.closest('.rhs-frame')?.querySelector('.rhs-badge')}))))assert.ok(img.src.startsWith('/assets/product/')&&img.badge,'product image with badge: '+img.src);
 assert.equal(await p.locator('.rhs-footer [data-notice]').count(),1,'one footer notice');
+// Conversion: "Request a demo" first (header, hero, contact), "Discuss a pilot" second (hero → #pilot, pilot, contact);
+// every CTA is a pre-filled e-mail with a subject and the template fields, never a form.
+const ctas=await p.locator('a[data-cta]').evaluateAll(els=>els.map(a=>({kind:a.dataset.cta,href:a.getAttribute('href'),where:a.closest('header')?'header':a.closest('#home')?'hero':a.closest('section')?.id})));
+assert.deepEqual(ctas.map(c=>c.where+':'+c.kind),['header:demo','hero:demo','pilot:pilot','contact:demo','contact:pilot'],'CTA placement '+where);
+assert.equal(await p.locator('#home .hero-buttons a.alt').getAttribute('href'),'#pilot','secondary hero CTA explains the pilot');
+const fields=lang==='es'?['Empresa:','Jurisdicción(es):','Volumen aproximado','Módulos de interés']:['Company:','Jurisdiction(s):','Approximate volume','Modules of interest'];
+for(const c of ctas){const url=new URL(c.href);assert.equal(url.protocol+url.pathname,'mailto:sales@rhs-labs.com');
+ const subject=url.searchParams.get('subject'),body=url.searchParams.get('body');assert.ok(subject&&subject.length>8,'subject '+c.kind);
+ for(const f of fields)assert.ok(body.includes(f),c.kind+' template has '+f);assert.ok(body.includes('\r\n'),'CRLF line breaks');}
+assert.notEqual(new URL(ctas[0].href).searchParams.get('subject'),new URL(ctas[2].href).searchParams.get('subject'),'demo and pilot e-mails differ');
 assert.ok(await p.locator('a[href^="mailto:sales@rhs-labs.com"]').count());
 assert.equal(await p.locator('link[rel="canonical"]').getAttribute('href'),'https://rhs-labs.com/'+(lang==='es'?'es/':''));
 assert.equal(await p.locator('a[href*="resources"],form,input').count(),0,'no form or lead collection');
