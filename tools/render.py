@@ -48,7 +48,7 @@ HERO = {
         'badge': {'concept': ['AVAILABLE FOR PILOT PROGRAMS', 'ILLUSTRATIVE CONCEPT', 'SIMULATED DATA'],
                   'product': ['AVAILABLE FOR PILOT PROGRAMS', 'PRODUCT UI', 'SYNTHETIC DATA']},
         'values': [['Player 360', 'Account, wallet and history in one profile'],
-                   ['Payments with approval tiers', 'Four-eyes control above your threshold'],
+                   ['Payments with approval tiers', 'Four-eyes control at or above your threshold'],
                    ['Risk and fraud', 'Rules, alerts and cases'],
                    ['Audit trail', 'Who did what, and when']]},
  'es': {'section': 'Presentación de la plataforma Sentinel', 'eyebrow': 'PLATAFORMA SENTINEL',
@@ -61,7 +61,7 @@ HERO = {
         'badge': {'concept': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'CONCEPTO ILUSTRATIVO', 'DATOS SIMULADOS'],
                   'product': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'INTERFAZ DEL PRODUCTO', 'DATOS SINTÉTICOS']},
         'values': [['Player 360', 'Cuenta, billetera e historial en un solo perfil'],
-                   ['Pagos con niveles de aprobación', 'Cuatro ojos por encima de su umbral'],
+                   ['Pagos con niveles de aprobación', 'Control de cuatro ojos a partir de su umbral'],
                    ['Riesgo y fraude', 'Reglas, alertas y casos'],
                    ['Registro de auditoría', 'Quién hizo qué y cuándo']]},
 }

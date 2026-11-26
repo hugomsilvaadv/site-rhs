@@ -5,7 +5,7 @@
 //
 // Derived from the back-office source on 2026-11-26 without running it (the private design-system
 // package was not installable): selectors, ids and crops must be confirmed on the first real run,
-// and every image is reviewed on the contact sheet before --approve. Nothing here edits the product:
+// and every image is reviewed on the contact sheet before it is committed. Nothing here edits the product:
 // captures only crop or hide (never rewrite) what must not reach the website.
 export const DESKTOP = { width: 1600, height: 1000 };
 export const MOBILE = { width: 390, height: 844 };
@@ -46,8 +46,8 @@ export const screens = [
   { name: 'player-360-summary', path: `/backoffice/players/${PLAYER}`, hero: true, ready: 'section[aria-labelledby="player-strip-title"]', hide: OUT_OF_SCOPE,
     // Numbered markers drawn into the capture, matching the five parts described in the Player 360 section.
     markers: { identity: 'section[aria-labelledby="player-strip-title"]', money: page => page.getByText('Net deposits').first(), withdrawals: page => page.getByRole('heading', { name: /Pending withdrawals/ }).first(), alerts: page => page.getByRole('heading', { name: /Open alerts/ }).first(), history: page => page.getByRole('heading', { name: /Latest changes/ }).first() },
-    review: 'Strip, money cards and Summary; no Links row, no rule-engine score, no out-of-scope product mention; masked data only.' },
-  { name: 'player-360-summary-mobile', path: `/backoffice/players/${PLAYER}`, viewport: 'mobile', ready: 'section[aria-labelledby="player-strip-title"]', hide: OUT_OF_SCOPE, review: 'Viewport only; strip and money cards.' },
+    review: 'Strip, money cards and Summary; no Links row, no rule-engine score, no out-of-scope product mention; masked data only. The strip\'s document type names the local national id: hide or crop it.' },
+  { name: 'player-360-summary-mobile', path: `/backoffice/players/${PLAYER}`, viewport: 'mobile', ready: 'section[aria-labelledby="player-strip-title"]', hide: OUT_OF_SCOPE, review: 'Viewport only; strip and money cards. The strip\'s document type names the local national id: hide or crop it.' },
   { name: 'player-360-payments', path: `/backoffice/players/${PLAYER}?tab=payments`, ready: 'h2, h3', hide: [...OUT_OF_SCOPE, 'Score'], review: 'Pending withdrawal card with Approve / Reject / Hold; check the payment-method column and crop the Score column.' },
   { name: 'withdrawals-queue', path: '/backoffice/withdrawals', hero: true, ready: 'table tbody tr', hide: OUT_OF_SCOPE, review: 'Queue with ages against the target and the selected row aside; the out-of-scope integration row of Player context must be hidden.' },
   { name: 'withdrawals-queue-mobile', path: '/backoffice/withdrawals', viewport: 'mobile', ready: 'h1', hide: OUT_OF_SCOPE, review: 'Viewport only.' },
@@ -69,11 +69,11 @@ export const screens = [
   { name: 'bonus', path: '/backoffice/bonus', ready: 'table', review: 'Templates and campaigns; Portuguese names.' },
   { name: 'vip-portfolio', path: '/backoffice/vip-portfolio', ready: 'h1', review: 'Synthetic staff names.' },
   { name: 'service-tickets', path: '/backoffice/service-tickets', ready: 'h1', review: 'Complaint texts are Portuguese.' },
-  { name: 'kyc', path: '/backoffice/kyc', ready: 'table', review: 'The KYC levels card names local identity documents: decide crop at review.' },
+  { name: 'kyc', path: '/backoffice/kyc', ready: 'table', hide: ['business and legal decision'], review: 'The KYC levels card names local identity documents: decide crop at review. The queue\'s scope note (document review pending a business and legal decision) is hidden: the website describes check decisions only.' },
   { name: 'responsible-gaming', path: '/backoffice/responsible-gaming', ready: '#rg-queue-title', review: 'Overview, closures and the requests queue; never run the routine.' },
   { name: 'data-requests', path: '/backoffice/data-requests', ready: 'h1', review: 'The UI title names a local privacy law: crop the title and tab or skip.' },
   { name: 'policies', path: '/backoffice/policies', ready: 'table', hide: ['POLICY_VERSIONS', 'PLAYER_TERMS_VERSION'], review: 'Catalog of versions; internal variable badge hidden.' },
-  { name: 'jurisdiction', path: '/backoffice/jurisdiction', ready: 'table', hide: ['JURISDICTION_PARAMETERS'], review: 'The mock jurisdiction names one country, its currency and privacy law: likely skip.' },
+  { name: 'jurisdiction', path: '/backoffice/jurisdiction', ready: 'table', hide: ['JURISDICTION_PARAMETERS'], review: 'The mock jurisdiction names one country, its currency, its privacy law and local ordinances: likely skip.' },
   { name: 'users', path: '/backoffice/users', ready: 'h1', prepare: async page => { await page.getByRole('tab', { name: 'Roles' }).click(); }, review: 'Roles tab only. The Users tab lists realistic names: never capture it.' },
   { name: 'global-search', path: '/backoffice/withdrawals', keepHeader: true, prepare: async page => { await page.keyboard.press('Control+K'); await page.getByRole('searchbox', { name: 'Global search' }).fill('psp-sim-c1000'); await page.getByText('Enter to search').first().waitFor(); }, review: 'Header kept for the search popover; check the brand label and the time-zone badge.' },
 ];
