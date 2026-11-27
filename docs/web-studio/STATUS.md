@@ -3,10 +3,19 @@
 ## Fase 8 — o Sentinel como produto (2026-11-27, em andamento)
 
 O proprietário confirmou que os dados do demo do Sentinel são fictícios e que o produto pronto para venda hoje é o Sentinel; o back-office (PAM) ainda não está pronto e deve aparecer como "em desenvolvimento" (RHS-056). A fase 8 (`feat/site-f8-sentinel-20261127`, criada a partir da fase 7) traz:
+- a página com o Sentinel no centro (RHS-057): o H1 aprovado de produção, quatro áreas do Sentinel, How it works, Access & integration, os módulos por disponibilidade e a seção do back-office PAM com o selo "In development", sem imagens;
+- "Available" no lugar de "available now" (RHS-058);
 - `tools/capture/import.mjs`, que transforma os prints revisados do demo nas imagens do site, com o selo e a cópia do hero, sem reescrever nada;
+- `tools/stage.mjs`, que deixa de publicar os placeholders do back-office;
 - as correções da revisão da fase 7 (ordem dos passos de captura, testes, codificação UTF-8 do gerador e os botões de contato em espanhol entre 901 e 993 px).
 
-Faltam: a decisão do proprietário sobre anunciar a detecção de multicontas e dispositivo, o inventário em texto das telas do Sentinel, a segunda rodada de prints no notebook e o texto novo do site. Ao `main` vai um só PR, o da fase mais recente: será o da fase 8, que contém as fases 1 a 7.
+| Item | Estado |
+|---|---|
+| Texto do Sentinel | Escrito a partir do relatório da primeira rodada no demo; falta conferi-lo com o inventário em texto (item s de `DECISIONS.md`) e fazer a auditoria de claims. |
+| Imagens | Nenhuma ainda: a página fica com texto, diagramas e a lista de telas até a importação. O hero continua com as imagens conceituais, rotuladas como tal. |
+| Multicontas | Fora do site até o proprietário decidir se a detecção de multicontas, dispositivo, IP e vínculos pode ser anunciada. Os testes recusam esses termos. |
+| Testes | Os 11 testes do README foram adaptados à página nova. |
+| PR | Ainda não aberto. Ao `main` vai um só PR, o da fase 8, que contém as fases 1 a 7. |
 
 ## Fase 7 — publicável sem prints (2026-11-27)
 

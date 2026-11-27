@@ -1,6 +1,8 @@
-# Capturas do back-office para o site
+# Capturas para o site
 
-O script fotografa o back-office real em modo mock (dados sintéticos, inglês, tema escuro) e grava cada tela em `assets/product/<nome>.webp`, por cima do placeholder de mesmo nome e tamanho. A página nunca mostra um placeholder: enquanto o arquivo for o placeholder registrado, a seção fica só com texto, diagramas e a lista de telas. A imagem só aparece quando a página é gerada de novo, no passo 4, **depois** de voltar os placeholders das telas deixadas de fora: uma página gerada antes disso continua apontando para o placeholder que voltou.
+Desde a fase 8, as imagens do site vêm do Sentinel, o produto disponível: veja a seção **Sentinel (demo com dados fictícios)** no fim. O back-office (PAM) está em desenvolvimento e aparece no site sem imagens; o roteiro abaixo fica para quando ele estiver pronto, e os placeholders dele nunca vão ao ar (`tools/stage.mjs` não os publica).
+
+O script do back-office fotografa o back-office real em modo mock (dados sintéticos, inglês, tema escuro) e grava cada tela em `assets/product/<nome>.webp`, por cima do placeholder de mesmo nome e tamanho. A página nunca mostra um placeholder: enquanto o arquivo for o placeholder registrado, a seção fica só com texto, diagramas e a lista de telas. A imagem só aparece quando a página é gerada de novo, no passo 4, **depois** de voltar os placeholders das telas deixadas de fora: uma página gerada antes disso continua apontando para o placeholder que voltou.
 
 ## No notebook (Windows, PowerShell)
 
@@ -71,5 +73,17 @@ node tools/capture/import.mjs C:\caminho\capturas-demo
 - A lista de telas, com o nome do PNG de origem, está em `tools/capture/sentinel.config.mjs`. O computador usa 3200×2000 e o celular, 780×1688; um PNG de outro tamanho é recusado, e um que falte fica de fora.
 - Cada tela vira `assets/product/sentinel-<tela>.webp`, com o selo "PRODUCT UI · SYNTHETIC DATA". As telas do hero ganham também a cópia limpa de 1586×992 em `assets/hero/`.
 - Revise `tools/capture/sentinel-contact-sheet.png` antes do commit. Tudo o que vai para `assets/` fica público.
+- Apague a imagem de uma tela que ficar de fora, em `assets/product/` e, se for uma tela do hero, em `assets/hero/`.
 - Commit de `assets/product/sentinel-*.webp`, `assets/hero/sentinel-*.webp`, `tools/capture/sentinel-manifest.json` e da folha de contato.
 - `node tools/capture/import.mjs --self-test` confere a ferramenta sem imagens reais.
+
+Depois do push, gere a página de novo (`py tools/render.py`; sem Python no notebook, peça à sessão na nuvem) e faça commit de `index.html` e `es/index.html`: só então as imagens aparecem, no tour, em "How it works" e em "Access & integration". O hero troca à parte, de propósito, com as três telas `sentinel-transactions`, `sentinel-alerts` e `sentinel-rules`:
+
+```powershell
+node tools/capture/hero-swap.mjs --check
+node tools/capture/hero-swap.mjs
+py tools/render.py
+node tools/og/og.mjs
+```
+
+Depois, rode os testes do README e registre a troca em `docs/web-studio/DECISIONS.md`.
