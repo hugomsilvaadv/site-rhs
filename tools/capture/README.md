@@ -1,6 +1,6 @@
 # Capturas do back-office para o site
 
-O script fotografa o back-office real em modo mock (dados sintéticos, inglês, tema escuro) e grava cada tela em `assets/product/<nome>.webp`, por cima do placeholder de mesmo nome e tamanho. A página já aponta para esses arquivos: **a troca é substituir o arquivo**.
+O script fotografa o back-office real em modo mock (dados sintéticos, inglês, tema escuro) e grava cada tela em `assets/product/<nome>.webp`, por cima do placeholder de mesmo nome e tamanho. A página nunca mostra um placeholder: enquanto o arquivo for o placeholder registrado, a seção fica só com texto e diagramas. Depois da captura, **gere a página de novo** (`py tools/render.py`, ou peça à sessão na nuvem, se não houver Python no notebook) para a imagem aparecer.
 
 ## No notebook (Windows, PowerShell)
 

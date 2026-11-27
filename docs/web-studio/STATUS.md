@@ -1,8 +1,21 @@
 # Estado real — RHS Labs / Sentinel
 
+## Fase 7 — publicável sem prints (2026-11-27)
+
+O proprietário pediu o site pronto o quanto antes. A fase 7 (`feat/site-f7-publicacao-20261127`, criada a partir da fase 6) tira as capturas do caminho crítico: **a página nunca mostra um placeholder**. Enquanto uma tela não tiver captura real, a área do tour, o Player 360 e Pagamentos aparecem só com texto, diagramas e a lista de telas, sem moldura vazia. O aviso do rodapé só fala de telas do produto quando a página mostra uma. Quando uma captura chega, `python3 tools/render.py` passa a mostrá-la (RHS-055).
+
+| Item | Estado em 2026-11-27 |
+|---|---|
+| Produção | Intocada; o `main` continua em `b4c11df`. |
+| PR | O PR da fase 7 para o `main` contém as fases 1 a 6. Ao `main` vai um só PR: o da fase 7 ou um posterior criado a partir dele, como o das capturas. |
+| Testes | Os 11 testes do README passaram na fase 7. `sectors`, `mobile-showcase` e `product-images` agora exigem que nenhum placeholder apareça e que a captura apareça depois de gerada a página. |
+| Capturas do demo | 13 telas do demo Sentinel (`demo.rhs-labs.com`) foram fotografadas no notebook do proprietário e estão só lá. Elas não entram no site até o proprietário confirmar que os dados do demo são fictícios e decidir qual produto o site apresenta (item p de `DECISIONS.md`). |
+
+Para publicar faltam a conferência do preview com o login da Vercel, as decisões dos sócios que o proprietário quiser fechar antes e o OK expresso dele para o merge.
+
 ## Rodada "produto real" — 2026-11-26: em preview, produção intocada
 
-**As capturas estão pendentes.** Nenhuma tela real do back-office foi fotografada até agora. O ambiente da nuvem não tem o token de leitura do pacote privado do design system, e o proprietário decidiu seguir sem ele (RHS-023). Mesmo assim, cada imagem de produto do site já aponta para o arquivo final da lista da fase 1, `assets/product/<tela>.webp`. Hoje esse arquivo é um placeholder escuro, do mesmo tamanho, com o rótulo "Screenshot pending: <tela>". Quando as capturas chegarem, basta substituir o arquivo (RHS-041). O hero continua com as três imagens conceituais até a troca deliberada (RHS-044). **Não publicar em produção com placeholders.**
+**As capturas estão pendentes.** Nenhuma tela real do back-office foi fotografada até agora. O ambiente da nuvem não tem o token de leitura do pacote privado do design system, e o proprietário decidiu seguir sem ele (RHS-023). Mesmo assim, cada imagem de produto do site já aponta para o arquivo final da lista da fase 1, `assets/product/<tela>.webp`. Hoje esse arquivo é um placeholder escuro, do mesmo tamanho, com o rótulo "Screenshot pending: <tela>". Quando as capturas chegarem, basta substituir o arquivo (RHS-041). O hero continua com as três imagens conceituais até a troca deliberada (RHS-044). **Não publicar em produção com placeholders** (resolvido na fase 7: a página não mostra mais nenhum).
 
 | Item | Estado em 2026-11-26 |
 |---|---|
@@ -18,7 +31,7 @@
 
 1. Siga `tools/capture/README.md`: suba o back-office em modo mock (`API_MODE=mock`, `AUTH_PROVIDER=fake`, `FEATURE_FLAG_PROFILE=homologacao`, inglês) e rode `node tools/capture/screens.mjs --dry-run`, depois `node tools/capture/screens.mjs`.
 2. Revise `tools/capture/contact-sheet.png` e cada arquivo em `assets/product/`. Recorte ou deixe de fora o que identificar o país do mock (decisão j). Nenhum e-mail, documento, nome que pareça real ou dado de equipe.
-3. Tudo o que está em `assets/` vai ao repositório público e ao site. Para cada tela deixada de fora (e para `users`, que o site não usa), volte o placeholder com `git checkout -- assets/product/<tela>.webp`. Se uma das três telas do hero (`player-360-summary`, `withdrawals-queue` ou `reports`) ficar de fora, falhar ou for recortada à mão, apague também a cópia `assets/hero/<tela>.webp` (`Remove-Item assets/hero/<tela>.webp`), que não tem placeholder, ou recorte-a do mesmo jeito. Depois, refaça a folha com `node tools/capture/contact-sheet.mjs` e faça commit de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato num branch novo, criado a partir do branch da fase 6, com PR para o `main`, e confira o preview. Esse PR contém a fase 6 e passa a ser o que vai ao `main`.
+3. Tudo o que está em `assets/` vai ao repositório público e ao site. Para cada tela deixada de fora (e para `users`, que o site não usa), volte o placeholder com `git checkout -- assets/product/<tela>.webp`. Se uma das três telas do hero (`player-360-summary`, `withdrawals-queue` ou `reports`) ficar de fora, falhar ou for recortada à mão, apague também a cópia `assets/hero/<tela>.webp` (`Remove-Item assets/hero/<tela>.webp`), que não tem placeholder, ou recorte-a do mesmo jeito. Depois, refaça a folha com `node tools/capture/contact-sheet.mjs`, gere a página de novo com `python3 tools/render.py` (sem Python no notebook, peça à sessão na nuvem) e faça commit das páginas, de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato num branch novo, criado a partir do branch da fase mais recente, com PR para o `main`, e confira o preview. Esse PR contém a fase 6 e passa a ser o que vai ao `main`.
 4. Para o hero: rode `node tools/capture/hero-swap.mjs --check` e depois `node tools/capture/hero-swap.mjs`. Em seguida, rode `python3 tools/render.py` e `node tools/og/og.mjs` (sem Python no notebook, faça esse passo numa sessão na nuvem), depois os testes do README, e registre a troca em `DECISIONS.md`.
 
 ### Revisão das afirmações (2026-11-26)

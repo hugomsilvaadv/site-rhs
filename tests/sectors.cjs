@@ -31,14 +31,22 @@ assert.equal(await p.locator('#intelligence .rhs-signal').count(),6);assert.matc
 // Nothing invented or out of scope in the lower page, the hero copy or the metadata.
 const text=await p.evaluate(()=>document.querySelector('.rhs-content').innerText+' '+document.querySelector('#home').innerText+' '+document.title+' '+document.querySelector('meta[name="description"]').content);
 assert.doesNotMatch(text,forbidden,'no invented or out-of-scope claims '+where);
-// Product images: assets/product/<screen>.webp of the capture plan (placeholder now, capture later: same file),
-// framed, described, 3200x2000; one per tour area, plus the Player 360 and payments.
-const plan=Object.keys(JSON.parse(require('node:fs').readFileSync(__dirname+'/../tools/capture/placeholders.json','utf8')).files).map(f=>'/'+f);
+// Product images: assets/product/<screen>.webp of the capture plan, shown only once the file is a real capture
+// (never the registered "Screenshot pending" placeholder): framed, described, 3200x2000, at most one per tour
+// area plus the Player 360 and payments. An area without its capture still lists its screens.
+const fs=require('node:fs'),crypto=require('node:crypto');
+const registry=JSON.parse(fs.readFileSync(__dirname+'/../tools/capture/placeholders.json','utf8')).files;
+const plan=Object.keys(registry).map(f=>'/'+f);
+const isCapture=src=>{const file=__dirname+'/..'+src;return fs.existsSync(file)&&crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')!==registry[src.slice(1)];};
+const slots=[['tour-players','player-360-payments'],['tour-payments','withdrawals-queue'],['tour-risk','alerts'],['tour-engagement','segments'],['tour-compliance','audit'],['tour-reports','reports'],['tour-admin','approval-limits'],['player-360','player-360-summary'],['payments','withdrawal-detail']].map(([area,name])=>[area,'/assets/product/'+name+'.webp']);
 const imgs=await p.locator('.rhs-content img').evaluateAll(els=>els.map(e=>({src:e.getAttribute('src'),frame:!!e.closest('.rhs-frame'),alt:e.getAttribute('alt'),size:[e.getAttribute('width'),e.getAttribute('height')],area:e.closest('[role="tabpanel"],section')?.id})));
-assert.equal(imgs.length,9,'seven tour areas, Player 360 and payments '+where);
-for(const img of imgs){assert.ok(plan.includes(img.src),'screen of the capture plan: '+img.src);assert.ok(img.frame,'framed '+img.src);assert.ok(img.alt.length>20,'described '+img.src);assert.deepEqual(img.size,['3200','2000']);}
-assert.deepEqual(imgs.map(i=>i.area),['tour-players','tour-payments','tour-risk','tour-engagement','tour-compliance','tour-reports','tour-admin','player-360','payments']);
-for(const src of await p.locator('.rhs-content picture source').evaluateAll(els=>els.map(e=>e.getAttribute('srcset'))))assert.ok(plan.includes(src)&&src.endsWith('-mobile.webp'),'phone capture of the plan: '+src);
+assert.deepEqual(imgs.map(i=>[i.area,i.src]),slots.filter(([,src])=>isCapture(src)),'a product image exactly where its capture exists '+where);
+for(const img of imgs){assert.ok(plan.includes(img.src),'screen of the capture plan: '+img.src);assert.ok(isCapture(img.src),'never a placeholder: '+img.src);assert.ok(img.frame,'framed '+img.src);assert.ok(img.alt.length>20,'described '+img.src);assert.deepEqual(img.size,['3200','2000']);}
+for(const src of await p.locator('.rhs-content picture source').evaluateAll(els=>els.map(e=>e.getAttribute('srcset'))))assert.ok(plan.includes(src)&&src.endsWith('-mobile.webp')&&isCapture(src),'phone capture of the plan: '+src);
+assert.equal(await p.locator('.rhs-content .rhs-frame:not(:has(img)), .rhs-content .rhs-wide-shot:not(:has(img))').count(),0,'no empty frame where a capture is missing '+where);
+assert.equal(await p.locator('#platform .rhs-tour-visual > .rhs-screens').count(),7,'every tour area keeps its list of screens '+where);
+const hero=await p.locator('[data-hero-images]').getAttribute('data-hero-images');
+assert.equal((await p.locator('.rhs-footer [data-notice]').getAttribute('data-notice')).split(' ').includes('product'),imgs.length>0||hero==='product','the footer speaks of product screens only when the page shows one '+where);
 assert.equal(await p.locator('.rhs-footer [data-notice]').count(),1,'one footer notice');
 // Conversion: "Request a demo" first (header, hero, contact), "Discuss a pilot" second (hero → #pilot, pilot, contact);
 // every CTA is a pre-filled e-mail with a subject and the template fields, never a form.

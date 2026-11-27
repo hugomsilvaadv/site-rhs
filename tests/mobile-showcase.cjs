@@ -1,8 +1,13 @@
 // Phone regression (iPhone/Android widths): the hero shows one dashboard at a time with swipe and dot
-// navigation, and the product tour shows one area (and so one image) at a time, inside the screen.
+// navigation, and the product tour shows one area (and at most one image, its capture) at a time, inside the screen.
 // Chromium emulation verifies layout; this does not claim a physical Safari test.
 const {chromium}=require('playwright');
 const fs=require('node:fs');
+const path=require('node:path');
+const crypto=require('node:crypto');
+// A file that still matches its registered placeholder is not a capture (the page never shows it).
+const registry=JSON.parse(fs.readFileSync(path.join(__dirname,'..','tools/capture/placeholders.json'),'utf8')).files;
+const isCapture=rel=>crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'..',rel))).digest('hex')!==registry[rel];
 const assert=require('node:assert/strict');
 const out=__dirname+'/../docs/web-studio/visual-qa-current';
 fs.mkdirSync(out,{recursive:true});
@@ -40,12 +45,19 @@ fs.mkdirSync(out,{recursive:true});
     assert.ok(tour.tabs.every(t=>t.left>=0&&t.right<=width+.5),'tour tabs inside the screen '+width+'/'+lang);
     assert.equal(tour.shown,1,'one tour area at a time '+width+'/'+lang);
     await page.locator('#tour-tab-payments').click();
-    await page.locator('#tour-payments img').scrollIntoViewIfNeeded();
-    await page.locator('#tour-payments img').evaluate(img=>img.decode());
+    // The area shows its capture when one exists (the phone capture on phones), otherwise its text and screen list.
+    const shot=await page.locator('#tour-payments img').count()>0;
+    if(shot){await page.locator('#tour-payments img').scrollIntoViewIfNeeded();await page.locator('#tour-payments img').evaluate(img=>img.decode());}
     const switched=await page.evaluate(()=>({shown:[...document.querySelectorAll('#platform [role="tabpanel"]')].filter(p=>p.getBoundingClientRect().height>0).map(p=>p.id),images:[...document.querySelectorAll('#platform img')].filter(i=>i.getBoundingClientRect().height>0).map(i=>({src:i.currentSrc.split('/').pop(),width:i.getBoundingClientRect().width})),overflow:document.documentElement.scrollWidth-innerWidth}));
     assert.deepEqual(switched.shown,['tour-payments'],'switching areas '+width+'/'+lang);
-    assert.deepEqual(switched.images.map(i=>i.src),['withdrawals-queue-mobile.webp'],'one image at a time, the phone capture on phones '+width+'/'+lang);
-    assert.ok(switched.images[0].width<=300.5,'phone capture shown at phone size '+width+'/'+lang);
+    if(shot){
+      const phone=fs.existsSync(path.join(__dirname,'..','assets/product/withdrawals-queue-mobile.webp'))&&isCapture('assets/product/withdrawals-queue-mobile.webp');
+      assert.deepEqual(switched.images.map(i=>i.src),[phone?'withdrawals-queue-mobile.webp':'withdrawals-queue.webp'],'one image at a time, the phone capture on phones when it exists '+width+'/'+lang);
+      if(phone)assert.ok(switched.images[0].width<=300.5,'phone capture shown at phone size '+width+'/'+lang);
+    }else{
+      assert.deepEqual(switched.images,[],'no image where the capture is missing '+width+'/'+lang);
+      assert.ok(await page.locator('#tour-payments .rhs-screens').isVisible(),'the area keeps its list of screens '+width+'/'+lang);
+    }
     assert.equal(switched.overflow,0,'no horizontal scroll after switching '+width+'/'+lang);
     if([390,430].includes(width))await page.locator('#platform').screenshot({path:out+'/'+lang+'-mobile-tour-'+width+'.png'});
     assert.deepEqual(errors,[],'browser errors '+width+'/'+lang);
@@ -53,6 +65,6 @@ fs.mkdirSync(out,{recursive:true});
     return {lang,width,first,clicked,tour:switched,errors};
   })));
   fs.writeFileSync(out+'/mobile-showcase.json',JSON.stringify(reports,null,2));
-  console.log('PASS: mobile single hero screen with pause control, tour one area and one phone image at a time, no overflow; 8 EN/ES cases');
+  console.log('PASS: mobile single hero screen with pause control, tour one area and at most one image (the phone capture) at a time, no overflow; 8 EN/ES cases');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});

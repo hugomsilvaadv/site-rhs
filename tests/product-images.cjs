@@ -1,7 +1,8 @@
 // The image swap, end to end, without real captures.
 // 1. Every screen of the capture plan has its placeholder at the final path and size.
-// 2. In a temporary copy of the site, overwriting placeholders with other files (as the capture does) changes
-//    what the page shows with no other change: same HTML, no regeneration.
+// 2. A placeholder is never shown: the pages reference only real captures. In a temporary copy of the site,
+//    overwriting two placeholders with other files (as the capture does) and rendering again shows them, on
+//    desktop and phone, and adds no other product image.
 // 3. The hero swap point: hero-swap.mjs refuses placeholders, and with capture copies it rewrites the integrity
 //    manifest and turns the swap on; after regeneration the orbit uses them with the product badge.
 // Nothing is written to the checkout.
@@ -34,13 +35,19 @@ const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X')
       const blob = await new Promise(r => c.toBlob(r, 'image/webp', 0.8)); const b = new Uint8Array(await blob.arrayBuffer());
       let s = ''; for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(s);
     }, { width, height, label }), 'base64');
-    const htmlBefore = ['index.html', 'es/index.html'].map(f => fs.readFileSync(path.join(dir, f), 'utf8'));
-    // 2. the capture overwrites two placeholders (desktop and phone) — nothing else changes
+    const pages = () => ['index.html', 'es/index.html'].map(f => fs.readFileSync(path.join(dir, f), 'utf8'));
+    const referenced = html => [...new Set([...html.matchAll(/\/assets\/product\/[a-z0-9-]+\.webp/g)].map(m => m[0].slice(1)))].sort();
+    // 2. a placeholder is never shown: every product image the pages reference is a real capture
+    const before = pages();
+    for (const html of before) for (const rel of referenced(html)) assert.notEqual(sha(fs.readFileSync(path.join(dir, rel))), registry[rel], rel + ' is shown while still a placeholder');
+    // the capture overwrites two placeholders (desktop and phone); rendering again shows them, and only them
     const swapped = { 'assets/product/withdrawals-queue.webp': await fixture(3200, 2000, 'withdrawals-queue'), 'assets/product/withdrawals-queue-mobile.webp': await fixture(780, 1688, 'withdrawals-queue-mobile') };
     for (const [rel, buffer] of Object.entries(swapped)) fs.writeFileSync(path.join(dir, rel), buffer);
+    const rendered = spawnSync('python3', ['tools/render.py'], { cwd: dir, encoding: 'utf8' });
+    assert.equal(rendered.status, 0, rendered.stderr);
+    pages().forEach((html, i) => assert.deepEqual(referenced(html).filter(rel => !referenced(before[i]).includes(rel)), Object.keys(swapped).sort(), 'rendering again shows the two captures and no other product image'));
     const stage = spawnSync(process.execPath, ['tools/stage.mjs'], { cwd: dir, encoding: 'utf8', env: { ...process.env, PUBLIC_SITE_ORIGIN: '' } });
     assert.equal(stage.status, 0, stage.stderr);
-    assert.deepEqual(['index.html', 'es/index.html'].map(f => fs.readFileSync(path.join(dir, f), 'utf8')), htmlBefore, 'no page change for the swap');
     server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1', '--directory', path.join(dir, 'public')], { stdio: 'ignore' });
     for (let i = 0; i < 40; i++) { try { await (await fetch(`http://127.0.0.1:${PORT}/`)).text(); break; } catch { await new Promise(r => setTimeout(r, 150)); } }
     for (const [width, rel] of [[1440, 'assets/product/withdrawals-queue.webp'], [390, 'assets/product/withdrawals-queue-mobile.webp']]) {
@@ -74,6 +81,6 @@ const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X')
     assert.match(html, /data-hero-images="product">[^<]*PRODUCT UI/, 'badge under the orbit says product UI');
     const check = spawnSync(process.execPath, [path.join(dir, 'tests/integrity.cjs')], { encoding: 'utf8' });
     assert.equal(check.status, 0, check.stderr);
-    console.log('PASS: 30 placeholders at the final paths; overwriting a file swaps the image with no page change (desktop and phone); hero swap refuses placeholders, rewrites the integrity manifest and turns the product badge on');
+    console.log('PASS: 30 placeholders at the final paths, never shown; a capture over a placeholder appears after rendering again (desktop and phone); hero swap refuses placeholders, rewrites the integrity manifest and turns the product badge on');
   } finally { server?.kill(); await browser.close(); fs.rmSync(dir, { recursive: true, force: true }); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

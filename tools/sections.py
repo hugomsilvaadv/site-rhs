@@ -1,11 +1,13 @@
 """Lower page (sectors 02–11): the real Sentinel back-office, EN/ES from one source; static, no backend.
 
 Every claim maps to a screen of the back-office menu (its navigation config, with the flag on in the
-`homologacao` profile). Each product image is assets/product/<screen>.webp: a "Screenshot pending" placeholder
-until the capture (tools/capture/screens.mjs) overwrites it with the real screen, same name and proportion, so
-the swap needs no change here. The capture carries the product badge and the Player 360 markers itself.
+`homologacao` profile). Each product image is assets/product/<screen>.webp of the capture plan. Until the
+capture (tools/capture/screens.mjs) overwrites the registered "Screenshot pending" placeholder, the page leaves the
+image out and the section stands on its text and diagrams; rendering again after a capture shows it. The capture
+carries the product badge and the Player 360 markers itself.
 Connected intelligence stays a concept diagram.
 """
+import hashlib
 import json
 from html import escape as esc
 from pathlib import Path
@@ -13,6 +15,8 @@ from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTACT = 'sales@rhs-labs.com'
+# The registered placeholders (tools/capture/placeholders.json): a file that still matches one is never shown.
+PLACEHOLDERS = json.loads((ROOT / 'tools/capture/placeholders.json').read_text())['files']
 
 SHAPES = {
  'brand': '<path d="m12 3-9 17h18Z"/><circle cx="12" cy="3" r="2"/><circle cx="3" cy="20" r="2"/><circle cx="21" cy="20" r="2"/>',
@@ -326,8 +330,15 @@ def product_src(name):
  return f'/assets/product/{name}.webp'
 
 
+def captured(name):
+ """True once assets/product/<name>.webp is a real capture, no longer the registered placeholder."""
+ rel = f'assets/product/{name}.webp'
+ path = ROOT / rel
+ return path.exists() and hashlib.sha256(path.read_bytes()).hexdigest() != PLACEHOLDERS.get(rel)
+
+
 def picture(name, alt, phone=None):
- """The screen's image, placeholder or capture alike; phones get the phone capture where one exists."""
+ """The screen's capture; phones get the phone capture when one is given."""
  source = f'<source media="(max-width: 560px)" srcset="{product_src(phone)}" width="{PHONE_FILE[0]}" height="{PHONE_FILE[1]}">' if phone else ''
  return f'<picture>{source}<img src="{product_src(name)}" width="{DESKTOP_FILE[0]}" height="{DESKTOP_FILE[1]}" alt="{esc(alt)}" loading="lazy" decoding="async"></picture>'
 
@@ -350,7 +361,9 @@ def tour(t, n):
   bullets = ''.join(f'<li>{icon("check")}<span>{b}</span></li>' for b in copy['bullets'])
   more = f'<a class="rhs-more" href="{spec["more"]}">{copy["more"]} {icon("arrow")}</a>' if spec['more'] and copy['more'] else ''
   screens = ''.join(f'<li>{icon(ic)}<b>{name}</b><small>{desc}</small></li>' for (ic, _), (name, desc) in zip(spec['screens'], copy['screens']))
-  visual = frame(picture(spec['shot'], copy['alt'], phone=spec['phone']), 'rhs-frame-phone' if spec['phone'] else '') + f'<div class="rhs-screens"><p class="rhs-screens-title" id="tour-screens-{key}">{c["screens"]}</p><ul aria-labelledby="tour-screens-{key}">{screens}</ul></div>'
+  phone = spec['phone'] if spec['phone'] and captured(spec['phone']) else None
+  shot = frame(picture(spec['shot'], copy['alt'], phone=phone), 'rhs-frame-phone' if phone else '') if captured(spec['shot']) else ''
+  visual = shot + f'<div class="rhs-screens"><p class="rhs-screens-title" id="tour-screens-{key}">{c["screens"]}</p><ul aria-labelledby="tour-screens-{key}">{screens}</ul></div>'
   hidden = '' if on else ' hidden'
   panels.append(f'<div class="rhs-tour-panel" role="tabpanel" id="tour-{key}" aria-labelledby="tour-tab-{key}" tabindex="0"{hidden}><div class="rhs-tour-copy">{module_tag(t, spec["module"])}<h3>{copy["title"]}</h3><ul class="rhs-ticks">{bullets}</ul>{more}</div><div class="rhs-tour-visual">{visual}</div></div>')
  return f'''<section id="platform" class="rhs-sector rhs-tour-sector" data-sector="{n}"><div class="wrap"><div class="rhs-section-heading">{intro(n, c['head'])}</div><div class="rhs-tour" data-tour><div class="rhs-tour-tabs" role="tablist" aria-label="{esc(c['tablist'])}">{''.join(tabs)}</div>{''.join(panels)}</div></div></section>'''
@@ -365,7 +378,7 @@ def modules(t, n):
 def player360(t, n):
  c = t['p360']
  points = ''.join(f'<li id="p360-{key}"><b class="rhs-num" aria-hidden="true">{i + 1}</b><div><h3>{title}</h3><p>{text}</p></div></li>' for i, (key, (title, text)) in enumerate(zip(P360_POINTS, c['points'])))
- visual = frame(picture(P360_SHOT, c['alt']))
+ visual = frame(picture(P360_SHOT, c['alt'])) if captured(P360_SHOT) else ''
  return f'''<section id="player-360" class="rhs-sector rhs-p360" data-sector="{n}"><div class="wrap rhs-split">{intro(n, c['head'])}<div class="rhs-p360-visual">{visual}<ol class="rhs-anatomy rhs-anatomy-legend" aria-label="{esc(c['label'])}">{points}</ol></div></div></section>'''
 
 
@@ -375,7 +388,7 @@ def payments(t, n):
  steps = ''.join(f'<li class="rhs-flow-step{" rhs-flow-optional" if key == "second_approval" else ""}"><span>{c["flow"][key]}</span></li>' for key in FLOW)
  side = ''.join(f'<li>{c["flow"][key]}</li>' for key in FLOW_SIDE)
  flow = f'<figure class="rhs-flow"><figcaption><b>{c["flow_title"]}</b></figcaption><ol class="rhs-flow-steps">{steps}</ol><div class="rhs-flow-side"><b>{c["side"]}</b><ul>{side}</ul></div><p class="rhs-flow-note">{c["flow_note"]}</p></figure>'
- shot = f'<div class="rhs-wide-shot">{frame(picture(PAYMENTS_SHOT, c["alt"]))}</div>'
+ shot = f'<div class="rhs-wide-shot">{frame(picture(PAYMENTS_SHOT, c["alt"]))}</div>' if captured(PAYMENTS_SHOT) else ''
  return f'''<section id="payments" class="rhs-sector rhs-payments-sector" data-sector="{n}"><div class="wrap"><div class="rhs-split">{intro(n, c['head'])}{flow}</div><ul class="rhs-capabilities">{items}</ul>{shot}</div></section>'''
 
 
@@ -432,5 +445,6 @@ def lower_page(lang, languages='', hero_kind='concept'):
  sectors = [tour(t, 2), modules(t, 3), player360(t, 4), payments(t, 5), compliance(t, 6),
             intelligence(t, 7), security(t, 8), pilot(t, 9), about(t, 10), contact(t, 11)]
  html = '\n'.join(sectors)
- notice = ['available'] + (['concept'] if hero_kind == 'concept' else []) + ['product']
+ shown = any(captured(name) for name in [spec['shot'] for spec in TOUR] + [P360_SHOT, PAYMENTS_SHOT])
+ notice = ['available'] + (['concept'] if hero_kind == 'concept' else []) + (['product'] if shown or hero_kind == 'product' else [])
  return '<div class="rhs-content">\n' + html + '\n' + footer(t, languages, notice) + '\n</div>'
