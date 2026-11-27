@@ -22,4 +22,10 @@ export const screens = [
   { name: 'sentinel-search', source: 'global-search.png', route: 'Global search (Ctrl+K)', review: 'Search for a neutral term; the out-of-scope palette entry hidden.' },
   { name: 'sentinel-customer', source: 'player-360-summary.png', route: 'Customer file › Record', review: 'Name, e-mail, device, IP, connections, the Links tab and the right column hidden; avatar initials remain.' },
   { name: 'sentinel-customer-mobile', source: 'player-360-summary-mobile.png', viewport: 'mobile', route: 'Customer file › Record', review: 'Phone width; same hidden parts as the desktop customer file.' },
+  // Only if the owner allows announcing multi-account and device detection: otherwise these sources are never
+  // captured and are skipped. Personal data and IP addresses stay hidden either way.
+  { name: 'sentinel-radar', source: 'radar.png', hero: true, route: 'Radar', review: 'Dashboard; check that no IP address or personal data is visible.' },
+  { name: 'sentinel-connections', source: 'connections.png', route: 'Investigate › Connections', review: 'Links between accounts; names, e-mails and IP addresses hidden.' },
+  { name: 'sentinel-customer-overview', source: 'customer-overview.png', route: 'Customer file › Overview', review: 'Fraud signals of one customer; name, e-mail and IP addresses hidden.' },
+  { name: 'sentinel-customer-links', source: 'customer-links.png', route: 'Customer file › Links', review: 'Linked accounts of one customer; names, e-mails and IP addresses hidden.' },
 ];
