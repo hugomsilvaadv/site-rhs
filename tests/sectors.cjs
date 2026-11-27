@@ -44,6 +44,7 @@ assert.deepEqual(imgs.map(i=>[i.area,i.src]),slots.filter(([,src])=>isCapture(sr
 for(const img of imgs){assert.ok(plan.includes(img.src),'screen of the capture plan: '+img.src);assert.ok(isCapture(img.src),'never a placeholder: '+img.src);assert.ok(img.frame,'framed '+img.src);assert.ok(img.alt.length>20,'described '+img.src);assert.deepEqual(img.size,['3200','2000']);}
 for(const src of await p.locator('.rhs-content picture source').evaluateAll(els=>els.map(e=>e.getAttribute('srcset'))))assert.ok(plan.includes(src)&&src.endsWith('-mobile.webp')&&isCapture(src),'phone capture of the plan: '+src);
 assert.equal(await p.locator('.rhs-content .rhs-frame:not(:has(img)), .rhs-content .rhs-wide-shot:not(:has(img))').count(),0,'no empty frame where a capture is missing '+where);
+assert.equal(await p.locator('.rhs-content .rhs-frame-phone:not(:has(source)), .rhs-content .rhs-frame:has(source):not(.rhs-frame-phone)').count(),0,'phone frame exactly where a phone capture is shown '+where);
 assert.equal(await p.locator('#platform .rhs-tour-visual > .rhs-screens').count(),7,'every tour area keeps its list of screens '+where);
 const hero=await p.locator('[data-hero-images]').getAttribute('data-hero-images');
 assert.equal((await p.locator('.rhs-footer [data-notice]').getAttribute('data-notice')).split(' ').includes('product'),imgs.length>0||hero==='product','the footer speaks of product screens only when the page shows one '+where);

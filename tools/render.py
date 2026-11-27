@@ -171,7 +171,7 @@ def replace_once(text, old, new):
 
 
 def hero_state():
- return json.loads(HERO_STATE.read_text()) if HERO_STATE.exists() else {'active': False}
+ return json.loads(HERO_STATE.read_text(encoding='utf-8')) if HERO_STATE.exists() else {'active': False}
 
 
 def hero_file_exists(rel):
@@ -201,7 +201,7 @@ def language_links(code, cls=None):
 def render_hero(code, state):
  h, v = HERO[code], V6_HERO
  kind, panels = hero_panels(state)
- html = (ROOT / 'assets/hero-v6-fragment.html').read_text()
+ html = (ROOT / 'assets/hero-v6-fragment.html').read_text(encoding='utf-8')
  html = replace_once(html, v['h1'], f'<h1>{h["h1"]}</h1>')
  html = replace_once(html, v['subtitle'], f'<p class="hero-subtitle">{h["subtitle"]}</p>')
  html = replace_once(html, v['section'], f'aria-label="{esc(h["section"])}"')
@@ -233,7 +233,7 @@ def render_hero(code, state):
 
 def render_header(code):
  p, v = PAGE[code], V6_HEADER
- html = (ROOT / 'assets/header-fragment.html').read_text()
+ html = (ROOT / 'assets/header-fragment.html').read_text(encoding='utf-8')
  html = replace_once(html, v['back_to_top'], f'aria-label="{esc(p["back_to_top"])}"')
  html = replace_once(html, v['main_menu'], f'aria-label="{esc(p["main_menu"])}"')
  html = replace_once(html, v['open_navigation'], f'aria-label="{esc(p["open_navigation"])}" data-label-open="{esc(p["open_navigation"])}" data-label-close="{esc(p["close_navigation"])}"')
@@ -279,5 +279,5 @@ if __name__ == '__main__':
  check_parity()
  state = hero_state()
  for code in published():
-  out = route_file(code); out.parent.mkdir(exist_ok=True, parents=True); out.write_text(render(code, state))
+  out = route_file(code); out.parent.mkdir(exist_ok=True, parents=True); out.write_bytes(render(code, state).encode('utf-8'))  # UTF-8 and LF on every system, Windows included
  print('Rendered ' + ', '.join(LANGUAGES[c]['path'] for c in published()) + ' from shared content source.')

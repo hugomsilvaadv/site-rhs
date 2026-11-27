@@ -21,8 +21,12 @@ const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X')
   assert.equal(plan.length, 30, 'one placeholder per screen of the capture plan (26 desktop, 4 phone)');
   for (const rel of plan) {
     const buffer = fs.readFileSync(path.join(root, rel));
-    assert.deepEqual(webpSize(buffer), rel.endsWith('-mobile.webp') ? [780, 1688] : [3200, 2000], rel + ' size');
-    assert.equal(sha(buffer), registry[rel], rel + ' is the registered placeholder');
+    const [width, height] = webpSize(buffer);
+    const phone = rel.endsWith('-mobile.webp');
+    // Either still the registered placeholder at the final size, or a capture that keeps the screen's proportion
+    // (the capture may step down to 0.75x to fit the byte budget).
+    if (sha(buffer) === registry[rel]) assert.deepEqual([width, height], phone ? [780, 1688] : [3200, 2000], rel + ' placeholder size');
+    else assert.ok(Math.abs(width / height - (phone ? 780 / 1688 : 1.6)) < 0.01, rel + ' capture keeps the proportion of its screen');
   }
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rhs-product-images-'));
   let server; const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', args: ['--no-sandbox'] });
@@ -40,8 +44,12 @@ const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X')
     // 2. a placeholder is never shown: every product image the pages reference is a real capture
     const before = pages();
     for (const html of before) for (const rel of referenced(html)) assert.notEqual(sha(fs.readFileSync(path.join(dir, rel))), registry[rel], rel + ' is shown while still a placeholder');
-    // the capture overwrites two placeholders (desktop and phone); rendering again shows them, and only them
-    const swapped = { 'assets/product/withdrawals-queue.webp': await fixture(3200, 2000, 'withdrawals-queue'), 'assets/product/withdrawals-queue-mobile.webp': await fixture(780, 1688, 'withdrawals-queue-mobile') };
+    // the capture overwrites two placeholders (desktop and phone) of a tour area; rendering again shows them, and only them
+    const areas = [['tour-payments', 'withdrawals-queue'], ['tour-risk', 'alerts'], ['tour-reports', 'reports']];
+    const pick = areas.find(([, name]) => [name, name + '-mobile'].every(n => sha(fs.readFileSync(path.join(dir, `assets/product/${n}.webp`))) === registry[`assets/product/${n}.webp`]));
+    assert.ok(pick, 'a tour area whose desktop and phone files are still placeholders, to exercise the swap');
+    const [area, name] = pick;
+    const swapped = { [`assets/product/${name}.webp`]: await fixture(3200, 2000, name), [`assets/product/${name}-mobile.webp`]: await fixture(780, 1688, name + '-mobile') };
     for (const [rel, buffer] of Object.entries(swapped)) fs.writeFileSync(path.join(dir, rel), buffer);
     const rendered = spawnSync('python3', ['tools/render.py'], { cwd: dir, encoding: 'utf8' });
     assert.equal(rendered.status, 0, rendered.stderr);
@@ -50,10 +58,10 @@ const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X')
     assert.equal(stage.status, 0, stage.stderr);
     server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1', '--directory', path.join(dir, 'public')], { stdio: 'ignore' });
     for (let i = 0; i < 40; i++) { try { await (await fetch(`http://127.0.0.1:${PORT}/`)).text(); break; } catch { await new Promise(r => setTimeout(r, 150)); } }
-    for (const [width, rel] of [[1440, 'assets/product/withdrawals-queue.webp'], [390, 'assets/product/withdrawals-queue-mobile.webp']]) {
+    for (const [width, rel] of [[1440, `assets/product/${name}.webp`], [390, `assets/product/${name}-mobile.webp`]]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce', ...(width < 600 ? { isMobile: true, hasTouch: true } : {}) });
-      await page.goto(`http://127.0.0.1:${PORT}/#tour-payments`, { waitUntil: 'networkidle' });
-      const img = page.locator('#tour-payments img');
+      await page.goto(`http://127.0.0.1:${PORT}/#${area}`, { waitUntil: 'networkidle' });
+      const img = page.locator(`#${area} img`);
       await img.scrollIntoViewIfNeeded(); await img.evaluate(i => i.decode());
       const src = await img.evaluate(i => i.currentSrc);
       assert.ok(src.endsWith('/' + rel), `${width}px shows ${rel}`);

@@ -16,7 +16,7 @@ from urllib.parse import quote
 ROOT = Path(__file__).resolve().parent.parent
 CONTACT = 'sales@rhs-labs.com'
 # The registered placeholders (tools/capture/placeholders.json): a file that still matches one is never shown.
-PLACEHOLDERS = json.loads((ROOT / 'tools/capture/placeholders.json').read_text())['files']
+PLACEHOLDERS = json.loads((ROOT / 'tools/capture/placeholders.json').read_text(encoding='utf-8'))['files']
 
 SHAPES = {
  'brand': '<path d="m12 3-9 17h18Z"/><circle cx="12" cy="3" r="2"/><circle cx="3" cy="20" r="2"/><circle cx="21" cy="20" r="2"/>',
