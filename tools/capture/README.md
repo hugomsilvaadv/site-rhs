@@ -56,3 +56,20 @@ O `hero-swap` regrava o manifesto de integridade de propósito, e o selo sob a �
 ## Ao revisar
 
 O mock reproduz a jurisdição de um único país (moeda, meio de pagamento, documentos, fuso e lei de privacidade locais) e tem textos sintéticos em português. Recorte ou deixe de fora o que identificar o país; as notas por tela estão na folha de contato. A aba Usuários (nomes realistas) nunca é fotografada: a tela `users` usa a aba Papéis e não aparece nas páginas, porque no mock essa aba mostra os papéis do template e o editor de papéis, não os cinco papéis da equipe. Não faça commit dessa captura: mantenha o placeholder `users.webp`. A área Administration usa `approval-limits`; os valores dessa tela são padrões provisórios da plataforma, na moeda local, e a captura os esconde: confira que nenhum aparece.
+
+## Sentinel (demo com dados fictícios)
+
+As telas do Sentinel vêm do demo da RHS, fotografadas no notebook do proprietário, que faz o login. Antes de cada print, os dados pessoais e os blocos que o site não mostra são escondidos na própria página. Depois, `import.mjs` transforma os PNGs no formato do site, sem reescrever nada:
+
+```powershell
+cd C:\caminho\site-rhs
+$env:CAPTURE_CHANNEL = "msedge"
+node tools/capture/import.mjs C:\caminho\capturas-demo --dry-run
+node tools/capture/import.mjs C:\caminho\capturas-demo
+```
+
+- A lista de telas, com o nome do PNG de origem, está em `tools/capture/sentinel.config.mjs`. O computador usa 3200×2000 e o celular, 780×1688; um PNG de outro tamanho é recusado, e um que falte fica de fora.
+- Cada tela vira `assets/product/sentinel-<tela>.webp`, com o selo "PRODUCT UI · SYNTHETIC DATA". As telas do hero ganham também a cópia limpa de 1586×992 em `assets/hero/`.
+- Revise `tools/capture/sentinel-contact-sheet.png` antes do commit. Tudo o que vai para `assets/` fica público.
+- Commit de `assets/product/sentinel-*.webp`, `assets/hero/sentinel-*.webp`, `tools/capture/sentinel-manifest.json` e da folha de contato.
+- `node tools/capture/import.mjs --self-test` confere a ferramenta sem imagens reais.
