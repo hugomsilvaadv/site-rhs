@@ -11,8 +11,9 @@ O proprietário confirmou que os dados do demo do Sentinel são fictícios e que
 
 | Item | Estado |
 |---|---|
-| Texto do Sentinel | Escrito a partir do relatório da primeira rodada no demo; falta conferi-lo com o inventário em texto (item s de `DECISIONS.md`) e fazer a auditoria de claims. |
-| Imagens | Nenhuma ainda: a página fica com texto, diagramas e a lista de telas até a importação. O hero continua com as imagens conceituais, rotuladas como tal. |
+| Texto do Sentinel | Escrito a partir do relatório da primeira rodada no demo e auditado (RHS-059: 35 achados confirmados e aplicados). Falta conferi-lo com o inventário em texto (item s de `DECISIONS.md`). |
+| Imagens | Nenhuma ainda: a página fica com texto, diagramas e a lista de telas até a importação. |
+| Hero | **Condição para publicar.** As imagens conceituais mostram multicontas, dispositivos, IP e cripto e não vão ao `main` com a fase 8; antes, a troca para `sentinel-transactions`, `sentinel-alerts` e `sentinel-rules` (RHS-057, RHS-059). Até lá, o selo delas diz "ILLUSTRATIVE CONCEPT · SIMULATED DATA · NOT THE CURRENT PRODUCT". |
 | Multicontas | Fora do site até o proprietário decidir se a detecção de multicontas, dispositivo, IP e vínculos pode ser anunciada. Os testes recusam esses termos. |
 | Testes | Os 11 testes do README foram adaptados à página nova. |
 | PR | Ainda não aberto. Ao `main` vai um só PR, o da fase 8, que contém as fases 1 a 7. |

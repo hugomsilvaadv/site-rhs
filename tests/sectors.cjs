@@ -22,17 +22,17 @@ assert.equal(await p.locator('#back-office .rhs-status-development').count(),1,'
 assert.match(await p.locator('#back-office .rhs-sector-copy').innerText(),lang==='es'?/en desarrollo y todavía no están disponibles/:/in development and not yet available/,'the back-office says it is not yet available '+where);
 assert.equal(await p.locator('#back-office img, #back-office .rhs-frame, #back-office picture').count(),0,'no product image for the back-office in development '+where);
 assert.equal(await p.locator('#back-office .rhs-control-grid li').count(),6,'six back-office areas '+where);
-// Tour: four Sentinel areas, three bullets each; one panel shown at a time.
+// Tour: four Sentinel areas, two or three bullets and at least two screens each; one panel shown at a time.
 const tabs=p.locator('#platform [role="tab"]');assert.equal(await tabs.count(),4,'four Sentinel areas '+where);
 const panels=await p.locator('#platform [role="tabpanel"]').evaluateAll(els=>els.map(e=>({id:e.id,hidden:e.hidden,bullets:e.querySelectorAll('.rhs-ticks li').length,screens:e.querySelectorAll('.rhs-screens li').length})));
 assert.deepEqual(panels.map(x=>x.id),['tour-transactions','tour-alerts','tour-rules','tour-customers']);
 assert.deepEqual(panels.map(x=>x.hidden),[false,true,true,true],'only the first area visible at load '+where);
-for(const x of panels){assert.equal(x.bullets,3,x.id+' bullets');assert.ok(x.screens>=3,x.id+' screens');}
+for(const x of panels){assert.ok(x.bullets>=2&&x.bullets<=3,x.id+' bullets');assert.ok(x.screens>=2,x.id+' screens');}
 // How it works, access and integration, modules, getting started.
 assert.equal(await p.locator('#how .rhs-flow-step').count(),6,'six steps of a risky withdrawal '+where);
 assert.equal(await p.locator('#how .rhs-flow-optional').count(),2,'two steps depend on the settings '+where);
 assert.equal(await p.locator('#how .rhs-capabilities li').count(),6,'six review capabilities '+where);
-assert.equal(await p.locator('#security .rhs-security-list li').count(),6,'six access and integration points '+where);assert.equal(await p.locator('#security .rhs-arch li').count(),3);
+assert.equal(await p.locator('#security .rhs-security-list li').count(),4,'four access and integration points '+where);assert.equal(await p.locator('#security .rhs-arch li').count(),3);
 assert.deepEqual(await p.locator('#modules .rhs-product').evaluateAll(els=>els.map(e=>e.dataset.status)),['available','development','development','development'],'Fraud available, the other modules in development '+where);
 assert.deepEqual(await p.locator('#modules .rhs-product .rhs-card-link').evaluateAll(els=>els.map(e=>e.getAttribute('href'))),['#platform','#back-office','#back-office','#back-office']);
 for(const text of await p.locator('#modules .rhs-product p').allTextContents())assert.ok(text.length<190,'module copy stays concise');
@@ -54,6 +54,8 @@ assert.equal(await p.locator('.rhs-content .rhs-frame:not(:has(img)), .rhs-conte
 assert.equal(await p.locator('.rhs-content .rhs-frame-phone:not(:has(source)), .rhs-content .rhs-frame:has(source):not(.rhs-frame-phone)').count(),0,'phone frame exactly where a phone capture is shown '+where);
 assert.equal(await p.locator('#platform .rhs-tour-visual > .rhs-screens').count(),4,'every tour area keeps its list of screens '+where);
 const hero=await p.locator('[data-hero-images]').getAttribute('data-hero-images');
+// Concept art never carries the availability word: it is not the current product.
+if(hero==='concept')assert.doesNotMatch(await p.locator('[data-hero-images]').innerText(),/AVAILABLE|DISPONIBLE/i,'the concept badge claims no availability '+where);
 const notice=(await p.locator('.rhs-footer [data-notice]').getAttribute('data-notice')).split(' ');
 assert.equal(notice.includes('product'),imgs.length>0||hero==='product','the footer speaks of product screens only when the page shows one '+where);
 assert.equal(notice.includes('concept'),hero==='concept','the footer speaks of concept art only while the hero shows it '+where);

@@ -23,7 +23,10 @@ try {
     const html = await readFile(path.join(root, file), 'utf8');
     const h1 = pick(html, /<h1>([\s\S]*?)<\/h1>/).replace(/<br>\s*/g, '<br>');
     const subtitle = pick(html, /<p class="hero-subtitle">([\s\S]*?)<\/p>/);
-    const badge = pick(html, /class="carousel-disclosure" data-hero-images="(?:concept|product)">([^<&]+?)\s*&nbsp;/);
+    // The availability chip of the Sentinel section ("Available"), not the badge under the orbit, which names
+    // concept art while the hero still shows it.
+    const badge = pick(html, /class="rhs-status rhs-status-available">([^<]+)</).toUpperCase();
+    if (!badge) throw new Error(`${file}: no availability chip`);
     const kind = pick(html, /data-hero-images="(concept|product)"/);
     const front = kind === 'product' ? pick(html, /id="carousel-track"[\s\S]*?<img src="\/([^"]+)"/) : '';
     const shot = front ? `<div class="shot"><img src="data:image/webp;base64,${(await readFile(path.join(root, front))).toString('base64')}" alt=""></div>` : '';
