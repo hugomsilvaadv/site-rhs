@@ -27,7 +27,7 @@ if(origin){
  for(const rel of ['index.html','es/index.html']){
   const file=path.join(output,rel); let html=await readFile(file,'utf8');
   html=html.replace(/(<link rel="(?:canonical|alternate)"[^>]*href=")(\/[^"]*)"/g,(_,before,route)=>before+origin+route+'"');
-  html=html.replace('property="og:image" content="/assets/','property="og:image" content="'+origin+'/assets/');
+  html=html.replace('property="og:image" content="/assets/','property="og:image" content="'+origin+'/assets/').replace('name="twitter:image" content="/assets/','name="twitter:image" content="'+origin+'/assets/');
   html=html.replace('</head>','<meta property="og:url" content="'+origin+(rel.startsWith('es/')?'/es/':'/')+'"></head>');
   await writeFile(file,html);
  }

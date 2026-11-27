@@ -9,9 +9,10 @@
   const title=document.getElementById('showcase-title');
   if(panels.length!==3) return;
 
-  const namesEN=['Operations Control Center','Multi-account Investigation','Payments and Risk Overview'];
-  const namesES=['Centro de control operativo','Investigación de cuentas vinculadas','Vista de pagos y riesgo'];
-  let names=document.documentElement.lang==='es'?namesES:namesEN;
+  // Screen names and the caption suffix come from the rendered page, in its language.
+  const readNames=()=>panels.map(panel=>panel.getAttribute('aria-label')||'');
+  let names=readNames();
+  const suffix=()=>title&&title.dataset.suffix?'  ·  '+title.dataset.suffix:'';
   let paused=false;
   const TAU=Math.PI*2;
   const angularSpeed=TAU/23500; // one continuous 360° lap every 23.5 seconds
@@ -95,7 +96,7 @@
         if(i===activeIndex)d.setAttribute('aria-current','true');
         else d.removeAttribute('aria-current');
       });
-      if(title)title.textContent=String(activeIndex+1).padStart(2,'0')+'  /  '+names[activeIndex]+(document.documentElement.lang==='es'?'  ·  ÓRBITA 3D CONTINUA':'  ·  CONTINUOUS 3D ORBIT');
+      if(title)title.textContent=String(activeIndex+1).padStart(2,'0')+'  /  '+names[activeIndex]+suffix();
     }
   }
 
@@ -144,7 +145,7 @@
   reducedMotion.addEventListener?.('change',()=>{if(reducedMotion.matches){manual=null;} mobileElapsed=0;render();});
   document.addEventListener('visibilitychange',()=>{lastFrame=null;if(document.hidden){cancelAnimationFrame(requestId);}else{requestId=requestAnimationFrame(animate);}});
   document.addEventListener('rhs:motion',e=>{paused=e.detail;});
-  document.addEventListener('rhs:language',()=>{names=document.documentElement.lang==='es'?namesES:namesEN;activeIndex=-1;render();});
+  document.addEventListener('rhs:language',()=>{names=readNames();activeIndex=-1;render();});
 
   // Geometry depends on viewport/panel dimensions, not on orbital phase.
   // Cache layout reads until resize; keep the approved transform math intact.
