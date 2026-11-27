@@ -42,8 +42,8 @@ const site = process.env.SITE_URL || 'http://127.0.0.1:8000/';
  assert.match(page.url(),/#tour-customers$/,'the selected area is in the address');
  // Keyboard: arrows, Home and End move the selection and the focus (automatic activation).
  await tabs.first().focus();
- await page.keyboard.press('ArrowRight');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-alerts');
- assert.equal(await page.locator('#tour-alerts').isVisible(),true);
+ await page.keyboard.press('ArrowRight');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-connections');
+ assert.equal(await page.locator('#tour-connections').isVisible(),true);
  await page.keyboard.press('ArrowLeft');await page.keyboard.press('ArrowLeft');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-customers','wraps around');
  await page.keyboard.press('Home');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-transactions');
  await page.keyboard.press('End');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-customers');

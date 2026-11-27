@@ -98,13 +98,14 @@ def intro(n, data, cta=None, cta_text=None, chip=''):
 # Shared, language-independent structure. Text lives in COPY, aligned by position.
 TOUR = [  # Sentinel areas: tab key, icon, main capture, phone capture, icons of the listed screens
  {'key': 'transactions', 'icon': 'payments', 'shot': 'sentinel-transactions', 'phone': 'sentinel-withdrawals-mobile', 'more': '#how', 'screens': ['list', 'record', 'users']},
+ {'key': 'connections', 'icon': 'network', 'shot': 'sentinel-connections', 'phone': None, 'more': None, 'screens': ['network', 'link', 'fraud', 'pulse']},
  {'key': 'alerts', 'icon': 'bell', 'shot': 'sentinel-alerts', 'phone': 'sentinel-alerts-mobile', 'more': None, 'screens': ['bell', 'case', 'pulse']},
- {'key': 'rules', 'icon': 'sliders', 'shot': 'sentinel-rules', 'phone': None, 'more': None, 'screens': ['layers', 'eyes']},
+ {'key': 'rules', 'icon': 'sliders', 'shot': 'sentinel-rules', 'phone': None, 'more': None, 'screens': ['layers', 'settings', 'chart', 'eyes']},
  {'key': 'customers', 'icon': 'person', 'shot': 'sentinel-customer', 'phone': 'sentinel-customer-mobile', 'more': '#security', 'screens': ['users', 'person', 'search']},
 ]
 FLOW = ['event', 'score', 'alert', 'queue', 'review', 'label']
 FLOW_OPTIONAL = ['alert', 'queue']  # they depend on the operator's settings: the alert triggers and the risk limit
-HOW_ICONS = ['gauge', 'bell', 'clock', 'check', 'flag', 'record']
+HOW_ICONS = ['gauge', 'bell', 'clock', 'check', 'flag', 'network']
 HOW_SHOT = 'sentinel-transaction-detail'
 SECURITY_ICONS = ['users', 'person', 'record', 'api']
 SECURITY_SHOT = 'sentinel-roles'
@@ -118,7 +119,7 @@ SHOTS = [spec['shot'] for spec in TOUR] + [HOW_SHOT, SECURITY_SHOT]
 COPY = {
 'en': {
  'status': {'available': 'Available', 'development': 'In development'},
- 'tour': {'head': ['SENTINEL', 'From the risk score<br><em>to your team\'s review.</em>', 'Sentinel scores your transactions for risk, alerts your team to the ones that need a look and keeps each customer\'s record in one file.'],
+ 'tour': {'head': ['SENTINEL', 'From the risk score<br><em>to your team\'s review.</em>', 'Sentinel scores your transactions for risk, shows which accounts are connected, alerts your team to the ones that need a look and keeps each customer\'s record in one file.'],
   'tablist': 'Sentinel areas', 'screens': 'Screens in this area',
   'tabs': [
    {'label': 'Transactions', 'title': 'See the risk of each transaction.',
@@ -127,6 +128,12 @@ COPY = {
                 'A withdrawal\'s detail shows the rules that fired and whether it went to the manual queue.'],
     'screens': [['Transactions', 'Events and their risk'], ['Transaction detail', 'Rules that fired and the queue'], ['Customers', 'The account list']],
     'more': 'How a risky withdrawal is handled', 'alt': 'Sentinel: transaction list with risk levels and scores, with synthetic data.'},
+   {'label': 'Connections', 'title': 'See which accounts are connected.',
+    'bullets': ['Multi-account signals: accounts that share an IP address, a cookie or a device fingerprint.',
+                'A Connections screen, a Links tab on the customer file and the signs of multi-accounting in the transaction list.',
+                'Radar, a dashboard of mostly multi-account indicators.'],
+    'screens': [['Connections', 'Links between accounts'], ['Links', 'A customer\'s linked accounts'], ['Overview', 'A customer\'s fraud signals'], ['Radar', 'Multi-account indicators']],
+    'more': '', 'alt': 'Sentinel: links between synthetic accounts.'},
    {'label': 'Alerts', 'title': 'Alerts with the steps to review them.',
     'bullets': ['An alert queue, with alerts such as a withdrawal with a high score.',
                 'An alert\'s detail shows the event data and its review steps.',
@@ -134,9 +141,10 @@ COPY = {
     'screens': [['Alerts', 'The alert queue'], ['Alert detail', 'Event data and review steps'], ['When to alert', 'Alert triggers']],
     'more': '', 'alt': 'Sentinel: alert queue with synthetic alerts.'},
    {'label': 'Rules', 'title': 'Rules with ready-made packages.',
-    'bullets': ['Ready-made packages to start from, and basic rules by category.',
+    'bullets': ['Ready-made packages to start from, and basic rules by category, multi-accounting included.',
+                'Advanced rules, most of them on devices, IP addresses, VPNs and multi-accounting, and a performance view of the rules.',
                 'An Approvals screen for proposed changes, showing who proposed them.'],
-    'screens': [['Basic rules', 'Packages and categories'], ['Approvals', 'Proposed changes']],
+    'screens': [['Basic rules', 'Packages and categories'], ['Advanced rules', 'Device, IP, VPN and multi-account rules'], ['Performance', 'How the rules perform'], ['Approvals', 'Proposed changes']],
     'more': '', 'alt': 'Sentinel: basic rules with ready-made packages and rule categories.'},
    {'label': 'Customers', 'title': 'One file for each customer.',
     'bullets': ['The customer record: status, KYC, key dates, balance, lifetime value and country.',
@@ -154,8 +162,8 @@ COPY = {
             ['Risk limit', 'A withdrawal whose score reaches your limit waits in the manual queue.'],
             ['Review steps', 'An alert\'s detail shows the event data and the steps to review it.'],
             ['Fraud or legitimate', 'After review, your team labels the outcome.'],
-            ['Activity log', 'Who signed in and what each teammate opened, and when.']],
-  'alt': 'Sentinel: the detail of a synthetic withdrawal in the manual queue.'},
+            ['Multi-account verdict', 'A withdrawal\'s detail shows its multi-account verdict and where the IP address is.']],
+  'alt': 'Sentinel: the detail of a synthetic withdrawal in the manual queue, with its multi-account verdict.'},
  'security': {'head': ['ACCESS & INTEGRATION', 'Access by role.<br><em>Activity on record.</em>', 'Your team works through roles built from a permission matrix, and the activity log keeps each person\'s sign-ins and the screens they opened. Integration settings cover API keys, webhooks and field mapping.'],
   'items': [['Roles and permissions', 'A permission matrix by role.'],
             ['Teammates', 'The list of your team\'s users.'],
@@ -164,7 +172,7 @@ COPY = {
   'arch': [['Your platform', 'Sends its transactions'], ['Sentinel', 'Scores, alerts and sends risky withdrawals to the manual queue'], ['Your team', 'Reviews and labels'], ['Webhooks', 'From Sentinel to your systems']], 'arch_title': 'How a transaction travels',
   'alt': 'Sentinel: the permission matrix by role.'},
  'modules': {'head': ['MODULES', 'Sentinel, available.<br><em>The PAM back-office, in development.</em>', 'Fraud, the risk and fraud control described above, is available. Core, Payments and Intelligence make up the PAM back-office, in development.'],
-  'cards': [['Fraud', 'Transaction risk, alerts, rules, manual review of withdrawals and the activity log.'],
+  'cards': [['Fraud', 'Transaction risk, multi-account signals, alerts, rules, manual review of withdrawals and the activity log.'],
             ['Core', 'Player search, Player 360, KYC, responsible gaming, compliance, engagement and administration.'],
             ['Payments', 'Withdrawal approvals by role and limit, cashier limits, unmatched payments, balance batches and the ledger.'],
             ['Intelligence', 'Reports and segments: the balance owed to players, margins, negative balances, blocks and job health.']],
@@ -201,7 +209,7 @@ COPY = {
 },
 'es': {
  'status': {'available': 'Disponible', 'development': 'En desarrollo'},
- 'tour': {'head': ['SENTINEL', 'De la puntuación de riesgo<br><em>a la revisión de su equipo.</em>', 'Sentinel puntúa el riesgo de sus transacciones, avisa a su equipo de las que requieren atención y reúne el registro de cada cliente en una sola ficha.'],
+ 'tour': {'head': ['SENTINEL', 'De la puntuación de riesgo<br><em>a la revisión de su equipo.</em>', 'Sentinel puntúa el riesgo de sus transacciones, muestra qué cuentas están conectadas, avisa a su equipo de las que requieren atención y reúne el registro de cada cliente en una sola ficha.'],
   'tablist': 'Áreas de Sentinel', 'screens': 'Pantallas de esta área',
   'tabs': [
    {'label': 'Transacciones', 'title': 'Vea el riesgo de cada transacción.',
@@ -210,6 +218,12 @@ COPY = {
                 'El detalle de un retiro muestra las reglas que se activaron y si pasó a la cola manual.'],
     'screens': [['Transacciones', 'Eventos y su riesgo'], ['Detalle de la transacción', 'Reglas activadas y la cola'], ['Clientes', 'La lista de cuentas']],
     'more': 'Cómo se trata un retiro de riesgo', 'alt': 'Sentinel: lista de transacciones con niveles y puntuaciones de riesgo, con datos sintéticos.'},
+   {'label': 'Conexiones', 'title': 'Vea qué cuentas están conectadas.',
+    'bullets': ['Señales de multicuenta: cuentas que comparten una dirección IP, una cookie o la huella digital de un dispositivo.',
+                'Una pantalla de Conexiones, una pestaña de Vínculos en la ficha del cliente y los indicios de multicuenta en la lista de transacciones.',
+                'Radar, un panel con indicadores sobre todo de multicuenta.'],
+    'screens': [['Conexiones', 'Vínculos entre cuentas'], ['Vínculos', 'Las cuentas vinculadas de un cliente'], ['Vista general', 'Las señales de fraude de un cliente'], ['Radar', 'Indicadores de multicuenta']],
+    'more': '', 'alt': 'Sentinel: vínculos entre cuentas sintéticas.'},
    {'label': 'Alertas', 'title': 'Alertas con los pasos para revisarlas.',
     'bullets': ['Una cola de alertas, con alertas como un retiro con una puntuación alta.',
                 'El detalle de una alerta muestra los datos del evento y sus pasos de revisión.',
@@ -217,9 +231,10 @@ COPY = {
     'screens': [['Alertas', 'La cola de alertas'], ['Detalle de la alerta', 'Datos del evento y pasos de revisión'], ['Cuándo alertar', 'Disparadores de alertas']],
     'more': '', 'alt': 'Sentinel: cola de alertas con alertas sintéticas.'},
    {'label': 'Reglas', 'title': 'Reglas con paquetes listos para usar.',
-    'bullets': ['Paquetes listos para usar como punto de partida y reglas básicas por categoría.',
+    'bullets': ['Paquetes listos para usar como punto de partida y reglas básicas por categoría, multicuenta incluida.',
+                'Reglas avanzadas, la mayoría sobre dispositivos, direcciones IP, VPN y multicuentas, y una vista del desempeño de las reglas.',
                 'Una pantalla de Aprobaciones para los cambios propuestos, que muestra quién los propuso.'],
-    'screens': [['Reglas básicas', 'Paquetes y categorías'], ['Aprobaciones', 'Cambios propuestos']],
+    'screens': [['Reglas básicas', 'Paquetes y categorías'], ['Reglas avanzadas', 'Reglas de dispositivo, IP, VPN y multicuenta'], ['Desempeño', 'Resultados de las reglas'], ['Aprobaciones', 'Cambios propuestos']],
     'more': '', 'alt': 'Sentinel: reglas básicas con paquetes listos para usar y categorías de reglas.'},
    {'label': 'Clientes', 'title': 'Una ficha para cada cliente.',
     'bullets': ['El registro del cliente: estado, KYC, fechas clave, saldo, valor de vida del cliente y país.',
@@ -237,8 +252,8 @@ COPY = {
             ['Límite de riesgo', 'Un retiro cuya puntuación alcanza el límite de riesgo de su operación espera en la cola manual.'],
             ['Pasos de revisión', 'El detalle de una alerta muestra los datos del evento y los pasos para revisarla.'],
             ['Fraude o legítimo', 'Tras la revisión, su equipo etiqueta el resultado.'],
-            ['Registro de actividad', 'Quién inició sesión y qué abrió cada persona del equipo, y cuándo.']],
-  'alt': 'Sentinel: el detalle de un retiro sintético en la cola manual.'},
+            ['Veredicto de multicuenta', 'El detalle de un retiro muestra su veredicto de multicuenta y dónde está la dirección IP.']],
+  'alt': 'Sentinel: el detalle de un retiro sintético en la cola manual, con su veredicto de multicuenta.'},
  'security': {'head': ['ACCESO E INTEGRACIÓN', 'Acceso por rol.<br><em>Actividad registrada.</em>', 'Su equipo trabaja con roles formados por una matriz de permisos, y el registro de actividad guarda los inicios de sesión de cada persona y las pantallas que abrió. La configuración de integración incluye claves de API, webhooks y mapeo de campos.'],
   'items': [['Roles y permisos', 'Una matriz de permisos por rol.'],
             ['Equipo', 'La lista de usuarios de su equipo.'],
@@ -247,7 +262,7 @@ COPY = {
   'arch': [['Su plataforma', 'Envía sus transacciones'], ['Sentinel', 'Puntúa, alerta y envía los retiros de riesgo a la cola manual'], ['Su equipo', 'Revisa y etiqueta'], ['Webhooks', 'Desde Sentinel hacia sus sistemas']], 'arch_title': 'El recorrido de una transacción',
   'alt': 'Sentinel: la matriz de permisos por rol.'},
  'modules': {'head': ['MÓDULOS', 'Sentinel, disponible.<br><em>El back-office PAM, en desarrollo.</em>', 'Fraud, el control de riesgo y fraude descrito arriba, está disponible. Core, Payments e Intelligence forman el back-office PAM, en desarrollo.'],
-  'cards': [['Fraud', 'Riesgo de las transacciones, alertas, reglas, revisión manual de retiros y registro de actividad.'],
+  'cards': [['Fraud', 'Riesgo de las transacciones, señales de multicuenta, alertas, reglas, revisión manual de retiros y registro de actividad.'],
             ['Core', 'Búsqueda de jugadores, Player 360, KYC, juego responsable, cumplimiento, relación con el jugador y administración.'],
             ['Payments', 'Aprobación de retiros por rol y límite, límites de caja, pagos no conciliados, ajustes en lote y libro de movimientos.'],
             ['Intelligence', 'Informes y segmentos: el saldo adeudado a los jugadores, márgenes, saldos negativos, bloqueos y estado de las tareas programadas.']],

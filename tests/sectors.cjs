@@ -2,7 +2,8 @@
 // fixed order, with nothing invented or out of scope.
 const assert=require('node:assert/strict');const {chromium}=require('playwright');
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
-const forbidden=/fingerprint|huella digital|device intelligence|multi-?account|multicuenta|cuentas vinculadas|linked accounts|account links|shared device|dispositivo compartido|\bdevices?\b|dispositivos?\b|\bIP address|direcci[oó]n IP|\bVPN\b|crypto|cripto|artificial intelligence|inteligencia artificial|machine learning|aprendizaje autom|\bAI\b|\bIA\b|certified|certificad|homologat|guaranteed|garantizad|\bPGS\b|\bPix\b|\bCPF\b|LGPD|Brazil|Brasil|real[- ]time|tiempo real/i;
+// Multi-account, device and IP detection may be announced since RHS-062; the rest stays out.
+const forbidden=/crypto|cripto|artificial intelligence|inteligencia artificial|machine learning|aprendizaje autom|\bAI\b|\bIA\b|certified|certificad|homologat|guaranteed|garantizad|\bPGS\b|\bPix\b|\bCPF\b|LGPD|Brazil|Brasil|real[- ]time|tiempo real/i;
 // The screens the page may show: the Sentinel import list (tools/capture/sentinel.config.mjs) and the registered
 // back-office placeholders, which are never shown.
 const root=path.join(__dirname,'..');
@@ -22,11 +23,11 @@ assert.equal(await p.locator('#back-office .rhs-status-development').count(),1,'
 assert.match(await p.locator('#back-office .rhs-sector-copy').innerText(),lang==='es'?/en desarrollo y todavía no están disponibles/:/in development and not yet available/,'the back-office says it is not yet available '+where);
 assert.equal(await p.locator('#back-office img, #back-office .rhs-frame, #back-office picture').count(),0,'no product image for the back-office in development '+where);
 assert.equal(await p.locator('#back-office .rhs-control-grid li').count(),6,'six back-office areas '+where);
-// Tour: four Sentinel areas, two or three bullets and at least two screens each; one panel shown at a time.
-const tabs=p.locator('#platform [role="tab"]');assert.equal(await tabs.count(),4,'four Sentinel areas '+where);
+// Tour: five Sentinel areas, two or three bullets and at least two screens each; one panel shown at a time.
+const tabs=p.locator('#platform [role="tab"]');assert.equal(await tabs.count(),5,'five Sentinel areas '+where);
 const panels=await p.locator('#platform [role="tabpanel"]').evaluateAll(els=>els.map(e=>({id:e.id,hidden:e.hidden,bullets:e.querySelectorAll('.rhs-ticks li').length,screens:e.querySelectorAll('.rhs-screens li').length})));
-assert.deepEqual(panels.map(x=>x.id),['tour-transactions','tour-alerts','tour-rules','tour-customers']);
-assert.deepEqual(panels.map(x=>x.hidden),[false,true,true,true],'only the first area visible at load '+where);
+assert.deepEqual(panels.map(x=>x.id),['tour-transactions','tour-connections','tour-alerts','tour-rules','tour-customers']);
+assert.deepEqual(panels.map(x=>x.hidden),[false,true,true,true,true],'only the first area visible at load '+where);
 for(const x of panels){assert.ok(x.bullets>=2&&x.bullets<=3,x.id+' bullets');assert.ok(x.screens>=2,x.id+' screens');}
 // How it works, access and integration, modules, getting started.
 assert.equal(await p.locator('#how .rhs-flow-step').count(),6,'six steps of a risky withdrawal '+where);
@@ -45,14 +46,14 @@ assert.doesNotMatch(text,forbidden,'no invented or out-of-scope claims '+where);
 // Product images: assets/product/<screen>.webp of the Sentinel import list, shown only once the file is a real
 // capture (never a registered placeholder): framed, described, 3200x2000, at most one per tour area plus the
 // how-it-works and access sections. An area without its capture still lists its screens.
-const slots=[['tour-transactions','sentinel-transactions'],['tour-alerts','sentinel-alerts'],['tour-rules','sentinel-rules'],['tour-customers','sentinel-customer'],['how','sentinel-transaction-detail'],['security','sentinel-roles']].map(([area,name])=>[area,'/assets/product/'+name+'.webp']);
+const slots=[['tour-transactions','sentinel-transactions'],['tour-connections','sentinel-connections'],['tour-alerts','sentinel-alerts'],['tour-rules','sentinel-rules'],['tour-customers','sentinel-customer'],['how','sentinel-transaction-detail'],['security','sentinel-roles']].map(([area,name])=>[area,'/assets/product/'+name+'.webp']);
 const imgs=await p.locator('.rhs-content img').evaluateAll(els=>els.map(e=>({src:e.getAttribute('src'),frame:!!e.closest('.rhs-frame'),alt:e.getAttribute('alt'),size:[e.getAttribute('width'),e.getAttribute('height')],area:e.closest('[role="tabpanel"],section')?.id})));
 assert.deepEqual(imgs.map(i=>[i.area,i.src]),slots.filter(([,src])=>isCapture(src)),'a product image exactly where its capture exists '+where);
 for(const img of imgs){assert.ok(sentinel.includes(img.src),'screen of the Sentinel import list: '+img.src);assert.ok(isCapture(img.src),'never a placeholder: '+img.src);assert.ok(img.frame,'framed '+img.src);assert.ok(img.alt.length>20,'described '+img.src);assert.deepEqual(img.size,['3200','2000']);}
 for(const src of await p.locator('.rhs-content picture source').evaluateAll(els=>els.map(e=>e.getAttribute('srcset'))))assert.ok(sentinel.includes(src)&&src.endsWith('-mobile.webp')&&isCapture(src),'phone capture of the import list: '+src);
 assert.equal(await p.locator('.rhs-content .rhs-frame:not(:has(img)), .rhs-content .rhs-wide-shot:not(:has(img))').count(),0,'no empty frame where a capture is missing '+where);
 assert.equal(await p.locator('.rhs-content .rhs-frame-phone:not(:has(source)), .rhs-content .rhs-frame:has(source):not(.rhs-frame-phone)').count(),0,'phone frame exactly where a phone capture is shown '+where);
-assert.equal(await p.locator('#platform .rhs-tour-visual > .rhs-screens').count(),4,'every tour area keeps its list of screens '+where);
+assert.equal(await p.locator('#platform .rhs-tour-visual > .rhs-screens').count(),5,'every tour area keeps its list of screens '+where);
 const hero=await p.locator('[data-hero-images]').getAttribute('data-hero-images');
 // Concept art never carries the availability word: it is not the current product.
 if(hero==='concept')assert.doesNotMatch(await p.locator('[data-hero-images]').innerText(),/AVAILABLE|DISPONIBLE/i,'the concept badge claims no availability '+where);
@@ -74,5 +75,5 @@ assert.ok(await p.locator('a[href^="mailto:sales@rhs-labs.com"]').count());
 assert.equal(await p.locator('link[rel="canonical"]').getAttribute('href'),'https://rhs-labs.com/'+(lang==='es'?'es/':''));
 assert.equal(await p.locator('a[href*="resources"],form,input').count(),0,'no form or lead collection');
 await p.close();}
-console.log('PASS: eight sectors EN/ES, Sentinel available (four tour areas, how it works, access and integration), modules by availability, PAM back-office in development without images, getting started, no invented or out-of-scope claims, canonical');
+console.log('PASS: eight sectors EN/ES, Sentinel available (five tour areas, how it works, access and integration), modules by availability, PAM back-office in development without images, getting started, no invented or out-of-scope claims, canonical');
 }finally{await b.close()}})().catch(e=>{console.error(e);process.exitCode=1});

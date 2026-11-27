@@ -20,15 +20,15 @@ LANGUAGES = {
 
 PAGE = {
  'en': {'title': 'RHS Labs Sentinel — Risk and fraud control for regulated betting operators',
-        'description': 'Risk and fraud control for regulated betting operators: transaction risk scores, alerts, '
-                       'rules with ready-made packages and manual review of risky withdrawals.',
+        'description': 'Risk and fraud control for regulated betting operators: transaction risk scores, multi-account signals, '
+                       'alerts, rules with ready-made packages and manual review of risky withdrawals.',
         'og_alt': 'RHS Labs Sentinel: risk and fraud control for regulated operators.',
         'nav': [['Platform', '#platform'], ['How it works', '#how'], ['Integration', '#security'], ['Modules', '#modules'], ['Back-office', '#back-office'], ['Pilot', '#pilot']],
         'skip': 'Skip to content', 'back_to_top': 'RHS Labs Sentinel — back to top', 'main_menu': 'Main menu',
         'open_navigation': 'Open navigation', 'close_navigation': 'Close navigation'},
  'es': {'title': 'RHS Labs Sentinel — Control de riesgo y fraude para operadores de apuestas regulados',
         'description': 'Control de riesgo y fraude para operadores de apuestas regulados: puntuación de riesgo de las transacciones, '
-                       'alertas, reglas con paquetes listos para usar y revisión manual de los retiros de riesgo.',
+                       'señales de multicuenta, alertas, reglas con paquetes listos para usar y revisión manual de los retiros de riesgo.',
         'og_alt': 'RHS Labs Sentinel: control de riesgo y fraude para operadores regulados.',
         'nav': [['Plataforma', '#platform'], ['Cómo funciona', '#how'], ['Integración', '#security'], ['Módulos', '#modules'], ['Back-office', '#back-office'], ['Piloto', '#pilot']],
         'skip': 'Saltar al contenido', 'back_to_top': 'RHS Labs Sentinel — volver al inicio', 'main_menu': 'Menú principal',
@@ -41,29 +41,29 @@ HERO = {
  'en': {'section': 'Sentinel platform showcase', 'eyebrow': 'SENTINEL PLATFORM',
         'h1': 'See risk. Stop fraud. <span>Stay ahead.</span>',
         'subtitle': 'RHS Labs Sentinel is risk and fraud control for regulated betting operators: '
-                    'transaction risk scores, alerts, rules with ready-made packages and manual review of risky withdrawals.',
+                    'transaction risk scores, multi-account signals, alerts, rules with ready-made packages and manual review of risky withdrawals.',
         'carousel': {'concept': 'Three concept illustrations of Sentinel', 'product': 'Three Sentinel screens'},
         'choose': 'Choose showcase screen', 'show': 'Show {name}', 'suffix': 'CONTINUOUS 3D ORBIT', 'roledescription': 'carousel',
         'pause': 'Pause motion', 'resume': 'Resume motion',
         'badge': {'concept': ['ILLUSTRATIVE CONCEPT', 'SIMULATED DATA', 'NOT THE CURRENT PRODUCT'],
                   'product': ['AVAILABLE', 'PRODUCT UI', 'SYNTHETIC DATA']},
         'values': [['Transaction risk', 'A level and score for each event'],
+                   ['Multi-account signals', 'Shared IP addresses, cookies and devices'],
                    ['Alerts', 'Triggers and review steps'],
-                   ['Rules', 'Ready-made packages and basic rules'],
-                   ['Activity log', 'Who opened what, and when']]},
+                   ['Rules', 'Ready-made packages and basic rules']]},
  'es': {'section': 'Presentación de la plataforma Sentinel', 'eyebrow': 'PLATAFORMA SENTINEL',
         'h1': 'Vea el riesgo. Frene el fraude. <span>Anticípese.</span>',
         'subtitle': 'RHS Labs Sentinel es control de riesgo y fraude para operadores de apuestas regulados: '
-                    'puntuación de riesgo de las transacciones, alertas, reglas con paquetes listos para usar y revisión manual de los retiros de riesgo.',
+                    'puntuación de riesgo de las transacciones, señales de multicuenta, alertas, reglas con paquetes listos para usar y revisión manual de los retiros de riesgo.',
         'carousel': {'concept': 'Tres ilustraciones conceptuales de Sentinel', 'product': 'Tres pantallas de Sentinel'},
         'choose': 'Elegir una pantalla', 'show': 'Mostrar {name}', 'suffix': 'ÓRBITA 3D CONTINUA', 'roledescription': 'carrusel',
         'pause': 'Pausar movimiento', 'resume': 'Reanudar movimiento',
         'badge': {'concept': ['CONCEPTO ILUSTRATIVO', 'DATOS SIMULADOS', 'NO ES EL PRODUCTO ACTUAL'],
                   'product': ['DISPONIBLE', 'INTERFAZ DEL PRODUCTO', 'DATOS SINTÉTICOS']},
         'values': [['Riesgo de las transacciones', 'Un nivel y una puntuación por evento'],
+                   ['Señales de multicuenta', 'Direcciones IP, cookies y dispositivos compartidos'],
                    ['Alertas', 'Disparadores y pasos de revisión'],
-                   ['Reglas', 'Paquetes listos para usar y reglas básicas'],
-                   ['Registro de actividad', 'Quién abrió qué y cuándo']]},
+                   ['Reglas', 'Paquetes listos para usar y reglas básicas']]},
 }
 
 # The approved V6 concept images: kept byte for byte (integrity manifest) until the swap.
@@ -98,9 +98,9 @@ HERO_PRODUCT = [
 ]
 
 VALUE_ICONS = ['<path d="M4 18a8 8 0 1 1 16 0M12 18l4-6"/>',
+               '<path d="m12 4-8 15h16ZM12 4v11M4 19l8-4 8 4"/><circle cx="12" cy="4" r="2"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="19" r="2"/><circle cx="12" cy="15" r="2"/>',
                '<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4Z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
-               '<path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="14" cy="18" r="2"/>',
-               '<path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h6"/>']
+               '<path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="14" cy="18" r="2"/>']
 
 V6_HERO = {  # strings of the approved fragment that the copy replaces (each must occur exactly once)
  'h1': '<h1>See risk. Stop fraud. <span>Stay ahead.</span></h1>',
