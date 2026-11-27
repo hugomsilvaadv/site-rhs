@@ -14,8 +14,8 @@ export const screens = [
   { name: 'sentinel-transactions', source: 'transactions.png', hero: true, route: 'Investigate › Transactions', review: 'Connections and Username columns left out through the column picker.' },
   { name: 'sentinel-withdrawals', source: 'withdrawals-queue.png', route: 'Investigate › Transactions (Withdrawal filter)', review: 'Withdrawals with their risk; not an approval queue.' },
   { name: 'sentinel-withdrawals-mobile', source: 'withdrawals-queue-mobile.png', viewport: 'mobile', route: 'Investigate › Transactions (Withdrawal filter)', review: 'Phone width; Event, Risk and Amount only; the currency (BRL, R$) hidden where possible (decision t).' },
-  { name: 'sentinel-transaction-detail', source: 'withdrawal-detail.png', route: 'Transaction detail', review: 'Withdrawal in the manual queue, with its multi-account verdict and IP map (RHS-062); IP addresses, hashes, personal data and any city or country name hidden.' },
-  { name: 'sentinel-alert-detail', source: 'case-detail.png', route: 'Alert detail', review: 'Event data, review steps and the multi-account signals block (RHS-062); IP addresses, cookie and fingerprint values, and personal data hidden.' },
+  { name: 'sentinel-transaction-detail', source: 'withdrawal-detail.png', route: 'Transaction detail', review: 'Withdrawal in the manual queue. The first-round file has the multi-account verdict, the IP map and the "Remote access" reason blanked; the second round (RHS-062) shows them. Either way: IP addresses, cookie and fingerprint values (hashes), personal data and any city or country name hidden.' },
+  { name: 'sentinel-alert-detail', source: 'case-detail.png', route: 'Alert detail', review: 'Event data and review steps. The first-round file has the multi-account block, the fired rules, the Links tab and the name blanked; the second round (RHS-062) shows the block. Either way: IP addresses, cookie and fingerprint values and personal data hidden.' },
   { name: 'sentinel-rules', source: 'rules.png', hero: true, route: 'Rules › Basic', review: 'Top of the basic rules; out-of-scope categories, the multi-accounting section and the search box hidden.' },
   { name: 'sentinel-approvals', source: 'approvals.png', route: 'Rules › Approvals', review: 'Empty state; the internal endpoint sentence hidden.' },
   { name: 'sentinel-roles', source: 'users.png', route: 'Team & access › Roles', review: 'Permission matrix by role, never the list of people; one out-of-scope row hidden.' },
@@ -24,8 +24,8 @@ export const screens = [
   { name: 'sentinel-customer-mobile', source: 'player-360-summary-mobile.png', viewport: 'mobile', route: 'Customer file › Record', review: 'Phone width; same hidden parts as the desktop customer file, the country value and any "CPF" text included.' },
   // Multi-account and device detection may be shown since 2026-11-27 (RHS-062). Personal data, IP addresses and
   // cookie or fingerprint values stay hidden.
-  { name: 'sentinel-radar', source: 'radar.png', hero: true, route: 'Radar', review: 'Dashboard; no IP address, personal data, city or country name visible.' },
-  { name: 'sentinel-connections', source: 'connections.png', route: 'Investigate › Connections', review: 'Links between accounts; names, e-mails and IP addresses hidden.' },
-  { name: 'sentinel-customer-overview', source: 'customer-overview.png', route: 'Customer file › Overview', review: 'Fraud signals of one customer; name, e-mail and IP addresses hidden.' },
-  { name: 'sentinel-customer-links', source: 'customer-links.png', route: 'Customer file › Links', review: 'Linked accounts of one customer; names, e-mails and IP addresses hidden.' },
+  { name: 'sentinel-radar', source: 'radar.png', hero: true, route: 'Radar', review: 'Dashboard; no IP address, cookie or fingerprint value, personal data, city or country name visible.' },
+  { name: 'sentinel-connections', source: 'connections.png', route: 'Investigate › Connections', review: 'Links between accounts; names, e-mails, IP addresses, cookie and fingerprint values and any city or country name hidden.' },
+  { name: 'sentinel-customer-overview', source: 'customer-overview.png', route: 'Customer file › Overview', review: 'Fraud signals of one customer; name, e-mail, IP addresses, cookie and fingerprint values and any city or country name hidden.' },
+  { name: 'sentinel-customer-links', source: 'customer-links.png', route: 'Customer file › Links', review: 'Linked accounts of one customer; names, e-mails, IP addresses, cookie and fingerprint values and any city or country name hidden.' },
 ];
