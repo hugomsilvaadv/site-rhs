@@ -13,7 +13,9 @@ export const HERO = { width: 1586, height: 992 };
 // Where the website expects each image: the placeholder and the capture share the path and the proportion.
 export const PRODUCT_DIR = 'assets/product';
 export const HERO_DIR = 'assets/hero';
-export const CONTEXT = { locale: 'en-US', timezoneId: 'America/Sao_Paulo' };
+// UTC−3, the offset of the mock's display zone, without a city name ('Etc/GMT+3' is UTC−3: the sign is inverted).
+// The back-office formats dates in its own display zone, never the browser's, so nothing on screen changes.
+export const CONTEXT = { locale: 'en-US', timezoneId: 'Etc/GMT+3' };
 
 const PLAYER = '00000000-0000-4000-8000-000000000001';
 const SECOND_APPROVAL = '00000000-0000-4000-8000-000000000104';
