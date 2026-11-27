@@ -52,8 +52,12 @@ export const screens = [
   { name: 'withdrawals-queue', path: '/backoffice/withdrawals', hero: true, ready: 'table tbody tr', hide: OUT_OF_SCOPE, review: 'Queue with ages against the target and the selected row aside; the out-of-scope integration row of Player context must be hidden.' },
   { name: 'withdrawals-queue-mobile', path: '/backoffice/withdrawals', viewport: 'mobile', ready: 'h1', hide: OUT_OF_SCOPE, review: 'Viewport only.' },
   { name: 'withdrawal-detail', path: `/backoffice/withdrawals/${SECOND_APPROVAL}`, ready: 'h1', hide: OUT_OF_SCOPE, review: 'Second-approval state with the Decision panel and the four-eyes notice. Never confirm a decision.' },
-  { name: 'approval-limits', path: '/backoffice/approval-limits', ready: 'table', review: 'Limits per role and second approval per category (platform defaults).' },
-  { name: 'cashier-limits', path: '/backoffice/cashier-limits', ready: 'table', hide: ['CASHIER_LIMITS_ENFORCED'], review: 'Starts empty in mock; the badge names an internal variable (hidden).' },
+  { name: 'approval-limits', path: '/backoffice/approval-limits', ready: 'table',
+    // Used on the website (Administration). Every amount is a provisional platform default in the mock's currency:
+    // the amount cells stay, their values are hidden; "Always" and "Does not approve" have no digits and stay visible.
+    prepare: async page => { await page.locator('table').first().waitFor({ state: 'visible', timeout: 15000 }); await page.evaluate(() => { for (const cell of document.querySelectorAll('td.tabular-nums')) if (/\d/.test(cell.textContent)) cell.style.visibility = 'hidden'; }); },
+    review: 'Administration image. Roles, categories and the four-eyes setup only: check that no amount is visible (they are provisional platform defaults in the local currency).' },
+  { name: 'cashier-limits', path: '/backoffice/cashier-limits', ready: 'table', hide: ['Configuration only:'], review: 'Starts empty in mock; the badge names an internal variable (hidden).' },
   { name: 'reconciliation', path: '/backoffice/reconciliation?tab=pending', ready: 'h1', review: 'Names a local payment rail and its transaction ids throughout: decide crop or skip at review.' },
   { name: 'adjustment-batches', path: '/backoffice/adjustment-batches?tab=pending', ready: 'table', review: 'Pending batch with Approve / Reject; never decide.' },
   { name: 'transactions', path: '/backoffice/transactions', ready: 'table tbody tr', review: 'Totals and ledger rows; the date hint names a local time zone.' },
@@ -72,9 +76,9 @@ export const screens = [
   { name: 'kyc', path: '/backoffice/kyc', ready: 'table', hide: ['business and legal decision'], review: 'The KYC levels card names local identity documents: decide crop at review. The queue\'s scope note (document review pending a business and legal decision) is hidden: the website describes check decisions only.' },
   { name: 'responsible-gaming', path: '/backoffice/responsible-gaming', ready: '#rg-queue-title', review: 'Overview, closures and the requests queue; never run the routine.' },
   { name: 'data-requests', path: '/backoffice/data-requests', ready: 'h1', review: 'The UI title names a local privacy law: crop the title and tab or skip.' },
-  { name: 'policies', path: '/backoffice/policies', ready: 'table', hide: ['POLICY_VERSIONS', 'PLAYER_TERMS_VERSION'], review: 'Catalog of versions; internal variable badge hidden.' },
-  { name: 'jurisdiction', path: '/backoffice/jurisdiction', ready: 'table', hide: ['JURISDICTION_PARAMETERS'], review: 'The mock jurisdiction names one country, its currency, its privacy law and local ordinances: likely skip.' },
-  { name: 'users', path: '/backoffice/users', ready: 'h1', prepare: async page => { await page.getByRole('tab', { name: 'Roles' }).click(); }, review: 'Not used on the website: the Users tab lists realistic names (never captured) and, in mock mode, the Roles tab shows the template roles and the role editor, not the five staff roles. Administration uses approval-limits.' },
+  { name: 'policies', path: '/backoffice/policies', ready: 'table', hide: ['Catalog only:', 'From the environment'], review: 'Catalog of versions; internal variable badges hidden.' },
+  { name: 'jurisdiction', path: '/backoffice/jurisdiction', ready: 'table', hide: ['Catalog only:'], review: 'The mock jurisdiction names one country, its currency, its privacy law and local ordinances: likely skip.' },
+  { name: 'users', path: '/backoffice/users', ready: 'h1', prepare: async page => { await page.getByRole('tab', { name: 'Roles' }).click(); }, review: 'Not shown on the website pages, but tools/stage.mjs publishes every file in assets/: keep the placeholder and never commit this capture. The Users tab lists realistic names (never captured) and, in mock mode, the Roles tab shows the template roles and the role editor, not the five staff roles. Administration uses approval-limits.' },
   { name: 'global-search', path: '/backoffice/withdrawals', keepHeader: true, prepare: async page => { await page.keyboard.press('Control+K'); await page.getByRole('searchbox', { name: 'Global search' }).fill('psp-sim-c1000'); await page.getByText('Enter to search').first().waitFor(); }, review: 'Header kept for the search popover; check the brand label and the time-zone badge.' },
 ];
 

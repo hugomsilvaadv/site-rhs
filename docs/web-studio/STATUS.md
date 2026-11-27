@@ -18,19 +18,20 @@
 
 1. Siga `tools/capture/README.md`: suba o back-office em modo mock (`API_MODE=mock`, `AUTH_PROVIDER=fake`, `FEATURE_FLAG_PROFILE=homologacao`, inglês) e rode `node tools/capture/screens.mjs --dry-run`, depois `node tools/capture/screens.mjs`.
 2. Revise `tools/capture/contact-sheet.png` e cada arquivo em `assets/product/`. Recorte ou deixe de fora o que identificar o país do mock (decisão j). Nenhum e-mail, documento, nome que pareça real ou dado de equipe.
-3. Faça commit de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato num branch novo, e confira o preview.
+3. Tudo o que está em `assets/` vai ao repositório público e ao site. Para cada tela deixada de fora (e para `users`, que o site não usa), volte o placeholder com `git checkout -- assets/product/<tela>.webp` e refaça a folha com `node tools/capture/contact-sheet.mjs`. Depois, faça commit de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato num branch novo, e confira o preview.
 4. Para o hero: rode `node tools/capture/hero-swap.mjs --check` e depois `node tools/capture/hero-swap.mjs`. Em seguida, rode `python3 tools/render.py` e `node tools/og/og.mjs` (sem Python no notebook, faça esse passo numa sessão na nuvem), depois os testes do README, e registre a troca em `DECISIONS.md`.
 
 ### Revisão das afirmações (2026-11-26)
 
 Cada frase factual da página, nos dois idiomas, foi conferida contra o inventário verificado e contra o código do back-office, só com leitura:
-- **Primeira rodada:** 96 frases, 40 achados. Cada achado passou por um verificador de código e um de texto. 39 foram confirmados e corrigidos em `ef0a4f0`; o único refutado foi o diagrama de segurança.
-- **Segunda rodada:** as 78 frases novas, de novo por código e por texto, mais uma leitura completa das duas páginas e da documentação. Não houve erro de fato; os 21 ajustes de texto e de coerência foram aplicados.
-- **Onde está cada mudança:** RHS-049 a RHS-051 em `DECISIONS.md`. Saíram da página a tela Integrations da lista de Administration e a frase de que a plataforma do operador se integra pela mesma API (item m dos sócios). A imagem da área Administration passou a ser `approval-limits`.
+- **Primeira rodada:** 96 afirmações, 40 achados. Cada achado passou por um verificador de código e um de texto. 39 foram confirmados por pelo menos um dos dois (quatro só pelo de texto) e corrigidos em `ef0a4f0`; o único refutado pelos dois foi o diagrama de segurança.
+- **Segunda rodada:** as 78 substituições da primeira, de novo por código e por texto, mais uma leitura completa das duas páginas e da documentação. Nas substituições não houve erro de fato. A leitura completa achou exageros que tinham ficado em frases antigas (como a contagem de segmento apresentada como obrigatória, a legenda de CRM que falava em mensagens aprovadas e a frase da API de integração) e o problema da imagem da área Administration. Os 21 achados, dois deles sobre a mesma frase, foram aplicados em `9e931c8`.
+- **Conferência final:** as mudanças da segunda rodada e estes registros, por código, texto e documentação. Os 15 pontos foram aplicados (RHS-052), entre eles o passo 03 do piloto, o limite das ações em massa sem número, os valores escondidos na captura de `approval-limits` e os nomes de variáveis da API fora do plano de captura.
+- **Onde está cada mudança:** RHS-049 a RHS-052 em `DECISIONS.md`. Saíram da página a tela Integrations da lista de Administration e, do card API-first, a frase de que a plataforma do operador se integra pela mesma API; a conexão da plataforma pela API ficou só no passo 03 do piloto, como trabalho definido e construído com o cliente (item m dos sócios). A imagem da área Administration passou a ser `approval-limits`, com os valores escondidos.
 
 ### Testes da fase 6 (2026-11-26, Chromium local)
 
-Os 11 testes do README passaram sem afrouxar nada:
+Os 11 testes do README passaram sem afrouxar nada, também depois de cada rodada da revisão das afirmações:
 - `generator`: as páginas equivalem à saída do gerador, há paridade EN/ES, o 3º idioma fica sem publicar e o ponto de troca do hero funciona.
 - `integrity`: as imagens da órbita batem com o manifesto, e o selo é verdadeiro.
 - `sectors`: os 10 setores, as 7 áreas com módulo e as afirmações proibidas ausentes.
@@ -55,7 +56,7 @@ As larguras pedidas (375, 768, 1280 e 1920) estão cobertas, nos dois idiomas. T
 - armazenamento: o navegador guarda só a preferência de idioma (`rhs-language`), e a página não faz chamada de rede além dos próprios arquivos nem carrega nada de terceiros;
 - cabeçalhos: o `vercel.json` é igual ao do `main` (`nosniff`, `Referrer-Policy` e `X-Frame-Options`). Nenhum dos dois envia CSP; as páginas não têm script, estilo ou handler inline, então uma CSP estrita funcionaria.
 
-Lighthouse local, com compressão brotli e simulação, sem dados de usuários reais:
+Lighthouse local, com compressão brotli e simulação, sem dados de usuários reais (medido de novo depois da revisão das afirmações, com os mesmos números):
 
 | Perfil | Performance | Accessibility | Best practices | SEO | LCP | Peso inicial |
 |---|---|---|---|---|---|---|
@@ -71,7 +72,7 @@ Cada imagem do tour só carrega quando a aba abre (lazy). Com as capturas reais,
 - A troca do hero, as imagens OG com a captura frontal e uma nova rodada de testes.
 - Conferir o preview pelo link autenticado da Vercel, inclusive em Safari e Firefox, e a entrega na caixa `sales@rhs-labs.com` (RHS-039).
 - As decisões dos sócios de a até o em `DECISIONS.md`, entre elas a disponibilidade para piloto (b, RHS-037), o recorte da jurisdição do mock (j), a legenda da órbita (l), a integração por API (m), a demonstração em espanhol com a interface em inglês (n) e as chaves da API que vêm desligadas (o).
-- Antes de uma demonstração no mock: ele não reproduz todas as regras. A segunda aprovação usa valores fixos, e não os limites da tela, e os limites por papel não se aplicam. A trilha de auditoria é uma lista fixa, então o que se faz na demonstração não aparece no relatório de auditoria.
+- Antes de uma demonstração no mock: ele não reproduz todas as regras. A segunda aprovação usa valores fixos, e não os limites da tela, e os limites por papel não se aplicam. A trilha de auditoria é uma lista fixa: fora as ocorrências registradas no próprio relatório de auditoria, o que se faz na demonstração não aparece nele.
 - O login com um provedor de identidade real e o teste de isolamento entre duas operadoras estão preparados no back-office, mas ainda não rodaram. Por isso a página trata a separação entre operadoras como propriedade de projeto.
 - Uma CSP estrita pode entrar no `vercel.json` num release futuro; o `main` não tem CSP, e esta rodada não mexeu nos cabeçalhos.
 - As evidências em PNG desta última rodada não foram versionadas (RHS-048).
@@ -88,9 +89,9 @@ Já expostos antes desta rodada:
 Novos nesta rodada:
 - O nome do repositório privado do back-office (`tools/capture/README.md` e a pasta padrão em `tools/capture/lib.mjs`).
 - Os nomes dos cookies do template (`tools/capture/screens.config.mjs`).
-- O plano de captura: as rotas de 30 telas, os seletores e as listas de linhas escondidas.
+- O plano de captura: as rotas de 30 telas, os seletores e as listas de textos escondidos. Essas listas citavam pelo nome quatro chaves da API (selos de limites do caixa, de políticas e de jurisdição); os nomes saíram da ponta do branch na conferência final, mas continuam no histórico a partir de `23aa41d`.
 - Os filtros de termos proibidos em `tests/sectors.cjs` e `tests/alignment-audit.cjs`, que citam a sigla da plataforma de referência e os termos do mercado do mock.
-- Da revisão das afirmações: o texto da nota interna da fila KYC que a captura esconde, e as limitações do mock descritas nas pendências e em `DECISIONS.md`, sem nomes de variáveis da API.
+- Da revisão das afirmações, sem nomes de variáveis da API: o texto da nota interna da fila KYC que a captura esconde, as limitações do mock, o que vem desligado por padrão na API (itens m e o de `DECISIONS.md`), o limite provisório das ações em massa e o fato de que o login com um provedor de identidade real e o teste de isolamento entre duas operadoras ainda não rodaram.
 
 Commits já publicados no início da rodada (`f5cd300`, `23aa41d`, `656dc05`, `5eaff22`, `e4cfd9b`) trazem ainda:
 - o nome do pacote privado do design system;

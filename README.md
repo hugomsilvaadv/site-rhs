@@ -1,6 +1,6 @@
 # RHS Labs / Sentinel website
 
-Static EN/ES website for RHS Labs Sentinel, the PAM and back-office for regulated betting operators. Every product claim maps to a real back-office screen (a menu route whose flag the `homologacao` profile turns on); the security section describes the back-office's architecture, and what only the API enforces, such as operator separation, is worded as a design property. Each product image is the file `assets/product/<screen>.webp` of the capture plan in `tools/capture/`: a dark placeholder marked "Screenshot pending" until the real back-office (mock mode, synthetic data) is captured over it. Until the hero swap, the three orbit images are concept illustrations and are labeled as such.
+Static EN/ES website for RHS Labs Sentinel, the PAM and back-office for regulated betting operators. Every product claim maps to a real back-office screen (a menu route whose flag the `homologacao` profile turns on); the security section describes the back-office's architecture, and operator separation, which only the API enforces and the back-office cannot verify, is worded as a design property. Each product image is the file `assets/product/<screen>.webp` of the capture plan in `tools/capture/`: a dark placeholder marked "Screenshot pending" until the real back-office (mock mode, synthetic data) is captured over it. Until the hero swap, the three orbit images are concept illustrations and are labeled as such.
 
 ## Develop
 

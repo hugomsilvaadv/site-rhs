@@ -31,7 +31,7 @@ O `--dry-run` confere se cada rota é uma tela do menu do back-office e diz quai
 
 **3. Revise** `tools/capture/contact-sheet.png` e cada imagem em `assets/product/`. Uma tela que falhar mantém o placeholder.
 
-**4. Commit e push** de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato. O preview da Vercel mostra as telas novas sem nenhuma outra mudança.
+**4. Commit e push** só do que passou na revisão. Tudo o que está em `assets/` vai para o repositório público e para o site, mesmo uma tela que a página não usa. Para cada tela deixada de fora (e para `users`, que o site não usa), volte o placeholder com `git checkout -- assets/product/<tela>.webp` e refaça a folha com `node tools/capture/contact-sheet.mjs`. Depois, commit de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato. O preview da Vercel mostra as telas novas sem nenhuma outra mudança.
 
 ## Hero (troca deliberada)
 
@@ -55,4 +55,4 @@ O `hero-swap` regrava o manifesto de integridade de propósito, e o selo sob a �
 
 ## Ao revisar
 
-O mock reproduz a jurisdição de um único país (moeda, meio de pagamento, documentos, fuso e lei de privacidade locais) e tem textos sintéticos em português. Recorte ou deixe de fora o que identificar o país; as notas por tela estão na folha de contato. A aba Usuários (nomes realistas) nunca é fotografada: a tela `users` usa a aba Papéis e não vai ao site, porque no mock essa aba mostra os papéis do template e o editor de papéis, não os cinco papéis da equipe. A área Administration usa `approval-limits`.
+O mock reproduz a jurisdição de um único país (moeda, meio de pagamento, documentos, fuso e lei de privacidade locais) e tem textos sintéticos em português. Recorte ou deixe de fora o que identificar o país; as notas por tela estão na folha de contato. A aba Usuários (nomes realistas) nunca é fotografada: a tela `users` usa a aba Papéis e não aparece nas páginas, porque no mock essa aba mostra os papéis do template e o editor de papéis, não os cinco papéis da equipe. Não faça commit dessa captura: mantenha o placeholder `users.webp`. A área Administration usa `approval-limits`; os valores dessa tela são padrões provisórios da plataforma, na moeda local, e a captura os esconde: confira que nenhum aparece.
