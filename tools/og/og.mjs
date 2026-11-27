@@ -23,11 +23,12 @@ try {
     const html = await readFile(path.join(root, file), 'utf8');
     const h1 = pick(html, /<h1>([\s\S]*?)<\/h1>/).replace(/<br>\s*/g, '<br>');
     const subtitle = pick(html, /<p class="hero-subtitle">([\s\S]*?)<\/p>/);
-    // The availability chip of the Sentinel section ("Available"), not the badge under the orbit, which names
-    // concept art while the hero still shows it.
-    const badge = pick(html, /class="rhs-status rhs-status-available">([^<]+)</).toUpperCase();
-    if (!badge) throw new Error(`${file}: no availability chip`);
     const kind = pick(html, /data-hero-images="(concept|product)"/);
+    // Concept art: the availability chip of the Sentinel section ("Available"), never the concept badge. After the
+    // swap, the product badge's first and last parts ("AVAILABLE · SYNTHETIC DATA"), because the card shows a capture.
+    const parts = pick(html, /class="carousel-disclosure" data-hero-images="product">([^<]+)</).split('&nbsp;·&nbsp;').map(part => part.replace(/&nbsp;/g, ' ').trim()).filter(Boolean);
+    const badge = kind === 'product' ? [parts[0], parts[parts.length - 1]].join(' · ') : pick(html, /class="rhs-status rhs-status-available">([^<]+)</).toUpperCase();
+    if (!badge) throw new Error(`${file}: no availability chip`);
     const front = kind === 'product' ? pick(html, /id="carousel-track"[\s\S]*?<img src="\/([^"]+)"/) : '';
     const shot = front ? `<div class="shot"><img src="data:image/webp;base64,${(await readFile(path.join(root, front))).toString('base64')}" alt=""></div>` : '';
     const page = `<!DOCTYPE html><html lang="${lang}"><head><meta charset="utf-8"><style>

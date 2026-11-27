@@ -27,6 +27,10 @@ for(const name of await readdir(path.join(root,'assets'))){
  await cp(path.join(root,'assets',name),path.join(output,'assets',name),{recursive:true});
 }
 for(const rel of Object.keys(placeholders))if(await placeholder(rel))await rm(path.join(output,rel),{force:true});
+// After the deliberate hero swap (tools/capture/hero.json), the three concept dashboards are no longer published:
+// they show content the website must not depict (multi-account, devices, IP addresses, crypto).
+let hero={};try{hero=JSON.parse(await readFile(path.join(root,'tools/capture/hero.json'),'utf8'));}catch{}
+if(hero.active)for(const name of ['dashboard-1.webp','dashboard-2.webp','dashboard-3.webp'])await rm(path.join(output,'assets',name),{force:true});
 console.log('Staged public website only in public/. No studio documents or build tools included.');
 
 if(origin){

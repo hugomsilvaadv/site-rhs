@@ -10,18 +10,18 @@ export const HERO = { width: 1586, height: 992 };
 
 export const screens = [
   { name: 'sentinel-alerts', source: 'alerts.png', hero: true, route: 'Alerts › Alerts', review: 'Alert queue; the Customer column and the Connections menu item hidden.' },
-  { name: 'sentinel-alerts-mobile', source: 'alerts-mobile.png', viewport: 'mobile', route: 'Alerts › Alerts', review: 'Phone width; same hidden parts as the desktop alert queue.' },
+  { name: 'sentinel-alerts-mobile', source: 'alerts-mobile.png', viewport: 'mobile', route: 'Alerts › Alerts', review: 'Phone width; same hidden parts as the desktop alert queue, including the Portuguese alert name where possible (decision t).' },
   { name: 'sentinel-transactions', source: 'transactions.png', hero: true, route: 'Investigate › Transactions', review: 'Connections and Username columns left out through the column picker.' },
   { name: 'sentinel-withdrawals', source: 'withdrawals-queue.png', route: 'Investigate › Transactions (Withdrawal filter)', review: 'Withdrawals with their risk; not an approval queue.' },
-  { name: 'sentinel-withdrawals-mobile', source: 'withdrawals-queue-mobile.png', viewport: 'mobile', route: 'Investigate › Transactions (Withdrawal filter)', review: 'Phone width; Event, Risk and Amount only.' },
+  { name: 'sentinel-withdrawals-mobile', source: 'withdrawals-queue-mobile.png', viewport: 'mobile', route: 'Investigate › Transactions (Withdrawal filter)', review: 'Phone width; Event, Risk and Amount only; the currency (BRL, R$) hidden where possible (decision t).' },
   { name: 'sentinel-transaction-detail', source: 'withdrawal-detail.png', route: 'Transaction detail', review: 'Withdrawal held in the manual queue; multi-account verdict, IP map and device blocks hidden.' },
   { name: 'sentinel-alert-detail', source: 'case-detail.png', route: 'Alert detail', review: 'Event data and review steps only; multi-account block and fired rules hidden.' },
   { name: 'sentinel-rules', source: 'rules.png', hero: true, route: 'Rules › Basic', review: 'Top of the basic rules; out-of-scope categories, the multi-accounting section and the search box hidden.' },
   { name: 'sentinel-approvals', source: 'approvals.png', route: 'Rules › Approvals', review: 'Empty state; the internal endpoint sentence hidden.' },
   { name: 'sentinel-roles', source: 'users.png', route: 'Team & access › Roles', review: 'Permission matrix by role, never the list of people; one out-of-scope row hidden.' },
   { name: 'sentinel-search', source: 'global-search.png', route: 'Global search (Ctrl+K)', review: 'Search for a neutral term; the out-of-scope palette entry hidden.' },
-  { name: 'sentinel-customer', source: 'player-360-summary.png', route: 'Customer file › Record', review: 'Name, e-mail, device, IP, connections, the Links tab and the right column hidden; avatar initials remain.' },
-  { name: 'sentinel-customer-mobile', source: 'player-360-summary-mobile.png', viewport: 'mobile', route: 'Customer file › Record', review: 'Phone width; same hidden parts as the desktop customer file.' },
+  { name: 'sentinel-customer', source: 'player-360-summary.png', route: 'Customer file › Record', review: 'Name, e-mail, device, IP, connections, the Links tab, the right column and the country value hidden; no "CPF" text or "Ver CPF" button visible; currency hidden where possible (decision t); avatar initials remain.' },
+  { name: 'sentinel-customer-mobile', source: 'player-360-summary-mobile.png', viewport: 'mobile', route: 'Customer file › Record', review: 'Phone width; same hidden parts as the desktop customer file, the country value and any "CPF" text included.' },
   // Only if the owner allows announcing multi-account and device detection: otherwise these sources are never
   // captured and are skipped. Personal data and IP addresses stay hidden either way.
   { name: 'sentinel-radar', source: 'radar.png', hero: true, route: 'Radar', review: 'Dashboard; check that no IP address or personal data is visible.' },

@@ -96,6 +96,11 @@ const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X')
     assert.match(html, /data-hero-images="product">[^<]*PRODUCT UI/, 'badge under the orbit says product UI');
     const check = spawnSync(process.execPath, [path.join(dir, 'tests/integrity.cjs')], { encoding: 'utf8' });
     assert.equal(check.status, 0, check.stderr);
-    console.log('PASS: 30 back-office placeholders at the final paths, never shown nor published; an imported Sentinel capture appears after rendering again (desktop and phone); hero swap refuses missing copies, rewrites the integrity manifest and turns the product badge on');
+    // after the swap, the concept dashboards are no longer published
+    const staged = spawnSync(process.execPath, ['tools/stage.mjs'], { cwd: dir, encoding: 'utf8', env: { ...process.env, PUBLIC_SITE_ORIGIN: '' } });
+    assert.equal(staged.status, 0, staged.stderr);
+    for (const name of ['dashboard-1.webp', 'dashboard-2.webp', 'dashboard-3.webp']) assert.ok(!fs.existsSync(path.join(dir, 'public/assets', name)), name + ' is not published after the swap');
+    for (const name of HERO) assert.ok(fs.existsSync(path.join(dir, 'public/assets/hero', name + '.webp')), name + ' hero copy is published');
+    console.log('PASS: 30 back-office placeholders at the final paths, never shown nor published; an imported Sentinel capture appears after rendering again (desktop and phone); hero swap refuses missing copies, rewrites the integrity manifest, turns the product badge on and unpublishes the concept dashboards');
   } finally { server?.kill(); await browser.close(); fs.rmSync(dir, { recursive: true, force: true }); }
 })().catch(e => { console.error(e); process.exitCode = 1; });
