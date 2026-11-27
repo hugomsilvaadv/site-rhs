@@ -7,7 +7,7 @@ const path=require('node:path');
 const crypto=require('node:crypto');
 // A file that still matches its registered placeholder is not a capture (the page never shows it).
 const registry=JSON.parse(fs.readFileSync(path.join(__dirname,'..','tools/capture/placeholders.json'),'utf8')).files;
-const isCapture=rel=>crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'..',rel))).digest('hex')!==registry[rel];
+const isCapture=rel=>fs.existsSync(path.join(__dirname,'..',rel))&&crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'..',rel))).digest('hex')!==registry[rel];
 const assert=require('node:assert/strict');
 const out=__dirname+'/../docs/web-studio/visual-qa-current';
 fs.mkdirSync(out,{recursive:true});
@@ -44,21 +44,20 @@ fs.mkdirSync(out,{recursive:true});
     const tour=await page.evaluate(()=>({tabs:[...document.querySelectorAll('#platform [role="tab"]')].map(t=>{const r=t.getBoundingClientRect();return {left:r.left,right:r.right}}),shown:[...document.querySelectorAll('#platform [role="tabpanel"]')].filter(p=>p.getBoundingClientRect().height>0).length}));
     assert.ok(tour.tabs.every(t=>t.left>=0&&t.right<=width+.5),'tour tabs inside the screen '+width+'/'+lang);
     assert.equal(tour.shown,1,'one tour area at a time '+width+'/'+lang);
-    await page.locator('#tour-tab-payments').click();
+    await page.locator('#tour-tab-alerts').click();
     // The area shows its capture when one exists (the phone capture on phones), otherwise its text and screen list.
-    const shot=await page.locator('#tour-payments img').count()>0;
-    const desktop='assets/product/withdrawals-queue.webp';
-    assert.equal(shot,fs.existsSync(path.join(__dirname,'..',desktop))&&isCapture(desktop),'the payments area shows its image exactly when its capture exists '+width+'/'+lang);
-    if(shot){await page.locator('#tour-payments img').scrollIntoViewIfNeeded();await page.locator('#tour-payments img').evaluate(img=>img.decode());}
+    const shot=await page.locator('#tour-alerts img').count()>0;
+    assert.equal(shot,isCapture('assets/product/sentinel-alerts.webp'),'the alerts area shows its image exactly when its capture exists '+width+'/'+lang);
+    if(shot){await page.locator('#tour-alerts img').scrollIntoViewIfNeeded();await page.locator('#tour-alerts img').evaluate(img=>img.decode());}
     const switched=await page.evaluate(()=>({shown:[...document.querySelectorAll('#platform [role="tabpanel"]')].filter(p=>p.getBoundingClientRect().height>0).map(p=>p.id),images:[...document.querySelectorAll('#platform img')].filter(i=>i.getBoundingClientRect().height>0).map(i=>({src:i.currentSrc.split('/').pop(),width:i.getBoundingClientRect().width})),overflow:document.documentElement.scrollWidth-innerWidth}));
-    assert.deepEqual(switched.shown,['tour-payments'],'switching areas '+width+'/'+lang);
+    assert.deepEqual(switched.shown,['tour-alerts'],'switching areas '+width+'/'+lang);
     if(shot){
-      const phone=fs.existsSync(path.join(__dirname,'..','assets/product/withdrawals-queue-mobile.webp'))&&isCapture('assets/product/withdrawals-queue-mobile.webp');
-      assert.deepEqual(switched.images.map(i=>i.src),[phone?'withdrawals-queue-mobile.webp':'withdrawals-queue.webp'],'one image at a time, the phone capture on phones when it exists '+width+'/'+lang);
+      const phone=isCapture('assets/product/sentinel-alerts-mobile.webp');
+      assert.deepEqual(switched.images.map(i=>i.src),[phone?'sentinel-alerts-mobile.webp':'sentinel-alerts.webp'],'one image at a time, the phone capture on phones when it exists '+width+'/'+lang);
       if(phone)assert.ok(switched.images[0].width<=300.5,'phone capture shown at phone size '+width+'/'+lang);
     }else{
       assert.deepEqual(switched.images,[],'no image where the capture is missing '+width+'/'+lang);
-      assert.ok(await page.locator('#tour-payments .rhs-screens').isVisible(),'the area keeps its list of screens '+width+'/'+lang);
+      assert.ok(await page.locator('#tour-alerts .rhs-screens').isVisible(),'the area keeps its list of screens '+width+'/'+lang);
     }
     assert.equal(switched.overflow,0,'no horizontal scroll after switching '+width+'/'+lang);
     if([390,430].includes(width))await page.locator('#platform').screenshot({path:out+'/'+lang+'-mobile-tour-'+width+'.png'});

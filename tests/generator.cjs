@@ -18,6 +18,13 @@ try:
 except ValueError:
     results['parity_guard'] = True
 render.PAGE['es'] = saved
+broken = copy.deepcopy(sections.COPY['es']); broken['how']['items'] = broken['how']['items'][:-1]
+saved = sections.COPY['es']; sections.COPY['es'] = broken
+try:
+    render.check_parity(); results['lower_page_guard'] = False
+except ValueError:
+    results['lower_page_guard'] = True
+sections.COPY['es'] = saved
 # A third language, registered but unpublished, leaves the published pages untouched.
 render.LANGUAGES['xx'] = {'path': '/xx/', 'og_locale': 'xx_XX', 'label': 'XX', 'name': 'Example', 'published': False}
 for table in (render.PAGE, render.HERO, sections.COPY):
@@ -35,14 +42,14 @@ results['third_file'] = str(render.route_file('xx')).endswith('xx/index.html')
 render.LANGUAGES['xx']['published'] = False
 # Hero swap point: with the swap on (tools/capture/hero.json), the capture copies replace the concept art
 # and the badge says product UI; a missing copy stops the generator.
-names = ['player-360-summary', 'withdrawals-queue', 'reports']
+names = ['sentinel-transactions', 'sentinel-alerts', 'sentinel-rules']
 results['swap_off_by_default'] = state.get('active') is not True
 render.hero_file_exists = lambda rel: True
 swapped = render.render('en', {'active': True})
 results['swap_images'] = all('src="/assets/hero/' + name + '.webp"' in swapped for name in names)
 results['swap_badge'] = 'data-hero-images="product"' in swapped and 'PRODUCT UI' in swapped and 'ILLUSTRATIVE CONCEPT' not in swapped
-results['swap_preload'] = 'rel="preload" href="/assets/hero/player-360-summary.webp"' in swapped
-render.hero_file_exists = lambda rel: not rel.endswith('reports.webp')
+results['swap_preload'] = 'rel="preload" href="/assets/hero/sentinel-transactions.webp"' in swapped
+render.hero_file_exists = lambda rel: not rel.endswith('sentinel-rules.webp')
 try:
     render.render('en', {'active': True}); results['swap_guard'] = False
 except ValueError:

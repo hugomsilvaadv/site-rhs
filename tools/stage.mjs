@@ -1,5 +1,6 @@
 // Stage only public website files; never publish studio docs, tests, Git metadata or tools.
 import {cp,mkdir,rm,readdir,readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -17,10 +18,15 @@ await rm(output,{recursive:true,force:true});
 await mkdir(output,{recursive:true});
 for(const name of ['index.html','es','site.css','site.js','robots.txt'])await cp(path.join(root,name),path.join(output,name),{recursive:true});
 await mkdir(path.join(output,'assets'),{recursive:true});
+// A registered "Screenshot pending" placeholder (tools/capture/placeholders.json) is never published: the page
+// never shows one, and the back-office capture plan keeps them only for its own future captures.
+const placeholders=JSON.parse(await readFile(path.join(root,'tools/capture/placeholders.json'),'utf8')).files;
+const placeholder=async rel=>placeholders[rel]!==undefined&&createHash('sha256').update(await readFile(path.join(root,rel))).digest('hex')===placeholders[rel];
 for(const name of await readdir(path.join(root,'assets'))){
  if(name.endsWith('-fragment.html'))continue;
  await cp(path.join(root,'assets',name),path.join(output,'assets',name),{recursive:true});
 }
+for(const rel of Object.keys(placeholders))if(await placeholder(rel))await rm(path.join(output,rel),{force:true});
 console.log('Staged public website only in public/. No studio documents or build tools included.');
 
 if(origin){

@@ -39,23 +39,25 @@ const site = process.env.SITE_URL || 'http://127.0.0.1:8000/';
   assert.equal(await tabs.nth(i).getAttribute('tabindex'),'0');
   assert.equal(state[i].label,await tabs.nth(i).getAttribute('id'));
  }
- assert.match(page.url(),/#tour-admin$/,'the selected area is in the address');
+ assert.match(page.url(),/#tour-customers$/,'the selected area is in the address');
  // Keyboard: arrows, Home and End move the selection and the focus (automatic activation).
  await tabs.first().focus();
- await page.keyboard.press('ArrowRight');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-payments');
- assert.equal(await page.locator('#tour-payments').isVisible(),true);
- await page.keyboard.press('ArrowLeft');await page.keyboard.press('ArrowLeft');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-admin','wraps around');
- await page.keyboard.press('Home');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-players');
- await page.keyboard.press('End');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-admin');
+ await page.keyboard.press('ArrowRight');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-alerts');
+ assert.equal(await page.locator('#tour-alerts').isVisible(),true);
+ await page.keyboard.press('ArrowLeft');await page.keyboard.press('ArrowLeft');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-customers','wraps around');
+ await page.keyboard.press('Home');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-transactions');
+ await page.keyboard.press('End');assert.equal(await page.evaluate(()=>document.activeElement.id),'tour-tab-customers');
  assert.equal(await page.locator('#platform [role="tab"][tabindex="0"]').count(),1,'roving tabindex');
- // Deep links: the module cards open their tour area.
- await page.locator('#modules a[href="#tour-risk"]').click();
- await page.waitForFunction(()=>!document.getElementById('tour-risk').hidden);
- assert.equal(await page.locator('#tour-tab-risk').getAttribute('aria-selected'),'true','module card opens its area');
+ // Deep links: a #tour-<area> address opens that area, on load and when the address changes.
+ await page.evaluate(()=>{location.hash='#tour-rules';});
+ await page.waitForFunction(()=>!document.getElementById('tour-rules').hidden);
+ assert.equal(await page.locator('#tour-tab-rules').getAttribute('aria-selected'),'true','a #tour link opens its area');
  const fresh=await browser.newPage({viewport:{width:1280,height:900}});
- await fresh.goto(site+'#tour-reports',{waitUntil:'networkidle'});
- assert.equal(await fresh.locator('#tour-reports').isVisible(),true,'a shared #tour link opens that area on load');
- assert.equal(await fresh.locator('#tour-tab-reports').getAttribute('aria-selected'),'true');
+ await fresh.goto(site+'#tour-alerts',{waitUntil:'networkidle'});
+ assert.equal(await fresh.locator('#tour-alerts').isVisible(),true,'a shared #tour link opens that area on load');
+ assert.equal(await fresh.locator('#tour-tab-alerts').getAttribute('aria-selected'),'true');
+ // The module cards lead to Sentinel (available) or to the back-office in development.
+ assert.deepEqual(await fresh.locator('#modules .rhs-card-link').evaluateAll(els=>els.map(a=>a.hash).filter(h=>!document.getElementById(h.slice(1)))),[],'module links have targets');
  await fresh.close();
  // Contact and pause control.
  assert.ok(await page.locator('a[href^="mailto:sales@rhs-labs.com"]').count());
@@ -70,7 +72,7 @@ const site = process.env.SITE_URL || 'http://127.0.0.1:8000/';
  // Spanish strings come from the Spanish page.
  await page.goto(site+'es/',{waitUntil:'networkidle'});
  assert.equal(await page.locator('#motion-toggle').innerText(),'Pausar movimiento');
- await page.locator('#tour-tab-payments').click();assert.equal(await page.locator('#tour-payments').isVisible(),true);
+ await page.locator('#tour-tab-alerts').click();assert.equal(await page.locator('#tour-alerts').isVisible(),true);
  assert.deepEqual(errors,[]);
  await page.emulateMedia({reducedMotion:'reduce'}); await page.reload({waitUntil:'networkidle'});
  const before=await page.locator('.product-screen').first().getAttribute('style');

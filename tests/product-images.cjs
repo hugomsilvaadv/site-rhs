@@ -1,10 +1,11 @@
-// The image swap, end to end, without real captures.
-// 1. Every screen of the capture plan has its placeholder at the final path and size.
+// The image path, end to end, without real captures.
+// 1. The dormant back-office capture plan keeps its placeholders at the final path and size; staging never
+//    publishes one.
 // 2. A placeholder is never shown: the pages reference only real captures. In a temporary copy of the site,
-//    overwriting two placeholders with other files (as the capture does) and rendering again shows them, on
-//    desktop and phone, and adds no other product image.
-// 3. The hero swap point: hero-swap.mjs refuses placeholders, and with capture copies it rewrites the integrity
-//    manifest and turns the swap on; after regeneration the orbit uses them with the product badge.
+//    importing a Sentinel area's desktop and phone captures (as tools/capture/import.mjs does) and rendering again
+//    shows them, on desktop and phone, and adds no other product image.
+// 3. The hero swap point: hero-swap.mjs refuses missing captures, and with the Sentinel capture copies it rewrites
+//    the integrity manifest and turns the swap on; after regeneration the orbit uses them with the product badge.
 // Nothing is written to the checkout.
 const { chromium } = require('playwright');
 const { spawnSync, spawn } = require('node:child_process');
@@ -12,13 +13,14 @@ const fs = require('node:fs'); const os = require('node:os'); const path = requi
 const assert = require('node:assert/strict');
 const root = path.join(__dirname, '..');
 const PORT = Number(process.env.FIXTURE_PORT || 8097);
+const HERO = ['sentinel-transactions', 'sentinel-alerts', 'sentinel-rules'];
 const sha = buffer => crypto.createHash('sha256').update(buffer).digest('hex');
 const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X') return [1 + b.readUIntLE(24, 3), 1 + b.readUIntLE(27, 3)]; if (c === 'VP8L') { const v = b.readUInt32LE(21); return [1 + (v & 0x3fff), 1 + ((v >> 14) & 0x3fff)]; } return [b.readUInt16LE(26) & 0x3fff, b.readUInt16LE(28) & 0x3fff]; };
 (async () => {
-  // 1. placeholders
+  // 1. placeholders of the back-office plan
   const registry = JSON.parse(fs.readFileSync(path.join(root, 'tools/capture/placeholders.json'), 'utf8')).files;
   const plan = Object.keys(registry);
-  assert.equal(plan.length, 30, 'one placeholder per screen of the capture plan (26 desktop, 4 phone)');
+  assert.equal(plan.length, 30, 'one placeholder per screen of the back-office capture plan (26 desktop, 4 phone)');
   for (const rel of plan) {
     const buffer = fs.readFileSync(path.join(root, rel));
     const [width, height] = webpSize(buffer);
@@ -41,24 +43,28 @@ const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X')
     }, { width, height, label }), 'base64');
     const pages = () => ['index.html', 'es/index.html'].map(f => fs.readFileSync(path.join(dir, f), 'utf8'));
     const referenced = html => [...new Set([...html.matchAll(/\/assets\/product\/[a-z0-9-]+\.webp/g)].map(m => m[0].slice(1)))].sort();
-    // 2. a placeholder is never shown: every product image the pages reference is a real capture
+    const render = () => { const r = spawnSync('python3', ['tools/render.py'], { cwd: dir, encoding: 'utf8' }); assert.equal(r.status, 0, r.stderr); };
+    // 2. a placeholder is never shown: every product image the checked-in pages reference is a real capture
+    for (const html of pages()) for (const rel of referenced(html)) assert.notEqual(sha(fs.readFileSync(path.join(dir, rel))), registry[rel], rel + ' is shown while still a placeholder');
+    // before the import of the alerts area (its files removed from the copy), the pages show no image there
+    const area = 'tour-alerts';
+    const files = ['assets/product/sentinel-alerts.webp', 'assets/product/sentinel-alerts-mobile.webp'];
+    for (const rel of files) fs.rmSync(path.join(dir, rel), { force: true });
+    render();
     const before = pages();
-    for (const html of before) for (const rel of referenced(html)) assert.notEqual(sha(fs.readFileSync(path.join(dir, rel))), registry[rel], rel + ' is shown while still a placeholder');
-    // the capture overwrites two placeholders (desktop and phone) of a tour area; rendering again shows them, and only them
-    const areas = [['tour-payments', 'withdrawals-queue'], ['tour-risk', 'alerts'], ['tour-reports', 'reports']];
-    const pick = areas.find(([, name]) => [name, name + '-mobile'].every(n => sha(fs.readFileSync(path.join(dir, `assets/product/${n}.webp`))) === registry[`assets/product/${n}.webp`]));
-    assert.ok(pick, 'a tour area whose desktop and phone files are still placeholders, to exercise the swap');
-    const [area, name] = pick;
-    const swapped = { [`assets/product/${name}.webp`]: await fixture(3200, 2000, name), [`assets/product/${name}-mobile.webp`]: await fixture(780, 1688, name + '-mobile') };
-    for (const [rel, buffer] of Object.entries(swapped)) fs.writeFileSync(path.join(dir, rel), buffer);
-    const rendered = spawnSync('python3', ['tools/render.py'], { cwd: dir, encoding: 'utf8' });
-    assert.equal(rendered.status, 0, rendered.stderr);
-    pages().forEach((html, i) => assert.deepEqual(referenced(html).filter(rel => !referenced(before[i]).includes(rel)), Object.keys(swapped).sort(), 'rendering again shows the two captures and no other product image'));
+    for (const html of before) assert.ok(!files.some(rel => html.includes('/' + rel)), 'no image before the import');
+    // the import writes the desktop and phone captures; rendering again shows them, and only them
+    const imported = { [files[0]]: await fixture(3200, 2000, 'alerts'), [files[1]]: await fixture(780, 1688, 'alerts-mobile') };
+    for (const [rel, buffer] of Object.entries(imported)) fs.writeFileSync(path.join(dir, rel), buffer);
+    render();
+    pages().forEach((html, i) => assert.deepEqual(referenced(html).filter(rel => !referenced(before[i]).includes(rel)), files.slice().sort(), 'rendering again shows the two captures and no other product image'));
     const stage = spawnSync(process.execPath, ['tools/stage.mjs'], { cwd: dir, encoding: 'utf8', env: { ...process.env, PUBLIC_SITE_ORIGIN: '' } });
     assert.equal(stage.status, 0, stage.stderr);
+    for (const rel of plan) if (sha(fs.readFileSync(path.join(dir, rel))) === registry[rel]) assert.ok(!fs.existsSync(path.join(dir, 'public', rel)), rel + ' placeholder is never published');
+    for (const rel of files) assert.ok(fs.existsSync(path.join(dir, 'public', rel)), rel + ' capture is published');
     server = spawn('python3', ['-m', 'http.server', String(PORT), '--bind', '127.0.0.1', '--directory', path.join(dir, 'public')], { stdio: 'ignore' });
     for (let i = 0; i < 40; i++) { try { await (await fetch(`http://127.0.0.1:${PORT}/`)).text(); break; } catch { await new Promise(r => setTimeout(r, 150)); } }
-    for (const [width, rel] of [[1440, `assets/product/${name}.webp`], [390, `assets/product/${name}-mobile.webp`]]) {
+    for (const [width, rel] of [[1440, files[0]], [390, files[1]]]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce', ...(width < 600 ? { isMobile: true, hasTouch: true } : {}) });
       await page.goto(`http://127.0.0.1:${PORT}/#${area}`, { waitUntil: 'networkidle' });
       const img = page.locator(`#${area} img`);
@@ -66,29 +72,30 @@ const webpSize = b => { const c = b.toString('ascii', 12, 16); if (c === 'VP8X')
       const src = await img.evaluate(i => i.currentSrc);
       assert.ok(src.endsWith('/' + rel), `${width}px shows ${rel}`);
       const served = Buffer.from(await (await fetch(src)).arrayBuffer());
-      assert.equal(sha(served), sha(swapped[rel]), `${width}px serves the new file, not the placeholder`);
+      assert.equal(sha(served), sha(imported[rel]), `${width}px serves the imported file`);
       await page.close();
     }
-    // 3. hero swap point
+    // 3. hero swap point, from a state before the swap
+    fs.rmSync(path.join(dir, 'tools/capture/hero.json'), { force: true });
+    for (const name of HERO) fs.rmSync(path.join(dir, `assets/hero/${name}.webp`), { force: true });
     const swap = (extra = []) => spawnSync(process.execPath, ['tools/capture/hero-swap.mjs', ...extra], { cwd: dir, encoding: 'utf8', env: { ...process.env, SITE_ROOT: dir } });
-    assert.notEqual(swap().status, 0, 'hero swap refuses placeholders');
+    assert.notEqual(swap().status, 0, 'hero swap refuses missing capture copies');
     assert.ok(!fs.existsSync(path.join(dir, 'tools/capture/hero.json')), 'nothing changed by a refused swap');
     fs.mkdirSync(path.join(dir, 'assets/hero'), { recursive: true });
-    for (const name of ['player-360-summary', 'withdrawals-queue', 'reports']) {
-      if (name !== 'withdrawals-queue') fs.writeFileSync(path.join(dir, `assets/product/${name}.webp`), await fixture(3200, 2000, name));
+    for (const name of HERO) {
+      fs.writeFileSync(path.join(dir, `assets/product/${name}.webp`), await fixture(3200, 2000, name));
       fs.writeFileSync(path.join(dir, `assets/hero/${name}.webp`), await fixture(1586, 992, 'hero ' + name));
     }
     const done = swap();
     assert.equal(done.status, 0, done.stderr);
     const integrity = JSON.parse(fs.readFileSync(path.join(dir, 'docs/web-studio/evidence/asset-integrity.json'), 'utf8'));
-    assert.deepEqual(integrity.map(e => e.file), ['assets/hero/player-360-summary.webp', 'assets/hero/withdrawals-queue.webp', 'assets/hero/reports.webp'], 'integrity manifest rewritten on purpose, front panel first');
-    const render = spawnSync('python3', ['tools/render.py'], { cwd: dir, encoding: 'utf8' });
-    assert.equal(render.status, 0, render.stderr);
+    assert.deepEqual(integrity.map(e => e.file), HERO.map(name => `assets/hero/${name}.webp`), 'integrity manifest rewritten on purpose, front panel first');
+    render();
     const html = fs.readFileSync(path.join(dir, 'index.html'), 'utf8');
     assert.ok(integrity.every(e => html.includes(`<img src="/${e.file}"`)), 'orbit uses the capture copies');
     assert.match(html, /data-hero-images="product">[^<]*PRODUCT UI/, 'badge under the orbit says product UI');
     const check = spawnSync(process.execPath, [path.join(dir, 'tests/integrity.cjs')], { encoding: 'utf8' });
     assert.equal(check.status, 0, check.stderr);
-    console.log('PASS: 30 placeholders at the final paths, never shown; a capture over a placeholder appears after rendering again (desktop and phone); hero swap refuses placeholders, rewrites the integrity manifest and turns the product badge on');
+    console.log('PASS: 30 back-office placeholders at the final paths, never shown nor published; an imported Sentinel capture appears after rendering again (desktop and phone); hero swap refuses missing copies, rewrites the integrity manifest and turns the product badge on');
   } finally { server?.kill(); await browser.close(); fs.rmSync(dir, { recursive: true, force: true }); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

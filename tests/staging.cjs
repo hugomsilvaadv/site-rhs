@@ -10,5 +10,8 @@ const es=fs.readFileSync(path.join(root,'public/es/index.html'),'utf8');assert.o
 // Open Graph images: JPEG, 1200x630 (dimensions from the start-of-frame marker).
 const jpegSize=b=>{assert.equal(b.readUInt16BE(0),0xffd8,'JPEG');for(let i=2;i<b.length;){const m=b.readUInt16BE(i),len=b.readUInt16BE(i+2);if(m>=0xffc0&&m<=0xffcf&&![0xffc4,0xffc8,0xffcc].includes(m))return [b.readUInt16BE(i+7),b.readUInt16BE(i+5)];i+=2+len;}};
 for(const lang of ['en','es']){const jpg=fs.readFileSync(path.join(root,'public/assets/og-image-'+lang+'.jpg'));assert.deepEqual(jpegSize(jpg),[1200,630],'Open Graph image is 1200x630');assert.ok(jpg.length<250*1024,'Open Graph image under 250 KB');}
+// A registered "Screenshot pending" placeholder is never published.
+const crypto=require('node:crypto');const registry=JSON.parse(fs.readFileSync(path.join(root,'tools/capture/placeholders.json'),'utf8')).files;
+for(const [rel,hash] of Object.entries(registry)){const published=path.join(root,'public',rel);if(fs.existsSync(published))assert.notEqual(crypto.createHash('sha256').update(fs.readFileSync(published)).digest('hex'),hash,rel+' is a placeholder and must not be published');}
 const bad=spawnSync(process.execPath,['tools/stage.mjs'],{cwd:root,env:{...process.env,PUBLIC_SITE_ORIGIN:'http://localhost:8000/path'},encoding:'utf8'});assert.notEqual(bad.status,0,'invalid production origin is rejected');
-console.log('PASS: deployment allowlist, sitemap, absolute metadata and invalid-origin guard');
+console.log('PASS: deployment allowlist (no placeholder), sitemap, absolute metadata and invalid-origin guard');

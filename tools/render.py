@@ -8,7 +8,7 @@ replacement must match exactly once, so a changed fragment fails loudly instead 
 import json
 from html import escape as esc
 from pathlib import Path
-from sections import COPY, cta_link, lower_page, mailto
+from sections import COPY, check_structure, cta_link, lower_page, mailto
 
 ROOT = Path(__file__).resolve().parent.parent
 HERO_STATE = ROOT / 'tools/capture/hero.json'  # written by tools/capture/hero-swap.mjs, the hero swap point
@@ -19,18 +19,18 @@ LANGUAGES = {
 }
 
 PAGE = {
- 'en': {'title': 'RHS Labs Sentinel — PAM and back-office for regulated betting operators',
-        'description': 'Player account management and back-office for regulated betting operators: Player 360, '
-                       'withdrawals with approval tiers, risk, fraud and compliance. Available for pilot programs.',
-        'og_alt': 'RHS Labs Sentinel: player account management for regulated operators.',
-        'nav': [['Platform', '#platform'], ['Modules', '#modules'], ['Payments', '#payments'], ['Compliance', '#compliance'], ['Security', '#security'], ['Pilot', '#pilot']],
+ 'en': {'title': 'RHS Labs Sentinel — Risk and fraud control for regulated betting operators',
+        'description': 'Risk and fraud control for regulated betting operators: transaction risk scores, alerts, '
+                       'rules your team controls and manual review of risky withdrawals.',
+        'og_alt': 'RHS Labs Sentinel: risk and fraud control for regulated operators.',
+        'nav': [['Platform', '#platform'], ['How it works', '#how'], ['Integration', '#security'], ['Modules', '#modules'], ['Back-office', '#back-office'], ['Pilot', '#pilot']],
         'skip': 'Skip to content', 'back_to_top': 'RHS Labs Sentinel — back to top', 'main_menu': 'Main menu',
         'open_navigation': 'Open navigation', 'close_navigation': 'Close navigation'},
- 'es': {'title': 'RHS Labs Sentinel — PAM y back-office para operadores de apuestas regulados',
-        'description': 'Gestión de cuentas de jugadores y back-office para operadores de apuestas regulados: Player 360, '
-                       'retiros con niveles de aprobación, riesgo, fraude y cumplimiento. Disponible para programas piloto.',
-        'og_alt': 'RHS Labs Sentinel: gestión de cuentas de jugadores para operadores regulados.',
-        'nav': [['Plataforma', '#platform'], ['Módulos', '#modules'], ['Pagos', '#payments'], ['Cumplimiento', '#compliance'], ['Seguridad', '#security'], ['Piloto', '#pilot']],
+ 'es': {'title': 'RHS Labs Sentinel — Control de riesgo y fraude para operadores de apuestas regulados',
+        'description': 'Control de riesgo y fraude para operadores de apuestas regulados: puntuación de riesgo de las transacciones, '
+                       'alertas, reglas que su equipo controla y revisión manual de los retiros de riesgo.',
+        'og_alt': 'RHS Labs Sentinel: control de riesgo y fraude para operadores regulados.',
+        'nav': [['Plataforma', '#platform'], ['Cómo funciona', '#how'], ['Integración', '#security'], ['Módulos', '#modules'], ['Back-office', '#back-office'], ['Piloto', '#pilot']],
         'skip': 'Saltar al contenido', 'back_to_top': 'RHS Labs Sentinel — volver al inicio', 'main_menu': 'Menú principal',
         'open_navigation': 'Abrir navegación', 'close_navigation': 'Cerrar navegación'},
 }
@@ -39,31 +39,31 @@ PAGE = {
 # and swapped in on purpose (tools/capture/hero-swap.mjs); the badge under the orbit says which.
 HERO = {
  'en': {'section': 'Sentinel platform showcase', 'eyebrow': 'SENTINEL PLATFORM',
-        'h1': 'Player account management<br> <span>for regulated operators.</span>',
-        'subtitle': 'RHS Labs Sentinel is the PAM and back-office for regulated betting operators: '
-                    'Player 360, withdrawals with approval tiers, risk and compliance, all in one place.',
-        'carousel': {'concept': 'Three concept illustrations of Sentinel', 'product': 'Three Sentinel back-office screens'},
+        'h1': 'See risk. Stop fraud. <span>Stay ahead.</span>',
+        'subtitle': 'RHS Labs Sentinel is risk and fraud control for regulated betting operators: '
+                    'transaction risk scores, alerts, rules your team controls and manual review of risky withdrawals.',
+        'carousel': {'concept': 'Three concept illustrations of Sentinel', 'product': 'Three Sentinel screens'},
         'choose': 'Choose showcase screen', 'show': 'Show {name}', 'suffix': 'CONTINUOUS 3D ORBIT', 'roledescription': 'carousel',
         'pause': 'Pause motion', 'resume': 'Resume motion',
-        'badge': {'concept': ['AVAILABLE FOR PILOT PROGRAMS', 'ILLUSTRATIVE CONCEPT', 'SIMULATED DATA'],
-                  'product': ['AVAILABLE FOR PILOT PROGRAMS', 'PRODUCT UI', 'SYNTHETIC DATA']},
-        'values': [['Player 360', 'Account, wallet and history in one profile'],
-                   ['Payments with approval tiers', 'Four-eyes control at or above your threshold'],
-                   ['Risk and fraud', 'Rules, alerts and cases'],
-                   ['Audit trail', 'Who did what, and when']]},
+        'badge': {'concept': ['AVAILABLE', 'ILLUSTRATIVE CONCEPT', 'SIMULATED DATA'],
+                  'product': ['AVAILABLE', 'PRODUCT UI', 'SYNTHETIC DATA']},
+        'values': [['Transaction risk', 'A level and score for each event'],
+                   ['Alerts', 'Triggers and review steps'],
+                   ['Rules you control', 'Packages, basic and advanced rules'],
+                   ['Activity log', 'Who did what, and when']]},
  'es': {'section': 'Presentación de la plataforma Sentinel', 'eyebrow': 'PLATAFORMA SENTINEL',
-        'h1': 'Gestión de cuentas de jugadores<br> <span>para operadores regulados.</span>',
-        'subtitle': 'RHS Labs Sentinel es el PAM y back-office para operadores de apuestas regulados: '
-                    'Player 360, retiros con niveles de aprobación, riesgo y cumplimiento, todo en un solo lugar.',
-        'carousel': {'concept': 'Tres ilustraciones conceptuales de Sentinel', 'product': 'Tres pantallas del back-office Sentinel'},
+        'h1': 'Vea el riesgo. Frene el fraude. <span>Anticípese.</span>',
+        'subtitle': 'RHS Labs Sentinel es control de riesgo y fraude para operadores de apuestas regulados: '
+                    'puntuación de riesgo de las transacciones, alertas, reglas que su equipo controla y revisión manual de los retiros de riesgo.',
+        'carousel': {'concept': 'Tres ilustraciones conceptuales de Sentinel', 'product': 'Tres pantallas de Sentinel'},
         'choose': 'Elegir una pantalla', 'show': 'Mostrar {name}', 'suffix': 'ÓRBITA 3D CONTINUA', 'roledescription': 'carrusel',
         'pause': 'Pausar movimiento', 'resume': 'Reanudar movimiento',
-        'badge': {'concept': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'CONCEPTO ILUSTRATIVO', 'DATOS SIMULADOS'],
-                  'product': ['DISPONIBLE PARA PROGRAMAS PILOTO', 'INTERFAZ DEL PRODUCTO', 'DATOS SINTÉTICOS']},
-        'values': [['Player 360', 'Cuenta, billetera e historial en un solo perfil'],
-                   ['Pagos con niveles de aprobación', 'Control de cuatro ojos a partir de su umbral'],
-                   ['Riesgo y fraude', 'Reglas, alertas y casos'],
-                   ['Registro de auditoría', 'Quién hizo qué y cuándo']]},
+        'badge': {'concept': ['DISPONIBLE', 'CONCEPTO ILUSTRATIVO', 'DATOS SIMULADOS'],
+                  'product': ['DISPONIBLE', 'INTERFAZ DEL PRODUCTO', 'DATOS SINTÉTICOS']},
+        'values': [['Riesgo de las transacciones', 'Un nivel y una puntuación por evento'],
+                   ['Alertas', 'Disparadores y pasos de revisión'],
+                   ['Reglas bajo su control', 'Paquetes, reglas básicas y avanzadas'],
+                   ['Registro de actividad', 'Quién hizo qué y cuándo']]},
 }
 
 # The approved V6 concept images: kept byte for byte (integrity manifest) until the swap.
@@ -81,25 +81,25 @@ HERO_CONCEPT = [
   'alt': {'en': 'Concept illustration, not the current product: a payments dashboard with simulated data.',
           'es': 'Ilustración conceptual, no el producto actual: un panel de pagos con datos simulados.'}},
 ]
-# Product captures for the swap, front panel first (see tools/capture/hero-swap.mjs).
+# Sentinel captures for the swap, front panel first (see tools/capture/hero-swap.mjs).
 HERO_PRODUCT = [
- {'screen': 'player-360-summary',
-  'name': {'en': 'Player 360 · Summary', 'es': 'Player 360 · Resumen'},
-  'alt': {'en': 'Sentinel back-office: Player 360 summary of a synthetic player, with the identity strip, money cards and summary panels.',
-          'es': 'Back-office Sentinel: resumen del Player 360 de un jugador sintético, con la franja de identidad, los indicadores financieros y los paneles del resumen.'}},
- {'screen': 'withdrawals-queue',
-  'name': {'en': 'Withdrawals queue', 'es': 'Cola de retiros'},
-  'alt': {'en': 'Sentinel back-office: withdrawal queue with synthetic requests, their state and waiting time.',
-          'es': 'Back-office Sentinel: cola de retiros con solicitudes sintéticas, su estado y tiempo de espera.'}},
- {'screen': 'reports',
-  'name': {'en': 'Reports', 'es': 'Informes'},
-  'alt': {'en': 'Sentinel back-office: reports page with synthetic operator totals.',
-          'es': 'Back-office Sentinel: página de informes con totales sintéticos del operador.'}},
+ {'screen': 'sentinel-transactions',
+  'name': {'en': 'Transactions', 'es': 'Transacciones'},
+  'alt': {'en': 'Sentinel: transaction list with risk levels and scores, with synthetic data.',
+          'es': 'Sentinel: lista de transacciones con niveles y puntuaciones de riesgo, con datos sintéticos.'}},
+ {'screen': 'sentinel-alerts',
+  'name': {'en': 'Alerts', 'es': 'Alertas'},
+  'alt': {'en': 'Sentinel: alert queue with synthetic alerts.',
+          'es': 'Sentinel: cola de alertas con alertas sintéticas.'}},
+ {'screen': 'sentinel-rules',
+  'name': {'en': 'Rules', 'es': 'Reglas'},
+  'alt': {'en': 'Sentinel: basic rules with ready-made packages and rule categories.',
+          'es': 'Sentinel: reglas básicas con paquetes listos para usar y categorías de reglas.'}},
 ]
 
-VALUE_ICONS = ['<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/>',
-               '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
-               '<path d="M12 22s9-4 9-11V5l-9-3-9 3v6c0 7 9 11 9 11z"/><path d="m9 12 2 2 4-4"/>',
+VALUE_ICONS = ['<path d="M4 18a8 8 0 1 1 16 0M12 18l4-6"/>',
+               '<path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4Z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+               '<path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="14" cy="18" r="2"/>',
                '<path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h6"/>']
 
 V6_HERO = {  # strings of the approved fragment that the copy replaces (each must occur exactly once)
@@ -151,12 +151,13 @@ def shape(value):
 def check_parity(codes=None):
  """Every published language must carry the same copy structure as English (EN/ES parity)."""
  for code in codes or published():
-  for name, table in (('PAGE', PAGE), ('HERO', HERO)):
+  for name, table in (('PAGE', PAGE), ('HERO', HERO), ('COPY', COPY)):
    if code not in table or shape(table[code]) != shape(table['en']):
     raise ValueError(f'{name} copy for {code!r} does not match the English structure')
   for item in HERO_CONCEPT + HERO_PRODUCT:
    if code not in item['name'] or code not in item['alt']:
     raise ValueError(f'hero image text missing for {code!r}')
+ check_structure()
 
 
 def published():

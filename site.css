@@ -1,4 +1,4 @@
-/* Lower page (sectors 02–11) and the hero's pause control. Hero rules live in assets/hero-v6.css, untouched. */
+/* Lower page (sectors 02–09) and the hero's pause control. Hero rules live in assets/hero-v6.css, untouched. */
 .rhs-skip{position:fixed;left:16px;top:-80px;z-index:10000;background:#34cdb8;color:#062623;padding:12px 20px;border-radius:8px}.rhs-skip:focus{top:12px}
 .rhs-sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 /* Hero: pause control beside the dots (WCAG 2.2.2), and the language links inside the phone menu. */
@@ -73,8 +73,8 @@ html:not(.rhs-js) .rhs-content .rhs-tour-panel[hidden]:target{display:grid}
 .rhs-content .rhs-payments-sector{background:radial-gradient(ellipse at 69% 30%,rgba(4,150,171,.075),transparent 70%),#04131e}
 .rhs-content .rhs-flow{margin:0;border:1px solid var(--rhs-card);border-radius:11px;padding:20px 22px;background:linear-gradient(135deg,#082334,#041522 85%);box-shadow:inset 0 0 35px #10a9b10b,0 10px 25px #0003;min-width:0}
 .rhs-content .rhs-flow figcaption b{font-size:14px;color:var(--rhs-ink);font-weight:600}
-.rhs-content .rhs-flow-steps{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));position:relative;counter-reset:flow}
-.rhs-content .rhs-flow-steps::before{content:'';position:absolute;left:calc(100% / 14);right:calc(100% / 14);top:14px;height:1px;background:linear-gradient(90deg,#1c6870,#2ddaca,#1c6870)}
+.rhs-content .rhs-flow-steps{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));position:relative;counter-reset:flow}
+.rhs-content .rhs-flow-steps::before{content:'';position:absolute;left:calc(100% / 12);right:calc(100% / 12);top:14px;height:1px;background:linear-gradient(90deg,#1c6870,#2ddaca,#1c6870)}
 .rhs-content .rhs-flow-step{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;counter-increment:flow;padding:0 3px}
 .rhs-content .rhs-flow-step::before{content:counter(flow);display:grid;place-items:center;width:29px;height:29px;border-radius:50%;background:#2ddaca;color:#04262b;font:700 12px/1 'DM Sans',sans-serif;box-shadow:0 0 0 4px #062332,0 0 14px #2ddaca55;position:relative}
 .rhs-content .rhs-flow-step span{font-size:12.5px;line-height:1.3;color:#d4e7ee}
@@ -113,6 +113,16 @@ html:not(.rhs-js) .rhs-content .rhs-tour-panel[hidden]:target{display:grid}
 .rhs-content .rhs-footer{padding:25px 0 20px;border:0;background:#03121c}.rhs-content .rhs-footer-top{display:flex;align-items:center;justify-content:space-between;gap:30px}.rhs-content .rhs-footer-brand{display:flex;align-items:center;gap:10px;white-space:nowrap}.rhs-content .rhs-footer-brand>.rhs-icon{width:29px;height:29px;color:#2ed9cc}.rhs-content .rhs-footer-brand>b{font:500 16px Sora,sans-serif;color:#e9f1f5}.rhs-content .rhs-footer-brand em{font:500 11px 'DM Sans',sans-serif;color:#32c5ba;font-style:normal;margin-left:3px}.rhs-content .rhs-footer nav{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;margin:0;font-size:11px}.rhs-content .rhs-languages{display:flex;gap:18px;font-size:11px}.rhs-content .rhs-languages [aria-current]{color:#32dbcb}.rhs-content .rhs-footer-notes{display:flex;align-items:start;justify-content:space-between;gap:35px;margin-top:20px;color:#80a1b1;font-size:11px}.rhs-content .rhs-footer-notes>p{max-width:760px}.rhs-content #privacy{max-width:400px;font-size:11px}.rhs-content #privacy summary{cursor:pointer;white-space:nowrap}.rhs-content #privacy p{margin-top:12px;font-size:11px;line-height:1.6}
 .rhs-content a:focus-visible,.rhs-content button:focus-visible,.rhs-content summary:focus-visible,.rhs-content [tabindex="0"]:focus-visible,.carousel-pause:focus-visible{outline:2px solid #5df2dd;outline-offset:4px}
 
+/* Availability: Sentinel is available now; the PAM back-office is in development (a dashed outline, no images). */
+.rhs-content .rhs-status{display:inline-flex;align-items:center;gap:7px;max-width:100%;font:700 10px/1.3 'DM Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;border:1px solid;border-radius:99px;padding:5px 11px}
+.rhs-content .rhs-status::before{content:'';flex:none;width:7px;height:7px;border-radius:50%;background:currentColor;box-sizing:border-box}
+.rhs-content .rhs-status-available{color:#2ee6d6;border-color:#1f6a70;background:#062731}.rhs-content .rhs-status-available::before{box-shadow:0 0 8px #2ee6d6aa}
+.rhs-content .rhs-status-development{color:#c3d3df;border-color:#4a6577;border-style:dashed;background:#0a1b28}.rhs-content .rhs-status-development::before{background:transparent;border:1.5px solid currentColor}
+.rhs-content .rhs-sector-copy>.rhs-status{margin-top:14px}.rhs-content .rhs-section-heading .rhs-sector-copy>.rhs-status{grid-column:1/-1;justify-self:start}
+.rhs-content .rhs-product>.rhs-status{margin-top:16px}.rhs-content .rhs-product>.rhs-status+h3{margin-top:12px}
+.rhs-content .rhs-product[data-status="development"]{border-style:dashed;background:linear-gradient(143deg,#0a2030c0,#061a29d8 53%,#061623)}
+.rhs-content .rhs-backoffice .rhs-control-grid li{border-style:dashed}.rhs-content .rhs-sector-copy>.rhs-dev-note{font-size:12.5px;line-height:1.5;color:#8eaab8;margin-top:12px}
+.rhs-content .rhs-arch-out::before{content:'↓'}
 @media(min-width:1600px){.rhs-content .rhs-sector{padding-top:64px;padding-bottom:64px}}
 @media(max-width:1100px){
  .rhs-content .wrap{width:calc(100% - 60px)}.rhs-content .rhs-split{gap:30px;grid-template-columns:.36fr .64fr}.rhs-content h2{font-size:31px}
