@@ -31,7 +31,7 @@ O `--dry-run` confere se cada rota é uma tela do menu do back-office e diz quai
 
 **3. Revise** `tools/capture/contact-sheet.png` e cada imagem em `assets/product/`. Uma tela que falhar mantém o placeholder.
 
-**4. Commit e push** só do que passou na revisão. Tudo o que está em `assets/` vai para o repositório público e para o site, mesmo uma tela que a página não usa. Para cada tela deixada de fora (e para `users`, que o site não usa), volte o placeholder com `git checkout -- assets/product/<tela>.webp` e refaça a folha com `node tools/capture/contact-sheet.mjs`. Depois, commit de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato. O preview da Vercel mostra as telas novas sem nenhuma outra mudança.
+**4. Commit e push** só do que passou na revisão. Tudo o que está em `assets/` vai para o repositório público e para o site, mesmo uma tela que a página não usa. Para cada tela deixada de fora (e para `users`, que o site não usa), volte o placeholder com `git checkout -- assets/product/<tela>.webp`. Se uma das três telas do hero (`player-360-summary`, `withdrawals-queue` ou `reports`) ficar de fora, falhar ou for recortada à mão, apague também a cópia `assets/hero/<tela>.webp` (`Remove-Item assets/hero/<tela>.webp`), que não tem placeholder, ou recorte-a do mesmo jeito. Refaça então a folha com `node tools/capture/contact-sheet.mjs`. Depois, commit de `assets/product/`, `assets/hero/`, `tools/capture/manifest.json` e da folha de contato. O preview da Vercel mostra as telas novas sem nenhuma outra mudança.
 
 ## Hero (troca deliberada)
 
