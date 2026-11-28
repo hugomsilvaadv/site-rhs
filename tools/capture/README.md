@@ -73,7 +73,7 @@ node tools/capture/import.mjs C:\caminho\capturas-demo
 - A lista de telas, com o nome do PNG de origem, está em `tools/capture/sentinel.config.mjs`. O computador usa 3200×2000 e o celular, 780×1688; um PNG de outro tamanho é recusado, e um que falte fica de fora.
 - Cada tela vira `assets/product/sentinel-<tela>.webp`, com o selo "PRODUCT UI · SYNTHETIC DATA". As telas do hero ganham também a cópia limpa de 1586×992 em `assets/hero/`.
 - Revise `tools/capture/sentinel-contact-sheet.png` antes do commit. Tudo o que vai para `assets/` fica público.
-- Apague a imagem de uma tela que ficar de fora, em `assets/product/` e, se for uma tela do hero, em `assets/hero/`.
+- Para deixar uma tela de fora, tire o PNG dela da pasta e importe de novo: a importação apaga a imagem anterior de uma tela sem PNG ou com PNG recusado, em `assets/product/` e em `assets/hero/`, e a folha de contato a mostra sem imagem. Uma pasta sem nenhum PNG da lista é recusada antes de qualquer mudança.
 - Commit de `assets/product/sentinel-*.webp`, `assets/hero/sentinel-*.webp`, `tools/capture/sentinel-manifest.json` e da folha de contato.
 - `node tools/capture/import.mjs --self-test` confere a ferramenta sem imagens reais.
 

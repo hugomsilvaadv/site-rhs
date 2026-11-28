@@ -11,13 +11,13 @@ const root = path.resolve(here, '../..');
 const escape = value => String(value ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const kb = bytes => (bytes / 1024).toFixed(0) + ' KB';
 
-export function contactSheetHtml(manifest, { imageBase }) {
+export function contactSheetHtml(manifest, { imageBase, missing = 'not captured: placeholder kept' }) {
   const cards = Object.entries(manifest.screens ?? {}).map(([name, screen]) => {
     const preview = screen.file;
     const files = [screen.file, screen.hero].filter(Boolean).map(file => `${file.path.split('/').pop()} ${file.width}×${file.height} · ${kb(file.bytes)} · q${Math.round(file.quality * 100)}${file.overBudget ? ' · <b class="warn">over budget</b>' : ''}`).join('<br>');
     const warnings = [...(screen.warnings ?? [])].map(warning => `<li>${escape(warning)}</li>`).join('');
     return `<figure class="${screen.failed ? 'pending' : 'ok'}">
-<div class="thumb">${preview ? `<img src="${escape(imageBase + preview.path)}" alt="">` : '<span>not captured: placeholder kept</span>'}</div>
+<div class="thumb">${preview ? `<img src="${escape(imageBase + preview.path)}" alt="">` : `<span>${escape(missing)}</span>`}</div>
 <figcaption><b>${escape(name)}</b> <span class="state">${screen.failed ? 'failed' : 'captured, review'}</span>
 <small>${escape(screen.route)} · ${escape(screen.viewport?.join('×'))} @${escape(screen.scale)}x</small><small>${files}</small>${screen.review ? `<p class="review">Check: ${escape(screen.review)}</p>` : ''}${screen.failed ? `<ul><li>${escape(screen.failed)}</li></ul>` : ''}${warnings ? `<ul>${warnings}</ul>` : ''}</figcaption></figure>`;
   }).join('\n');
@@ -35,8 +35,8 @@ figure.ok{border-color:#2f9e8f}.thumb{position:relative;aspect-ratio:16/10;backg
 <main>${cards}</main></body></html>`;
 }
 
-export async function buildContactSheet({ manifest, htmlPath, pngPath, imageBase }) {
-  await writeFile(htmlPath, contactSheetHtml(manifest, { imageBase }));
+export async function buildContactSheet({ manifest, htmlPath, pngPath, imageBase, missing }) {
+  await writeFile(htmlPath, contactSheetHtml(manifest, { imageBase, ...(missing ? { missing } : {}) }));
   const browser = await launch();
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });

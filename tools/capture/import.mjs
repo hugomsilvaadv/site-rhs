@@ -1,8 +1,10 @@
 // Brings reviewed screenshots taken elsewhere into the website without rewriting them. Each source PNG listed
 // in tools/capture/sentinel.config.mjs becomes assets/product/<name>.webp: website size, the product badge
 // drawn in, within the byte budget; hero screens also get the clean 1586×992 copy in assets/hero/. A missing
-// source is skipped (the page then shows no image there) and a source of the wrong size is refused. Writes
-// tools/capture/sentinel-manifest.json and the contact sheet tools/capture/sentinel-contact-sheet.png.
+// source is skipped and a source of the wrong size is refused; either way the screen's earlier image, hero copy
+// included, is removed, so the page shows no image there and no stale file is committed. A folder with none of
+// the listed PNGs is refused before anything changes. Writes tools/capture/sentinel-manifest.json and the
+// contact sheet tools/capture/sentinel-contact-sheet.png.
 //   node tools/capture/import.mjs <folder with the PNGs> [--dry-run]
 //   node tools/capture/import.mjs --self-test
 import { mkdir, readFile, writeFile, mkdtemp, rm } from 'node:fs/promises';
@@ -31,8 +33,21 @@ async function render(page, png, { width, height, badge, small }) {
   return page.screenshot({ type: 'png', animations: 'disabled' });
 }
 
+// The earlier image of a screen that is not imported this time (its product file and hero copy, if any).
+const outputs = name => [`assets/product/${name}.webp`, `assets/hero/${name}.webp`];
+
 export async function importAll({ from, out = siteRoot, dryRun = false, screens = plan.screens }) {
+  if (!screens.some(screen => existsSync(path.join(from, screen.source)))) throw new Error(`none of the ${screens.length} listed PNGs is in ${from}: nothing imported or removed`);
   const results = {};
+  // A screen skipped or refused this time keeps no earlier image: the import never leaves a file it did not make.
+  const drop = async (name, entry) => {
+    const stale = outputs(name).filter(rel => existsSync(path.join(out, rel)));
+    if (!stale.length) return;
+    if (dryRun) { entry.wouldRemove = stale; console.log(`  would remove the earlier image of ${name}: ${stale.join(', ')}`); return; }
+    for (const rel of stale) await rm(path.join(out, rel));
+    entry.removed = stale;
+    console.log(`  removed the earlier image of ${name}: ${stale.join(', ')}`);
+  };
   const browser = await launch();
   try {
     const context = await browser.newContext({ deviceScaleFactor: 2 });
@@ -42,12 +57,13 @@ export async function importAll({ from, out = siteRoot, dryRun = false, screens 
       const size = screen.viewport === 'mobile' ? plan.MOBILE : plan.DESKTOP;
       const entry = { route: screen.route, viewport: [size.width, size.height], scale: 2, source: screen.source, ...(screen.review ? { review: screen.review } : {}) };
       const source = path.join(from, screen.source);
-      if (!existsSync(source)) { results[screen.name] = { ...entry, failed: 'source not found: ' + screen.source }; console.log(`skipped ${screen.name}: ${screen.source} not found`); continue; }
+      if (!existsSync(source)) { results[screen.name] = { ...entry, failed: 'source not found: ' + screen.source }; console.log(`skipped ${screen.name}: ${screen.source} not found`); await drop(screen.name, results[screen.name]); continue; }
       const png = await readFile(source);
       const got = pngSize(png);
       if (got.width !== size.width * 2 || got.height !== size.height * 2) {
         results[screen.name] = { ...entry, failed: `source is ${got.width}×${got.height}, expected ${size.width * 2}×${size.height * 2}` };
         console.log(`refused ${screen.name}: ${results[screen.name].failed}`);
+        await drop(screen.name, results[screen.name]);
         continue;
       }
       if (dryRun) { results[screen.name] = { ...entry, dryRun: true }; console.log(`ok ${screen.name} ← ${screen.source}`); continue; }
@@ -75,7 +91,7 @@ export async function importAll({ from, out = siteRoot, dryRun = false, screens 
     const manifest = { version: 2, capturedAt: new Date().toISOString(), source: { repo: 'Sentinel demo (fictitious data)', commit: '-', mode: 'imported screenshots', flagProfile: '-', locale: 'en', theme: '-' }, screens: results };
     await mkdir(path.join(out, 'tools/capture'), { recursive: true });
     await writeFile(path.join(out, 'tools/capture/sentinel-manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
-    await buildContactSheet({ manifest, htmlPath: path.join(out, 'tools/capture/sentinel-contact-sheet.html'), pngPath: path.join(out, 'tools/capture/sentinel-contact-sheet.png'), imageBase: '../../' });
+    await buildContactSheet({ manifest, htmlPath: path.join(out, 'tools/capture/sentinel-contact-sheet.html'), pngPath: path.join(out, 'tools/capture/sentinel-contact-sheet.png'), imageBase: '../../', missing: 'not imported: no image' });
   }
   return results;
 }
@@ -126,7 +142,21 @@ async function selfTest() {
       assert.ok(await corner(alerts.hero.path) <= 3, 'hero copy without the badge');
     } finally { await check.close(); }
     assert.ok(existsSync(path.join(dir, 'tools/capture/sentinel-contact-sheet.png')), 'contact sheet written');
-    console.log('PASS: import self-test (sizes, badge, clean hero copy, budget, refused and missing sources, contact sheet) in ' + dir);
+    // A screen whose PNG is gone, or refused, loses its earlier image (hero copy included); the others stay.
+    await rm(path.join(from, 'alerts.png'));
+    await writeFile(path.join(dir, 'assets/product/sentinel-rules.webp'), 'earlier image');
+    const planned = await importAll({ from, out: dir, dryRun: true });
+    assert.deepEqual(planned['sentinel-alerts'].wouldRemove, ['assets/product/sentinel-alerts.webp', 'assets/hero/sentinel-alerts.webp'], 'the dry run says which earlier images would go');
+    assert.ok(existsSync(path.join(dir, 'assets/product/sentinel-alerts.webp')), 'the dry run removes nothing');
+    const again = await importAll({ from, out: dir });
+    assert.deepEqual(again['sentinel-alerts'].removed, ['assets/product/sentinel-alerts.webp', 'assets/hero/sentinel-alerts.webp'], 'the earlier image of a screen without its PNG is removed, hero copy included');
+    assert.ok(!existsSync(path.join(dir, 'assets/product/sentinel-alerts.webp')) && !existsSync(path.join(dir, 'assets/hero/sentinel-alerts.webp')));
+    assert.deepEqual(again['sentinel-rules'].removed, ['assets/product/sentinel-rules.webp'], 'the earlier image of a refused screen is removed');
+    assert.ok(existsSync(path.join(dir, 'assets/product/sentinel-alerts-mobile.webp')), 'the imported screens stay');
+    // A folder with none of the listed PNGs (a wrong path) is refused before anything changes.
+    await assert.rejects(importAll({ from: path.join(dir, 'no-such-folder'), out: dir }), /none of the 17 listed PNGs/);
+    assert.ok(existsSync(path.join(dir, 'assets/product/sentinel-alerts-mobile.webp')), 'nothing removed for a wrong folder');
+    console.log('PASS: import self-test (sizes, badge, clean hero copy, budget, refused and missing sources, earlier images removed, wrong folder refused, contact sheet) in ' + dir);
   } finally { await rm(dir, { recursive: true, force: true }); }
 }
 
